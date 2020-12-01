@@ -1,5 +1,5 @@
 <template>
-	<div class="home">
+	<div class="admin-home">
 		<img alt="Vue logo"
 			src="@/assets/logo.png"
 		>
@@ -8,6 +8,6 @@
 
 <script>
 export default {
-	name: "HomeView"
+	name: "AdminHomeView"
 }
 </script>
