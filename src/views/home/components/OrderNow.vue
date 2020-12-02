@@ -18,7 +18,9 @@
 					dark
 				>
 					<v-icon>fastfood</v-icon>
-					<span class="ml-2">start my order</span>
+					<span v-if="$vuetify.breakpoint.width > 255"
+						class="ml-2"
+					>start my order</span>
 				</v-btn>
 			</div>
 		</v-card>

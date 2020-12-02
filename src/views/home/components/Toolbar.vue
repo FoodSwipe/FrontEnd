@@ -8,18 +8,32 @@
 			<v-spacer />
 
 			<div class="organization-title">
-				Food Mood
+				Food Swipe
 			</div>
 			<v-spacer />
 			<template #extension>
-				<v-app-bar-nav-icon />
+				<v-app-bar-nav-icon>
+					<v-icon :size="
+						$vuetify.breakpoint.width > 300
+							? ''
+							: '16'
+					"
+					>
+						menu
+					</v-icon>
+				</v-app-bar-nav-icon>
 
 				<v-spacer />
 
 				<v-btn icon
 					max-width="24"
 				>
-					<v-icon color="white">
+					<v-icon :size="
+						$vuetify.breakpoint.width > 300
+							? ''
+							: '16'
+					"
+					>
 						account_circle
 					</v-icon>
 				</v-btn>
@@ -28,7 +42,14 @@
 					class="mx-1"
 					max-width="24"
 				>
-					<v-icon>search</v-icon>
+					<v-icon :size="
+						$vuetify.breakpoint.width > 300
+							? ''
+							: '16'
+					"
+					>
+						search
+					</v-icon>
 				</v-btn>
 				<v-badge
 					light
@@ -43,7 +64,15 @@
 						max-width="24"
 						class="mr-2"
 					>
-						<v-icon>add_shopping_cart</v-icon>
+						<v-icon
+							:size="
+								$vuetify.breakpoint.width > 300
+									? ''
+									: '16'
+							"
+						>
+							add_shopping_cart
+						</v-icon>
 					</v-btn>
 				</v-badge>
 			</template>
@@ -77,6 +106,12 @@ export default {
 	max-width: 24px
 .organization-title
 	font-size: 2.5rem
+	line-height: 2.5rem
 	font-family: 'Sacramento', cursive
-
+	@media only screen and (max-width: 220px)
+		font-size: 1.8rem
+		line-height: 1.8rem
+	@media only screen and (max-width: 160px)
+		font-size: 1.2rem
+		line-height: 1.2rem
 </style>
