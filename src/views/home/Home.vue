@@ -1,13 +1,18 @@
 <template>
 	<div class="home">
-		<img alt="Vue logo"
-			src="@/assets/logo.png"
-		>
+		<swiper />
+		<order-now />
+		<hot-items />
 	</div>
 </template>
 
 <script>
 export default {
-	name: "HomeView"
+	name: "HomeView",
+	components: {
+		Swiper: () => import("@/views/home/components/Swiper"),
+		OrderNow: () => import("@/views/home/components/OrderNow"),
+		HotItems: () => import("@/views/home/components/HotItems")
+	}
 }
 </script>
