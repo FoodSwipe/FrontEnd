@@ -39,6 +39,7 @@
 									<v-img src="https://lh3.googleusercontent.com/proxy/MqGKMZqxrEwdFXOMC0JkHsmquJqT2LJ1uxg6M4whw61xpRNH9U80Hk_zkSYAa3rvuJCWLchcxnFEYBYhKbirt4QY_bfQrajTWTJP_lQADK-NH8uOdsn2mK-jlM1_EJLjUaqf" />
 								</v-avatar>
 							</div>
+							<v-divider class="mx-4 mt-1" />
 							<v-row
 								class="ma-0 pa-0"
 							>
@@ -70,9 +71,6 @@
 						</div>
 					</v-card>
 				</div>
-				<!-- Add Pagination -->
-				<div class="swiper-pagination" />
-				<!-- Add Arrows -->
 				<div class="swiper-button-next" />
 				<div class="swiper-button-prev" />
 			</div>
@@ -80,7 +78,7 @@
 	</v-card>
 </template>
 <script>
-import Swiper, { Navigation, Pagination } from "swiper"
+import Swiper, { Navigation } from "swiper"
 
 export default {
 	name: "HotItemsComponent",
@@ -117,7 +115,7 @@ export default {
 		],
 	}),
 	mounted() {
-		Swiper.use([Navigation, Pagination]);
+		Swiper.use([Navigation]);
 
 		const mySwiper = new Swiper(".swiper-container", {
 			slidesPerView: "auto",
@@ -125,15 +123,11 @@ export default {
 			loop: false,
 			centeredSlides: true,
 			spaceBetween: 15,
-			speed: 700,
+			speed: 400,
 			navigation: {
 				nextEl: ".swiper-button-next",
 				prevEl: ".swiper-button-prev",
-			},
-			pagination: {
-				el: ".swiper-pagination",
-				clickable: true,
-			},
+			}
 		})
 	},
 }
