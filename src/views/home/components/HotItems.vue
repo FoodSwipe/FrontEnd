@@ -1,7 +1,6 @@
 <template>
 	<v-card
 		flat
-		color="peach-gradient"
 		class="rounded-0 pa-4"
 	>
 		<v-card-title class="hot-items d-flex justify-center">
@@ -11,20 +10,20 @@
 			flat max-width="1000"
 			color="transparent"
 		>
-			<div class="swiper-container">
+			<div class="swiper-container pa-1">
 				<div class="swiper-wrapper">
 					<v-card
 						v-for="(item, index) in foodItems"
 						:key="index"
 						class="swiper-slide"
-						max-width="150"
+						max-width="180"
 					>
 						<!-- eslint-disable-next-line vue/no-v-for-template-key-on-child-->
 						<v-img
 							class="car-image"
 							:src="item.src"
 							max-width="100%"
-							height="120"
+							height="140"
 							dark
 						/>
 						<div class="px-2">
@@ -33,10 +32,15 @@
 							</p>
 							<div class="d-flex justify-start align-start">
 								<v-avatar size="20">
-									<v-img src="https://png.pngtree.com/png-vector/20190903/ourmid/pngtree-vector-red-chili-pepper-png-image_1716344.jpg" />
+									<v-img contain
+										src="https://png.pngtree.com/png-vector/20190903/ourmid/pngtree-vector-red-chili-pepper-png-image_1716344.jpg"
+									/>
 								</v-avatar>
 								<v-avatar size="20">
-									<v-img src="https://lh3.googleusercontent.com/proxy/MqGKMZqxrEwdFXOMC0JkHsmquJqT2LJ1uxg6M4whw61xpRNH9U80Hk_zkSYAa3rvuJCWLchcxnFEYBYhKbirt4QY_bfQrajTWTJP_lQADK-NH8uOdsn2mK-jlM1_EJLjUaqf" />
+									<v-img
+										contain
+										src="https://i.dlpng.com/static/png/6543803_preview.png"
+									/>
 								</v-avatar>
 							</div>
 							<v-divider class="mx-4 mt-1" />
@@ -51,7 +55,6 @@
 								<v-btn v-ripple
 									icon
 									small
-									width="20"
 									class="pa-0"
 								>
 									<v-icon small>
@@ -60,7 +63,6 @@
 								</v-btn>
 								<v-btn icon
 									small
-									width="20"
 									class="pa-0"
 								>
 									<v-icon small>
@@ -122,7 +124,7 @@ export default {
 			direction: "horizontal",
 			loop: false,
 			centeredSlides: true,
-			spaceBetween: 15,
+			spaceBetween: 35,
 			speed: 400,
 			navigation: {
 				nextEl: ".swiper-button-next",
