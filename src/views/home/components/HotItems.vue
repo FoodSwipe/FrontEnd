@@ -4,8 +4,8 @@
 		color="peach-gradient"
 		class="rounded-0 pa-4"
 	>
-		<v-card-title class="headline d-flex justify-center">
-			Hot Items
+		<v-card-title class="hot-items d-flex justify-center">
+			<u>Hot Items</u>
 		</v-card-title>
 		<v-card class="pa-0 mx-auto"
 			flat max-width="1000"
@@ -136,4 +136,12 @@ export default {
 .swiper-pagination{
 	bottom: -1px !important;
 }
+</style>
+
+<style scoped lang="sass">
+.hot-items
+	text-transform: uppercase
+	font-size: 1.5rem
+	line-height: 1.5rem
+	font-family: "Rasa SemiBold", cursive
 </style>
