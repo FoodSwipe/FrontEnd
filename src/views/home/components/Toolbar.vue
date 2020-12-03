@@ -1,8 +1,9 @@
 <template>
 	<div>
 		<v-app-bar
-			color="black"
+			id="home-app-bar"
 			dense
+			fixed
 			dark
 		>
 			<v-spacer />
@@ -26,7 +27,7 @@
 				<v-spacer />
 
 				<v-btn icon
-					max-width="24"
+					small
 				>
 					<v-icon :size="
 						$vuetify.breakpoint.width > 300
@@ -40,7 +41,7 @@
 
 				<v-btn icon
 					class="mx-1"
-					max-width="24"
+					small
 				>
 					<v-icon :size="
 						$vuetify.breakpoint.width > 300
@@ -61,7 +62,7 @@
 				>
 					<v-btn icon
 						dark
-						max-width="24"
+						small
 						class="mr-2"
 					>
 						<v-icon
@@ -81,8 +82,38 @@
 </template>
 
 <script>
+import $ from "jquery";
+
 export default {
-	name: "HomeToolbarComponent"
+	name: "HomeToolbarComponent",
+	mounted: function () {
+		this.initBarTransparency()
+		this.initBarScrollColoring()
+	},
+	methods: {
+		initBarTransparency() {
+			$(document).ready(() => {
+				const scrollTop = $(window).scrollTop()
+				if (scrollTop === 0) {
+					$("#home-app-bar").css({
+						background: "rgb(255,255,255, 0)"
+					})
+				}
+			})
+		},
+		initBarScrollColoring() {
+			$(window).scroll(function () {
+				const scrollTop = $(this).scrollTop()
+				console.log("here")
+				$("#home-app-bar").css({
+					backgroundColor: function () {
+						const elementHeight = $(this).height();
+						return "rgb(224,141,19," + (1 - (elementHeight - scrollTop) / elementHeight).toString()
+					}
+				})
+			})
+		}
+	}
 }
 </script>
 <style>
@@ -102,8 +133,8 @@ export default {
 }
 </style>
 <style lang="sass" scoped>
-::v-deep.v-btn__content
-	max-width: 24px
+//::v-deep.v-btn__content
+//	max-width: 30px
 .organization-title
 	font-size: 2.5rem
 	line-height: 2.5rem
