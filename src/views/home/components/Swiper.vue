@@ -102,7 +102,7 @@ export default {
 
 .carousel-cell {
 	display: block;
-	height: 40vh;
+	height: 55vh;
 	width: 100vw;
 }
 .carousel-image {
