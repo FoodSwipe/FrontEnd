@@ -3,7 +3,7 @@
 		<swiper />
 		<order-now />
 		<hot-items />
-		<home-footer />
+		<how-we-serve />
 	</div>
 </template>
 
@@ -14,7 +14,7 @@ export default {
 		Swiper: () => import("@/views/home/components/Swiper"),
 		OrderNow: () => import("@/views/home/components/OrderNow"),
 		HotItems: () => import("@/views/home/components/HotItems"),
-		HomeFooter: () => import("@/views/home/components/Footer")
+		HowWeServe: () => import("@/views/home/components/HowWeServe")
 	}
 }
 </script>

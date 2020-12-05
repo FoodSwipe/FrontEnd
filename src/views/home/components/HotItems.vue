@@ -3,7 +3,7 @@
 		flat
 		class="rounded-0 pa-4"
 	>
-		<v-card-title class="hot-items d-flex justify-center">
+		<v-card-title class="hot-items">
 			<u>Hot Items</u>
 		</v-card-title>
 		<v-card class="pa-0 mx-auto"
@@ -15,62 +15,42 @@
 					<v-card
 						v-for="(item, index) in foodItems"
 						:key="index"
+						flat
 						class="swiper-slide"
-						max-width="180"
+						max-width="140"
 					>
 						<!-- eslint-disable-next-line vue/no-v-for-template-key-on-child-->
-						<v-img
-							class="car-image"
-							:src="item.src"
-							max-width="100%"
-							height="140"
-							dark
-						/>
-						<div class="px-2">
-							<p class="ma-0 pt-2">
-								{{ item.name }}
-							</p>
-							<div class="d-flex justify-start align-start">
-								<v-avatar size="20">
-									<v-img contain
+						<v-badge
+							avatar
+							bordered
+							overlap
+							bottom
+							offset-x="30"
+							offset-y="30"
+						>
+							<template #badge>
+								<v-avatar>
+									<v-img
+										contain
 										src="https://png.pngtree.com/png-vector/20190903/ourmid/pngtree-vector-red-chili-pepper-png-image_1716344.jpg"
 									/>
 								</v-avatar>
-								<v-avatar size="20">
-									<v-img
-										contain
-										src="https://i.dlpng.com/static/png/6543803_preview.png"
-									/>
-								</v-avatar>
-							</div>
-							<v-divider class="mx-4 mt-1" />
-							<v-row
-								class="ma-0 pa-0"
+							</template>
+
+							<v-avatar size="100"
+								color="white"
 							>
-								<p class="mb-0">
-									<span style="color: grey; font-size: 12px">Rs</span>
-									<span style="color: green; font-size: 18px; font-weight: bold">150</span>
-								</p>
-								<v-spacer />
-								<v-btn v-ripple
-									icon
-									small
-									class="pa-0"
-								>
-									<v-icon small>
-										add_shopping_cart
-									</v-icon>
-								</v-btn>
-								<v-btn icon
-									small
-									class="pa-0"
-								>
-									<v-icon small>
-										visibility
-									</v-icon>
-								</v-btn>
-							</v-row>
-						</div>
+								<v-img
+									class="car-image"
+									:src="item.src"
+									max-width="100%"
+								/>
+							</v-avatar>
+						</v-badge>
+
+						<p class="mb-0 text-center item-name">
+							{{ item.name }}
+						</p>
 					</v-card>
 				</div>
 				<div class="swiper-button-next" />
@@ -124,7 +104,7 @@ export default {
 			direction: "horizontal",
 			loop: false,
 			centeredSlides: true,
-			spaceBetween: 35,
+			spaceBetween: 0,
 			speed: 400,
 			navigation: {
 				nextEl: ".swiper-button-next",
@@ -146,4 +126,7 @@ export default {
 	font-size: 1.5rem
 	line-height: 1.5rem
 	font-family: "Rasa SemiBold", cursive
+.item-name
+	width: 100px
+	font-size: 1rem
 </style>

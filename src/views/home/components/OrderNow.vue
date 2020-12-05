@@ -1,8 +1,9 @@
 <template>
 	<div class="pa-4">
 		<v-card
-			max-width="1000"
-			class="mx-auto pa-2"
+			color="brown lighten-4"
+			max-width="100vw"
+			class="mx-auto pa-2 order-now-card"
 		>
 			<v-row class="ma-0 pa-0"
 				justify="center"
@@ -10,9 +11,9 @@
 			>
 				<v-col cols="12"
 					class="pa-1"
-					xl="8"
-					lg="8"
-					md="8"
+					xl="6"
+					lg="6"
+					md="5"
 					sm="7"
 				>
 					<v-autocomplete
@@ -21,7 +22,7 @@
 						:items="people"
 						filled
 						chips
-						color="blue-grey lighten-2"
+						color="blue darken-2"
 						placeholder="Select menu item group"
 						item-text="name"
 						item-value="name"
@@ -78,6 +79,10 @@
 					/>
 				</v-col>
 				<v-col cols="12"
+					xl="2"
+					lg="2"
+					md="3"
+					sm="12"
 					class="d-flex justify-center pa-1"
 				>
 					<v-btn depressed
@@ -175,5 +180,9 @@ export default {
 <style scoped>
 ::v-deep.v-autocomplete:not(.v-input--is-focused).v-select--chips input {
 	max-height: 25px;
+}
+.order-now-card {
+	/*background: linear-gradient(rgba(248, 249, 250, 0), rgba(246, 242, 248, 0)), url("https://media-cdn.tripadvisor.com/media/photo-s/0b/05/09/21/dessert.jpg") no-repeat fixed center;*/
+	/*background-size: cover;*/
 }
 </style>

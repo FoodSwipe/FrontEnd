@@ -3,117 +3,58 @@
 		<v-app-bar
 			id="home-app-bar"
 			dense
-			fixed
-			dark
+			color="#FFC107"
+			height="60"
+			class="pr-4"
 		>
-			<v-spacer />
-
 			<div class="organization-title">
 				Food Swipe
 			</div>
 			<v-spacer />
-			<template #extension>
-				<v-app-bar-nav-icon>
-					<v-icon :size="
-						$vuetify.breakpoint.width > 300
-							? ''
-							: '16'
-					"
-					>
-						menu
-					</v-icon>
-				</v-app-bar-nav-icon>
-
-				<v-spacer />
-
-				<v-btn icon
-					small
+			<v-btn icon
+				small
+				class="pr-0 pr-sm-6 pr-md-6 pr-lg-6 pr-xl-6"
+			>
+				<v-icon :size="
+					$vuetify.breakpoint.width > 300
+						? ''
+						: '16'
+				"
 				>
-					<v-icon :size="
-						$vuetify.breakpoint.width > 300
-							? ''
-							: '16'
-					"
-					>
-						account_circle
-					</v-icon>
-				</v-btn>
-
-				<v-btn icon
-					class="mx-1"
-					small
-				>
-					<v-icon :size="
-						$vuetify.breakpoint.width > 300
-							? ''
-							: '16'
-					"
-					>
-						search
-					</v-icon>
-				</v-btn>
-				<v-badge
+					account_circle
+				</v-icon>
+			</v-btn>
+			<v-badge
+				dark
+				color="black"
+				content="5"
+				offset-x="10"
+				offset-y="15"
+			>
+				<v-btn
 					light
-					bordered
-					color="black"
-					content="5"
-					offset-x="10"
-					offset-y="15"
+					icon
+					small
+					class="mr-2"
 				>
-					<v-btn icon
-						dark
-						small
-						class="mr-2"
+					<v-icon
+						:size="
+							$vuetify.breakpoint.width > 300
+								? ''
+								: '16'
+						"
 					>
-						<v-icon
-							:size="
-								$vuetify.breakpoint.width > 300
-									? ''
-									: '16'
-							"
-						>
-							add_shopping_cart
-						</v-icon>
-					</v-btn>
-				</v-badge>
-			</template>
+						add_shopping_cart
+					</v-icon>
+				</v-btn>
+			</v-badge>
 		</v-app-bar>
 	</div>
 </template>
 
 <script>
-import $ from "jquery";
-
 export default {
 	name: "HomeToolbarComponent",
-	mounted: function () {
-		this.initBarTransparency()
-		this.initBarScrollColoring()
-	},
-	methods: {
-		initBarTransparency() {
-			$(document).ready(() => {
-				const scrollTop = $(window).scrollTop()
-				if (scrollTop === 0) {
-					$("#home-app-bar").css({
-						background: "rgb(255,255,255, 0)"
-					})
-				}
-			})
-		},
-		initBarScrollColoring() {
-			$(window).scroll(function () {
-				const scrollTop = $(this).scrollTop()
-				console.log("here")
-				$("#home-app-bar").css({
-					backgroundColor: function () {
-						const elementHeight = $(this).height();
-						return "rgb(224,141,19," + (1 - (elementHeight - scrollTop) / elementHeight).toString()
-					}
-				})
-			})
-		}
-	}
 }
 </script>
 <style>
@@ -137,12 +78,15 @@ export default {
 //	max-width: 30px
 .organization-title
 	font-size: 2.5rem
-	line-height: 2.5rem
+	line-height: 2.6rem
 	font-family: 'Sacramento', cursive
-	@media only screen and (max-width: 220px)
-		font-size: 1.8rem
-		line-height: 1.8rem
-	@media only screen and (max-width: 160px)
+	@media only screen and (max-width: 600px)
+		font-size: 2rem
+		line-height: 2rem
+	@media only screen and (max-width: 300px)
+		font-size: 1.6rem
+		line-height: 1.6rem
+	@media only screen and (max-width: 185px)
 		font-size: 1.2rem
 		line-height: 1.2rem
 </style>
