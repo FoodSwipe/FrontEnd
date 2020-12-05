@@ -8,53 +8,135 @@
 			class="pr-4"
 		>
 			<div class="organization-title">
-				Food Swipe
+				{{ $route.name }}
 			</div>
 			<v-spacer />
-			<v-btn icon
-				small
-				class="pr-0 pr-sm-6 pr-md-6 pr-lg-6 pr-xl-6"
-			>
-				<v-icon :size="
-					$vuetify.breakpoint.width > 300
-						? ''
-						: '16'
-				"
-				>
-					account_circle
-				</v-icon>
-			</v-btn>
+			<v-tooltip bottom>
+				<template #activator="{on, attrs}">
+					<v-btn
+						v-show="$route.name !== 'Food Swipe'"
+						icon
+						small
+						class="pr-0 mr-sm-6 mr-md-6 mr-lg-6 mr-xl-6"
+						v-bind="attrs"
+						@click="toHome()"
+						v-on="on"
+					>
+						<v-icon :size="
+							$vuetify.breakpoint.width > 300
+								? ''
+								: '16'
+						"
+						>
+							home
+						</v-icon>
+					</v-btn>
+				</template>
+				<span>Home</span>
+			</v-tooltip>
+			<v-tooltip bottom>
+				<template #activator="{on, attrs}">
+					<v-btn
+						v-show="$route.name !== 'Profile'"
+						icon
+						small
+						class="pr-0 mr-sm-6 mr-md-6 mr-lg-6 mr-xl-6"
+						v-bind="attrs"
+						@click="toProfile()"
+						v-on="on"
+					>
+						<v-icon :size="
+							$vuetify.breakpoint.width > 300
+								? ''
+								: '16'
+						"
+						>
+							account_circle
+						</v-icon>
+					</v-btn>
+				</template>
+				<span>Kiran Parajuli</span>
+			</v-tooltip>
+			<v-tooltip bottom>
+				<template #activator="{on, attrs}">
+					<v-btn
+						v-show="$route.name !== 'Store'"
+						icon
+						small
+						class="pr-0 mr-sm-6 mr-md-6 mr-lg-6 mr-xl-6"
+						v-bind="attrs"
+						@click="toStore()"
+						v-on="on"
+					>
+						<v-icon :size="
+							$vuetify.breakpoint.width > 300
+								? ''
+								: '16'
+						"
+						>
+							store
+						</v-icon>
+					</v-btn>
+				</template>
+				<span>Store</span>
+			</v-tooltip>
+
 			<v-badge
+				v-show="$route.name !== 'Cart'"
 				dark
 				color="black"
 				content="5"
 				offset-x="10"
 				offset-y="15"
 			>
-				<v-btn
-					light
-					icon
-					small
-					class="mr-2"
-				>
-					<v-icon
-						:size="
-							$vuetify.breakpoint.width > 300
-								? ''
-								: '16'
-						"
-					>
-						add_shopping_cart
-					</v-icon>
-				</v-btn>
+				<v-tooltip bottom>
+					<template #activator="{on, attrs}">
+						<v-btn
+							light
+							icon
+							small
+							class="mr-2"
+							v-bind="attrs"
+							@click="toCart()"
+							v-on="on"
+						>
+							<v-icon
+								:size="
+									$vuetify.breakpoint.width > 300
+										? ''
+										: '16'
+								"
+							>
+								add_shopping_cart
+							</v-icon>
+						</v-btn>
+					</template>
+					<span>Cart</span>
+				</v-tooltip>
 			</v-badge>
 		</v-app-bar>
 	</div>
 </template>
 
 <script>
+import router from "@/router"
+
 export default {
 	name: "HomeToolbarComponent",
+	methods: {
+		toCart() {
+			router.push({name: "Cart"})
+		},
+		toProfile() {
+			router.push({name: "Profile"})
+		},
+		toStore() {
+			router.push({name: "Store"})
+		},
+		toHome() {
+			router.push({name: "Food Swipe"})
+		},
+	}
 }
 </script>
 <style>

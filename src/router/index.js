@@ -10,8 +10,23 @@ const routes = [
 		children: [
 			{
 				path: "",
-				name: "HOME",
-				component: () => import("@/views/home/Home")
+				name: "Food Swipe",
+				component: () => import("@/views/home/Home"),
+			},
+			{
+				path: "store",
+				name: "Store",
+				component: () => import("@/views/store/Store")
+			},
+			{
+				path: "profile",
+				name: "Profile",
+				component: () => import("@/views/profile/Profile"),
+			},
+			{
+				path: "cart",
+				name: "Cart",
+				component: () => import("@/views/cart/Cart"),
 			},
 		]
 	},
@@ -21,7 +36,7 @@ const routes = [
 		children: [
 			{
 				path: "",
-				name: "ADMINISTRATION HOME",
+				name: "Administration Home",
 				component: () => import("@/views/admin/Home")
 			},
 		]
