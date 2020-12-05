@@ -26,7 +26,7 @@
 							overlap
 							bottom
 							offset-x="30"
-							offset-y="30"
+							offset-y="20"
 						>
 							<template #badge>
 								<v-avatar>
