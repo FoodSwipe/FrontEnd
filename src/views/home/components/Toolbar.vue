@@ -36,24 +36,19 @@
 			</v-tooltip>
 			<v-tooltip bottom>
 				<template #activator="{on, attrs}">
-					<v-btn
+					<v-avatar
 						v-show="$route.name !== 'Profile'"
-						icon
-						small
-						class="pr-0 mr-sm-6 mr-md-6 mr-lg-6 mr-xl-6"
+						size="32"
+						class="pr-0 mr-sm-6 mr-md-6 mr-lg-6 mr-xl-6 profile-avatar"
 						v-bind="attrs"
+						color="white"
 						@click="toProfile()"
 						v-on="on"
 					>
-						<v-icon :size="
-							$vuetify.breakpoint.width > 300
-								? ''
-								: '16'
-						"
-						>
-							account_circle
-						</v-icon>
-					</v-btn>
+						<v-img
+							src="https://image.freepik.com/free-vector/beard-man-barber-shop-logo-vector-illustration_56473-434.jpg"
+						/>
+					</v-avatar>
 				</template>
 				<span>Kiran Parajuli</span>
 			</v-tooltip>
@@ -159,6 +154,7 @@ export default {
 //::v-deep.v-btn__content
 //	max-width: 30px
 .organization-title
+	transition: all .3s
 	font-size: 2.5rem
 	line-height: 2.6rem
 	font-family: 'Sacramento', cursive
@@ -171,4 +167,12 @@ export default {
 	@media only screen and (max-width: 185px)
 		font-size: 1.2rem
 		line-height: 1.2rem
+.profile-avatar
+	transition: all .3s
+	cursor: pointer
+	border: 2px solid white
+	@media only screen and (max-width: 285px)
+		height: 24px !important
+		min-width: 24px !important
+		width: 24px !important
 </style>
