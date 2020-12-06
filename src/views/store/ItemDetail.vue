@@ -4,7 +4,30 @@
 		max-width="1200"
 		flat
 	>
-		<v-card-title>{{ item.name }}</v-card-title>
+		<v-card-title>
+			{{ item.name }}
+			<span
+				v-for="(type, index) in item.type"
+				:key="index"
+				class="px-1"
+			>
+				<v-tooltip bottom>
+					<template #activator="{on, attrs}">
+						<v-avatar
+							class="elevation-1"
+							size="20"
+							v-bind="attrs"
+							v-on="on"
+						>
+							<v-img
+								:src="type.image"
+							/>
+						</v-avatar>
+					</template>
+					<span>{{ type.name }}</span>
+				</v-tooltip>
+			</span>
+		</v-card-title>
 		<v-card-subtitle>
 			<v-icon size="14"
 				color="orange darken-2"
@@ -28,7 +51,6 @@
 			>5 reviews</u>
 		</v-card-subtitle>
 		<v-img
-			contain
 			:src="item.image"
 			height="45vh"
 		/>
@@ -309,7 +331,7 @@ export default {
 				},
 				{
 					name: "Non Veg",
-					image: "https://lh3.googleusercontent.com/proxy/DN9dGmSCLyEXkwEwUg5f3upEhF4zrZFX_pwo7ISxUgWiHzSEMXzxolvfRutyKQK5GVv-7qlRDNy7JgbgLdQ-zVLQh9utf9WHeRpQJPmplb2itzr1eoQa0aM30V5nNHCjOAyJg7RyaUWV8Q"
+					image: require("@/assets/nonveglogo.png")
 				}
 			]
 		}
