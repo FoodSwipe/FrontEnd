@@ -50,35 +50,47 @@
 				@click="scrollToReviews()"
 			>5 reviews</u>
 		</v-card-subtitle>
-		<v-img
-			:src="item.image"
-			height="45vh"
-		/>
-		<div class="to-cart-column">
-			<v-avatar v-ripple
-				icon
-				class="to-cart-avatar elevation-4"
-				size="48"
-			>
-				<v-icon dark>
-					add_shopping_cart
-				</v-icon>
-			</v-avatar>
-		</div>
-		<v-card-text class="py-2">
-			{{ item.description }}
-		</v-card-text>
 		<v-card-text class="py-0 item-detail-box">
 			<v-row class="ma-0 pa-0"
 				no-gutters
 			>
+				<!--item image column-->
+				<v-col cols="12"
+					xl="8"
+					lg="8"
+					md="8"
+					sm="7"
+				>
+					<v-img
+						:src="item.image"
+						height="45vh"
+					/>
+					<div class="to-cart-column">
+						<v-avatar v-ripple
+							icon
+							class="to-cart-avatar elevation-4 blue-gradient"
+							size="48"
+						>
+							<v-icon dark>
+								add_shopping_cart
+							</v-icon>
+						</v-avatar>
+					</div>
+					<v-card-text class="py-2">
+						{{ item.description }}
+					</v-card-text>
+				</v-col>
+				<!--crucial details				-->
 				<v-col cols="12"
 					xl="4"
 					lg="4"
 					md="4"
-					sm="12"
+					sm="5"
 				>
-					<v-list two-line>
+					<v-list two-line
+						class="pt-0"
+					>
+						<v-divider class="mx-4" />
 						<v-list-item @click="1">
 							<v-list-item-icon>
 								<v-icon :size="
@@ -100,6 +112,7 @@
 								<v-list-item-subtitle>Price(RS)</v-list-item-subtitle>
 							</v-list-item-content>
 						</v-list-item>
+						<v-divider class="mx-4" />
 						<v-list-item
 							v-for="(statDetail, index) in getStatDetailsArray"
 							:key="index"
@@ -120,109 +133,144 @@
 							</v-list-item-content>
 						</v-list-item>
 					</v-list>
-				</v-col>
-				<v-col cols="12"
-					xl="4"
-					lg="4"
-					md="4"
-					sm="6"
-				>
-					<v-list class="extra-details">
-						<v-subheader>
-							<v-icon color="blue darken-2">
-								all_inclusive
+					<div class="actions px-4">
+						<v-btn dark
+							class="peach-gradient"
+							x-large
+							block
+						>
+							<v-icon
+								large
+							>
+								add_shopping_cart
 							</v-icon>
-							<span class="text-uppercase mx-1 blue--text text--darken-2">More Details</span>
-						</v-subheader>
-						<v-list-item
-							v-for="(extraDetail, index) in getExtraDetailsArray"
-							:key="index"
-							@click="1"
-						>
-							<v-list-item-icon v-if="$vuetify.breakpoint.width > 215">
-								<v-avatar size="24"
-									color="grey"
-								>
-									<span class="white--text">{{ extraDetail.field[0].toUpperCase() }}</span>
-								</v-avatar>
-							</v-list-item-icon>
-							<v-list-item-content>
-								<v-list-item-title>
-									{{ extraDetail.value }}
-								</v-list-item-title>
-								<v-list-item-subtitle class="text-capitalize">
-									{{ extraDetail.field }}
-								</v-list-item-subtitle>
-							</v-list-item-content>
-						</v-list-item>
-						<v-list-item
-							v-for="(exDetail, index) in getBooleanDetailsArray"
-							:key="index+1000"
-							@click="1"
-						>
-							<v-list-item-icon v-if="$vuetify.breakpoint.width > 215">
-								<v-avatar size="24"
-									color="grey"
-								>
-									<span class="white--text">{{ exDetail.field[0].toUpperCase() }}</span>
-								</v-avatar>
-							</v-list-item-icon>
-							<v-list-item-content>
-								<v-list-item-title>{{ exDetail.field }}</v-list-item-title>
-							</v-list-item-content>
-							<v-list-item-action>
-								<v-icon v-if="exDetail.value"
-									color="green"
-								>
-									done
-								</v-icon>
-								<v-icon v-else
-									color="red"
-								>
-									close
-								</v-icon>
-							</v-list-item-action>
-						</v-list-item>
-					</v-list>
-				</v-col>
-				<v-col cols="12"
-					xl="4"
-					lg="4"
-					md="4"
-					sm="6"
-				>
-					<v-list class="ingredients-list">
-						<v-subheader>
-							<v-icon color="pink lighten-1">
-								casino
-							</v-icon>
-							<span class="text-uppercase pink--text mx-1">Ingredients</span>
-						</v-subheader>
-						<v-list-item
-							v-for="(ingredient, index) in item.ingredients"
-							:key="index"
-							@click="1"
-						>
-							<v-list-item-icon v-if="$vuetify.breakpoint.width > 215">
-								<v-avatar size="24"
-									color="grey"
-								>
-									<span class="white--text">{{ ingredient[0].toUpperCase() }}</span>
-								</v-avatar>
-							</v-list-item-icon>
-							<v-list-item-content>
-								<v-list-item-title>
-									{{ ingredient }}
-								</v-list-item-title>
-							</v-list-item-content>
-						</v-list-item>
-					</v-list>
+							<v-fade-transition mode="out-in">
+								<span v-if="$vuetify.breakpoint.width > 200"
+									class="pl-2"
+								>Add to cart</span>
+							</v-fade-transition>
+						</v-btn>
+					</div>
 				</v-col>
 			</v-row>
+			<v-card class="mx-auto mb-4"
+				max-width="800"
+				flat
+			>
+				<v-row class="ma-0 pa-0"
+					justify="center" align="center"
+					no-gutters
+				>
+					<!--more details				-->
+					<v-col cols="12"
+						xl="6"
+						lg="6"
+						md="6"
+						sm="6"
+					>
+						<v-list class="extra-details pt-0">
+							<v-subheader>
+								<v-icon color="blue darken-2">
+									all_inclusive
+								</v-icon>
+								<span class="text-uppercase mx-1 blue--text text--darken-2">More Details</span>
+							</v-subheader>
+							<v-list-item
+								v-for="(extraDetail, index) in getExtraDetailsArray"
+								:key="index"
+								@click="1"
+							>
+								<v-list-item-icon v-if="$vuetify.breakpoint.width > 215">
+									<v-avatar size="24"
+										color="grey"
+									>
+										<span class="white--text">{{ extraDetail.field[0].toUpperCase() }}</span>
+									</v-avatar>
+								</v-list-item-icon>
+								<v-list-item-content>
+									<v-list-item-title>
+										{{ extraDetail.value }}
+									</v-list-item-title>
+									<v-list-item-subtitle class="text-capitalize">
+										{{ extraDetail.field }}
+									</v-list-item-subtitle>
+								</v-list-item-content>
+							</v-list-item>
+							<v-list-item
+								v-for="(exDetail, index) in getBooleanDetailsArray"
+								:key="index+1000"
+								@click="1"
+							>
+								<v-list-item-icon v-if="$vuetify.breakpoint.width > 215">
+									<v-avatar size="24"
+										color="grey"
+									>
+										<span class="white--text">{{ exDetail.field[0].toUpperCase() }}</span>
+									</v-avatar>
+								</v-list-item-icon>
+								<v-list-item-content>
+									<v-list-item-title>{{ exDetail.field }}</v-list-item-title>
+								</v-list-item-content>
+								<v-list-item-action>
+									<v-icon v-if="exDetail.value"
+										color="green"
+									>
+										done
+									</v-icon>
+									<v-icon v-else
+										color="red"
+									>
+										close
+									</v-icon>
+								</v-list-item-action>
+							</v-list-item>
+						</v-list>
+					</v-col>
+					<!--ingredients details				-->
+					<v-col cols="12"
+						xl="6"
+						lg="6"
+						md="6"
+						sm="6"
+					>
+						<v-list class="ingredients-list pt-0 text-right"
+							dense
+						>
+							<div style="font-size: .875rem; padding: 0 16px; height: 40px;"
+								class="d-flex justify-end align-center"
+							>
+								<v-icon color="pink lighten-1">
+									casino
+								</v-icon>
+								<span class="text-uppercase pink--text mx-1">Ingredients</span>
+							</div>
+							<v-row class="ma-0 pa-0"
+								no-gutters
+							>
+								<v-col v-for="(ingredient, index) in item.ingredients"
+									:key="index"
+									cols="6"
+								>
+									<v-list-item
+										@click="1"
+									>
+										<v-list-item-content>
+											<v-list-item-title>
+												{{ ingredient }}
+											</v-list-item-title>
+										</v-list-item-content>
+									</v-list-item>
+								</v-col>
+							</v-row>
+						</v-list>
+					</v-col>
+				</v-row>
+			</v-card>
 		</v-card-text>
-		<v-card-text>
+		<v-card-text class="review-section">
 			<v-row class="ma-0 pa-0"
 				no-gutters
+				align="center"
 			>
 				<v-col
 					cols="12"
@@ -231,21 +279,21 @@
 					md="4"
 					sm="4"
 				>
-					<v-subheader class="d-flex justify-center review-item-subheader">
+					<v-subheader class="d-flex justify-center align-center review-item-subheader">
 						<v-avatar
 							color="grey darken-1"
 							class="elevation-4"
 							:size="
 								$vuetify.breakpoint.width > 600
-									? '40'
-									: '30'
+									? '32'
+									: '20'
 							"
 						>
 							<v-icon dark
 								:size="
 									$vuetify.breakpoint.width > 600
-										? '22'
-										: '18'
+										? '18'
+										: '14'
 								"
 							>
 								rate_review
@@ -346,13 +394,13 @@ export default {
 		getBooleanDetailsArray() {
 			return [
 				{ field: "Vegetarian?", value: this.item.isVeg },
-				{ field: "Available?", value: this.item.isAvailable },
 			]
 		},
 		getStatDetailsArray() {
 			return [
 				{ field: "Total order appearances", value: 50 },
 				{ field: "Total purchases", value: 50 },
+				{ field: "Available?", value: this.item.isAvailable },
 			]
 		}
 	},
@@ -393,16 +441,15 @@ export default {
 	margin-top: -24px;
 }
 .to-cart-avatar {
-	border: 2px solid #3054b0;
-	background: #3054b0;
+	cursor: pointer;
 }
 .reviews {
 	transition: all .3s;
-	font-size: 1.8rem;
-	line-height: 1.8rem;
+	font-size: 1.5rem;
+	line-height: 1.5rem;
 	@media only screen and (max-width: 600px) {
-		font-size: 1.5rem;
-		line-height: 1.5rem;
+		font-size: 1.2rem;
+		line-height: 1.2rem;
 	}
 }
 </style>
@@ -414,4 +461,6 @@ export default {
 .timeline-user-name
 	font-size: 1rem
 	line-height: 1rem
+.review-section
+	background-image: linear-gradient(gold, green)
 </style>
