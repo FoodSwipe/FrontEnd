@@ -12,34 +12,54 @@
 		</template>
 
 		<v-img
+			dark
 			height="200"
 			:src="item.image"
-		/>
-
-		<v-card-title class="item-name">
-			{{ item.name }}
-			<span
-				v-for="(type, index) in item.type"
-				:key="index"
-				class="px-1"
+			gradient="to top, rgba(0,0,0, .3), rgba(0,0,0, .7)"
+			class="cursor"
+			@click="routeToItemDetail()"
+		>
+			<v-row class="fill-height text-center ma-0 pa-0"
+				no-gutters justify="center"
+				align="start"
 			>
-				<v-tooltip bottom>
-					<template #activator="{on, attrs}">
-						<v-avatar
-							class="elevation-1"
-							size="20"
-							v-bind="attrs"
-							v-on="on"
+				<v-card class="mx-auto pa-2"
+					width="100%"
+					color="transparent"
+					flat
+				>
+					<div class="py-0 pb-12 d-flex justify-space-between"
+						style="width: 100%"
+					>
+						<span
+							v-for="(type, index) in item.type"
+							:key="index"
+							class="px-1"
 						>
-							<v-img
-								:src="type.image"
-							/>
-						</v-avatar>
-					</template>
-					<span>{{ type.name }}</span>
-				</v-tooltip>
-			</span>
-		</v-card-title>
+							<v-tooltip bottom>
+								<template #activator="{on, attrs}">
+									<v-avatar
+										class="elevation-1"
+										size="20"
+										v-bind="attrs"
+										v-on="on"
+									>
+										<v-img
+											:src="type.image"
+										/>
+									</v-avatar>
+								</template>
+								<span>{{ type.name }}</span>
+							</v-tooltip>
+						</span>
+					</div>
+
+					<div class="item-name py-0">
+						{{ item.name }}
+					</div>
+				</v-card>
+			</v-row>
+		</v-img>
 
 		<v-card-text class="item-details">
 			<v-row
@@ -47,12 +67,16 @@
 				class="ma-0 pa-0"
 				no-gutters
 			>
-				<v-col cols="10">
-					<div>
-						<span class="rs">Rs</span><span class="item-price">{{ item.price }}</span>
-					</div>
-				</v-col>
-				<v-spacer />
+				<v-fade-transition>
+					<v-col v-if="$vuetify.breakpoint.width > 260"
+						cols="10"
+					>
+						<div>
+							<span class="rs">Rs</span><span class="item-price">{{ item.price }}</span>
+						</div>
+					</v-col>
+				</v-fade-transition>
+				<v-spacer v-if="$vuetify.breakpoint.width > 300" />
 				<v-col cols="2"
 					class="ma-0 pa-0"
 				>
@@ -79,6 +103,8 @@
 	</v-card>
 </template>
 <script>
+import router from "@/router"
+
 export default {
 	name: "StoreItemCard",
 	props: {
@@ -98,6 +124,9 @@ export default {
 
 			setTimeout(() => (this.loading = false), 2000)
 		},
+		routeToItemDetail() {
+			router.push({name: "Product"})
+		}
 	},
 }
 </script>
@@ -105,7 +134,8 @@ export default {
 .item-name {
 	font-size: 1rem;
 	line-height: 1.2rem;
-	padding: 5px 15px 0;
+	font-weight: 500;
+	padding: 0 5px;
 }
 .item-details {
 	padding: 2px 17px 0;

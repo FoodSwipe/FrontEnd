@@ -9,21 +9,39 @@
 			<v-expansion-panel
 				v-for="(group, index) in storeItemGroups"
 				:key="index"
+				dense
+				class="px-0"
 			>
-				<v-expansion-panel-header class="panel-header">
-					{{ group.name }}
+				<v-expansion-panel-header class="panel-header"
+					ripple
+				>
+					<template #default>
+						<v-avatar size="52"
+							max-width="52"
+							style="border: 3px goldenrod solid;"
+							class="elevation-4"
+						>
+							<v-img :src="group.image" />
+						</v-avatar>
+						<span class="pl-2">{{ group.name }}</span>
+					</template>
 				</v-expansion-panel-header>
-				<v-expansion-panel-content>
+				<v-expansion-panel-content
+					class="px-0"
+				>
 					<v-row
+						class="ma-0 pa-0"
 						align="center"
+						no-gutters
 					>
 						<v-col v-for="(item, i) in group.items"
 							:key="i"
-							cols="12"
+							cols="6"
 							xl="2"
 							lg="2"
-							md="3"
-							sm="4"
+							md="2"
+							sm="3"
+							class="pa-2"
 						>
 							<store-item-card
 								:item="item"
@@ -49,6 +67,7 @@ export default {
 				description: "Sed porttitor lectus nibh. Proin eget tortor risus." +
 					" Curabitur aliquet quam id dui posuere blandit. Sed porttitor lectus" +
 					" nibh. Nulla porttitor accumsan tincidunt.",
+				image: "https://cdn-b.william-reed.com/var/wrbm_gb_hospitality/storage/images/publications/hospitality/bighospitality.co.uk/article/2017/12/18/meatcure-burger-group-goes-into-liquidation/2704079-1-eng-GB/Meatcure-burger-group-goes-into-liquidation_wrbm_large.jpg",
 				items: [
 					{
 						name: "Mushroom Burger",
@@ -102,6 +121,7 @@ export default {
 					" Momos are native to Southwest Chinese region of Tibet as well as Bhutan," +
 					" Nepal, North Indian region of Ladakh, Northeast Indian regions of Sikkim," +
 					" Assam, and Arunachal Pradesh, and East Indian region of Darjeeling.",
+				image: "https://siddharthabiz.com/wp-content/uploads/2020/06/chicken-steam-momo.jpg",
 				items: [
 					{
 						name: "Veg Momo",
@@ -211,6 +231,7 @@ export default {
 				description: "Chow mein are Chinese stir-fried noodles with vegetables and sometimes meat or tofu." +
 					" The dish is popular throughout the Chinese diaspora and appears on the menus" +
 					" of most Chinese restaurants abroad.",
+				image: "https://static.toiimg.com/thumb/75455420.cms?imgsize=2101247&width=800&height=800",
 				items: [
 					{
 						name: "Veg Chowmein",
@@ -298,6 +319,7 @@ export default {
 				description: "Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. Praesent sapien massa," +
 					" convallis a pellentesque nec, egestas non nisi. Curabitur non nulla sit amet" +
 					" nisl tempus convallis quis ac lectus.",
+				image: "https://shop.pall.com/INTERSHOP/static/WFS/PALL-PALLUS-Site/-/PALL-PALLUS-pall-smb-responsive/en_US/subcategory-images/Beer-Corporate.jpg",
 				items: [
 					{
 						name: "Ruslan Vodka",
@@ -364,5 +386,8 @@ export default {
 	:hover > & {
 		background-color: #fff7e3;
 	}
+}
+::v-deep.v-expansion-panel-content > div {
+	padding: 0 6px 4px;
 }
 </style>
