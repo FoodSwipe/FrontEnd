@@ -66,6 +66,36 @@ const routes = [
 				name: "Administration",
 				component: () => import("@/views/admin/Home")
 			},
+			{
+				path: "customer",
+				name: "Customer",
+				component: () => import("@/views/admin/customer/Customer")
+			},
+			{
+				path: "order",
+				name: "Order",
+				component: () => import("@/views/admin/order/Order")
+			},
+			{
+				path: "transaction",
+				name: "Transaction",
+				component: () => import("@/views/admin/transaction/Transaction")
+			},
+			{
+				path: "menu-item",
+				name: "Menu Item",
+				component: () =>import("@/views/admin/menu/MenuItem")
+			},
+			{
+				path: "menu-item-group",
+				name: "Menu Item Group",
+				component: () =>import("@/views/admin/menu/MenuItemGroup")
+			},
+			{
+				path: "utilities",
+				name: "Utilities",
+				component: () =>import("@/views/admin/utility/Utilities")
+			},
 		]
 	}
 ]
