@@ -33,6 +33,28 @@ const routes = [
 				name: "Cart",
 				component: () => import("@/views/cart/Cart"),
 			},
+			{
+				path: "order",
+				name: "Order",
+				component: () => import("@/layout/OrderLayout"),
+				children: [
+					{
+						name: "Confirm Order",
+						path: "shipping-confirmation",
+						component: () => import("@/views/cart/OrderConfirmation")
+					},
+					{
+						name: "Confirm Payment",
+						path: "payment-confirmation",
+						component: () => import("@/views/cart/PaymentConfirmation")
+					},
+					{
+						name: "Review Order",
+						path: "review-order",
+						component: () => import("@/views/cart/ReviewOrder")
+					}
+				]
+			},
 		]
 	},
 	{
