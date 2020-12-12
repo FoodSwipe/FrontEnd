@@ -84,6 +84,30 @@
 			</template>
 			<span>Store</span>
 		</v-tooltip>
+		<v-tooltip bottom>
+			<template #activator="{on, attrs}">
+				<v-slide-x-transition>
+					<v-btn
+						icon
+						small
+						class="pr-0 mr-sm-6 mr-md-6 mr-lg-6 mr-xl-6"
+						v-bind="attrs"
+						@click="toAdminPanel()"
+						v-on="on"
+					>
+						<v-icon :size="
+							$vuetify.breakpoint.width > 300
+								? ''
+								: '16'
+						"
+						>
+							settings_applications
+						</v-icon>
+					</v-btn>
+				</v-slide-x-transition>
+			</template>
+			<span>Administration</span>
+		</v-tooltip>
 
 		<v-fade-transition>
 			<v-badge
@@ -141,6 +165,9 @@ export default {
 		toHome() {
 			router.push({name: "Food Swipe"})
 		},
+		toAdminPanel() {
+			router.push({name: "Administration"})
+		}
 	}
 }
 </script>

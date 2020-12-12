@@ -62,8 +62,8 @@ const routes = [
 		component: () => import("@/layout/AdminLayout"),
 		children: [
 			{
-				path: "",
-				name: "Administration Home",
+				path: "home",
+				name: "Administration",
 				component: () => import("@/views/admin/Home")
 			},
 		]
