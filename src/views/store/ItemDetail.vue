@@ -5,219 +5,141 @@
 		flat
 		color="transparent"
 	>
-		<v-row class="ma-0 pa-0"
-			no-gutters
-		>
-			<!--item image column-->
-			<v-col cols="12"
-				xl="8"
-				lg="8"
-				md="8"
-				sm="7"
-			>
-				<transition
-					appear
-					:css="false"
-					@before-enter="beforeEnter"
-					@enter="enter"
-				>
-					<v-img
-						:src="item.image"
-						height="45vh"
-						class="rounded-b"
-					/>
-				</transition>
-				<div class="to-cart-column">
-					<v-avatar v-ripple
-						icon
-						class="to-cart-avatar elevation-4 blue-gradient"
-						size="48"
-					>
-						<v-icon dark>
-							add_shopping_cart
-						</v-icon>
-					</v-avatar>
-				</div>
-				<v-card-title class="pt-0">
-					{{ item.name }}
-					<span
-						v-for="(type, index) in item.type"
-						:key="index"
-						class="px-1"
-					>
-						<v-tooltip bottom>
-							<template #activator="{on, attrs}">
-								<v-avatar
-									class="elevation-1"
-									size="20"
-									v-bind="attrs"
-									v-on="on"
-								>
-									<v-img
-										:src="type.image"
-									/>
-								</v-avatar>
-							</template>
-							<span>{{ type.name }}</span>
-						</v-tooltip>
-					</span>
-				</v-card-title>
-				<v-card-subtitle>
-					<v-icon size="14"
-						color="orange darken-2"
-						class="mr-1"
-					>
-						account_circle
-					</v-icon>John Doe
-					<v-icon size="14"
-						color="teal"
-						class="mr-1"
-					>
-						event_note
-					</v-icon>July 7, 2020
-					<v-icon size="14"
-						color="blue darken-2"
-						class="mr-1"
-					>
-						rate_review
-					</v-icon><u class="dotted-underline mx-1"
-						@click="scrollToReviews()"
-					>5 reviews</u>
-				</v-card-subtitle>
-			</v-col>
-			<!--crucial details				-->
-			<v-col cols="12"
-				xl="4"
-				lg="4"
-				md="4"
-				sm="5"
-			>
-				<v-list two-line
-					class="pt-0"
-					color="transparent"
-				>
-					<v-divider v-if="$vuetify.breakpoint < 600"
-						class="mx-4"
-					/>
-					<transition
-						appear
-						@before-enter="beforeEnterPriceItem"
-						@enter="enterPriceItem"
-					>
-						<v-list-item @click="1">
-							<v-list-item-icon>
-								<v-icon :size="
-										$vuetify.breakpoint.width > 275
-											? '80'
-											: $vuetify.breakpoint.width < 210
-												? '28'
-												: '40'
-									"
-									color="green darken-3"
-								>
-									monetization_on
-								</v-icon>
-							</v-list-item-icon>
-							<v-list-item-content class="pt-0">
-								<v-list-item-title class="price">
-									{{ item.price }}
-								</v-list-item-title>
-								<v-list-item-subtitle>Price(RS)</v-list-item-subtitle>
-							</v-list-item-content>
-						</v-list-item>
-					</transition>
-					<v-divider class="mx-4" />
-					<v-list-item
-						v-for="(statDetail, index) in getStatDetailsArray"
-						:key="index"
-						@click="1"
-					>
-						<v-list-item-icon v-if="$vuetify.breakpoint.width > 215">
-							<v-avatar size="24"
-								color="grey"
-							>
-								<span class="white--text">{{ statDetail.field[0].toUpperCase() }}</span>
-							</v-avatar>
-						</v-list-item-icon>
-						<v-list-item-content>
-							<v-list-item-title>
-								{{ statDetail.value }}
-							</v-list-item-title>
-							<v-list-item-subtitle>{{ statDetail.field }}</v-list-item-subtitle>
-						</v-list-item-content>
-					</v-list-item>
-				</v-list>
-				<div class="actions px-4">
-					<v-btn dark
-						class="peach-gradient"
-						x-large
-						block
-					>
-						<v-icon
-							large
-						>
-							add_shopping_cart
-						</v-icon>
-						<v-fade-transition mode="out-in">
-							<span v-if="$vuetify.breakpoint.width > 240"
-								class="pl-2"
-							>Add to cart</span>
-						</v-fade-transition>
-					</v-btn>
-				</div>
-			</v-col>
-		</v-row>
-		<v-card class="mx-auto mb-4"
-			max-width="800"
+		<v-card color="transparent"
 			flat
-			color="transparent"
 		>
 			<v-row class="ma-0 pa-0"
-				justify="center" align="center"
 				no-gutters
 			>
-				<!--more details				-->
+				<!--item image column-->
 				<v-col cols="12"
 					xl="6"
 					lg="6"
 					md="6"
 					sm="6"
+					class="pt-0 pt-sm-12 pt-md-12 pt-lg-12 pt-xl-12"
 				>
-					<v-list class="extra-details pt-0">
-						<v-subheader>
-							<v-icon color="blue darken-2">
-								all_inclusive
-							</v-icon>
-							<span class="text-uppercase mx-1 blue--text text--darken-2">More Details</span>
-						</v-subheader>
-						<v-list-item
-							v-for="(extraDetail, index) in getExtraDetailsArray"
-							:key="index"
-							@click="1"
+					<transition
+						appear
+						:css="false"
+						@before-enter="beforeEnter"
+						@enter="enter"
+					>
+						<v-img
+							:src="item.image"
+							max-height="70vh"
+							class="rounded-0 rounded-b"
+						/>
+					</transition>
+					<div class="to-cart-column mb-1">
+						<v-avatar v-ripple
+							icon
+							class="to-cart-avatar elevation-4 blue-gradient"
+							size="48"
 						>
-							<v-list-item-icon v-if="$vuetify.breakpoint.width > 215">
-								<v-avatar size="24"
-									color="grey"
+							<v-icon dark>
+								add_shopping_cart
+							</v-icon>
+						</v-avatar>
+					</div>
+				</v-col>
+				<!--crucial details				-->
+				<v-col cols="12"
+					xl="6"
+					lg="6"
+					md="6"
+					sm="6"
+					class="pa-0 pa-sm-6 pa-md-16 pa-lg-16 pa-xl-16"
+				>
+					<v-card-title class="pt-0">
+						{{ item.name }}
+						<span
+							v-for="(type, index) in item.type"
+							:key="index"
+							class="px-1"
+						>
+							<v-tooltip bottom>
+								<template #activator="{on, attrs}">
+									<v-avatar
+										class="elevation-1"
+										size="20"
+										v-bind="attrs"
+										v-on="on"
+									>
+										<v-img
+											:src="type.image"
+										/>
+									</v-avatar>
+								</template>
+								<span>{{ type.name }}</span>
+							</v-tooltip>
+						</span>
+					</v-card-title>
+					<v-list class="extra-details pt-0"
+						dense two-line
+					>
+						<transition
+							appear
+							@before-enter="beforeEnterPriceItem"
+							@enter="enterPriceItem"
+						>
+							<v-list-item>
+								<v-list-item-icon>
+									<v-icon :size="
+											$vuetify.breakpoint.width > 275
+												? '58'
+												: $vuetify.breakpoint.width < 210
+													? '28'
+													: '40'
+										"
+										color="green darken-3"
+									>
+										monetization_on
+									</v-icon>
+								</v-list-item-icon>
+								<v-list-item-content>
+									<v-list-item-title class="price">
+										{{ item.price }}
+									</v-list-item-title>
+									<v-list-item-subtitle>Price (RS)</v-list-item-subtitle>
+								</v-list-item-content>
+							</v-list-item>
+						</transition>
+						<v-row class="ma-0 pa-0"
+							no-gutters
+						>
+							<v-col v-for="(extraDetail, index) in getExtraDetailsArray"
+								:key="index"
+								cols="6"
+							>
+								<v-list-item
+									@click="1"
 								>
-									<span class="white--text">{{ extraDetail.field[0].toUpperCase() }}</span>
-								</v-avatar>
-							</v-list-item-icon>
-							<v-list-item-content>
-								<v-list-item-title>
-									{{ extraDetail.value }}
-								</v-list-item-title>
-								<v-list-item-subtitle class="text-capitalize">
-									{{ extraDetail.field }}
-								</v-list-item-subtitle>
-							</v-list-item-content>
-						</v-list-item>
+									<v-list-item-icon v-if="$vuetify.breakpoint.width > 215">
+										<v-avatar
+											color="grey"
+										>
+											<span class="white--text">{{ extraDetail.field[0].toUpperCase() }}</span>
+										</v-avatar>
+									</v-list-item-icon>
+									<v-list-item-content>
+										<v-list-item-title>
+											{{ extraDetail.value }}
+										</v-list-item-title>
+										<v-list-item-subtitle class="text-capitalize">
+											{{ extraDetail.field }}
+										</v-list-item-subtitle>
+									</v-list-item-content>
+								</v-list-item>
+							</v-col>
+						</v-row>
 						<v-list-item
 							v-for="(exDetail, index) in getBooleanDetailsArray"
 							:key="index+1000"
 							@click="1"
 						>
 							<v-list-item-icon v-if="$vuetify.breakpoint.width > 215">
-								<v-avatar size="24"
+								<v-avatar
 									color="grey"
 								>
 									<span class="white--text">{{ exDetail.field[0].toUpperCase() }}</span>
@@ -240,20 +162,10 @@
 							</v-list-item-action>
 						</v-list-item>
 					</v-list>
-				</v-col>
-				<!--ingredients details				-->
-				<v-col cols="12"
-					xl="6"
-					lg="6"
-					md="6"
-					sm="6"
-				>
-					<v-list class="ingredients-list pt-0 text-right"
+					<v-list class="ingredients-list pt-0"
 						dense
 					>
-						<div style="font-size: .875rem; padding: 0 16px; height: 40px;"
-							class="d-flex justify-end align-center"
-						>
+						<div class="pl-4">
 							<v-icon color="pink lighten-1">
 								casino
 							</v-icon>
@@ -264,7 +176,7 @@
 						>
 							<v-col v-for="(ingredient, index) in item.ingredients"
 								:key="index"
-								cols="6"
+								cols="4"
 							>
 								<v-list-item
 									@click="1"
@@ -278,6 +190,22 @@
 							</v-col>
 						</v-row>
 					</v-list>
+					<div class="actions px-4">
+						<v-btn dark
+							class="peach-gradient"
+							x-large
+							block
+						>
+							<v-icon>
+								add_shopping_cart
+							</v-icon>
+							<v-fade-transition mode="out-in">
+								<span v-if="$vuetify.breakpoint.width > 240"
+									class="pl-2"
+								>Add to cart</span>
+							</v-fade-transition>
+						</v-btn>
+					</div>
 				</v-col>
 			</v-row>
 		</v-card>
@@ -473,16 +401,16 @@ export default {
 .price {
 	transition: all .3s;
 	font-family: 'Yeon Sung', cursive;
-	font-size: 4rem;
-	line-height: 4rem;
+	font-size: 2.4rem !important;
+	line-height: 2.4rem !important;
 	color: green;
 	@media only screen and (max-width: 230px) {
-		font-size: 3rem;
-		line-height: 3rem;
-	}
-	@media only screen and (max-width: 210px) {
 		font-size: 2rem;
 		line-height: 2rem;
+	}
+	@media only screen and (max-width: 210px) {
+		font-size: 1.52rem;
+		line-height: 1.52rem;
 	}
 }
 .to-cart-column {
