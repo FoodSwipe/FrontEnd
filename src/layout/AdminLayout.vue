@@ -135,7 +135,7 @@ export default {
 		drawer: true,
 		drawerItems: [
 			{ title: "Home", icon: "home", to: "/admin/home" },
-			{ title: "Customers", icon: "group", to: "/admin/customer" },
+			{ title: "Users", icon: "group", to: "/admin/user" },
 			{ title: "Orders", icon: "view_list", to: "/admin/order" },
 			{ title: "Transactions", icon: "payment", to: "/admin/transaction" },
 			{ title: "Menu Items", icon: "local_bar", to: "/admin/menu-item" },
