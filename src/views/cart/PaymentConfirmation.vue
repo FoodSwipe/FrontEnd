@@ -41,7 +41,7 @@
 					>
 						<v-avatar color="#eec661"
 							size="84"
-							style="border: 4px solid #eec661"
+							class="golden-rod-border-4"
 						>
 							<v-img
 								src="https://i.gifer.com/EnnH.gif"
@@ -85,7 +85,7 @@
 					>
 						<v-avatar color="#eec661"
 							size="84"
-							style="border: 4px solid #eec661"
+							class="golden-rod-border-4"
 						>
 							<v-img
 								src="https://goingdigitalx.files.wordpress.com/2020/08/mp.gif"

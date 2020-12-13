@@ -18,7 +18,7 @@
 			>
 				<div class="delivered-card" />
 				<v-card-title class="py-0">
-					#{{ order.id }} <span
+					<span class="order-id">#{{ order.id }}</span> <span
 						class="pl-3 order-date"
 					><v-icon small>
 						today
@@ -44,12 +44,17 @@
 						</v-avatar>
 					</v-row>
 					<v-divider />
-					<div class="d-flex align-end pt-2 pb-1 px-3">
+					<div class="d-flex align-end pt-2 pb-1 px-1">
 						<div>
-							<b>Total:</b>
+							<v-icon small>
+								room
+							</v-icon><span class="pl-1">Amarsingh</span>
 						</div>
 						<v-spacer />
-						<div><span>NRS</span><span class="pl-2 headline">1500</span></div>
+						<div>
+							<span class="nrs">NRS</span>
+							<span class="pl-1 g-total">1500</span>
+						</div>
 					</div>
 				</v-card-text>
 			</v-card>
@@ -124,6 +129,15 @@ export default {
 	border-radius: 4px 4px 0 0;
 }
 .order-date {
-	font-size: .7rem; color: grey;
+	font-size: .62rem; color: #bfbfbf;
+}
+.order-id {
+	font-size: 1.1rem;
+}
+.nrs {
+	font-size: .75rem;
+}
+.g-total {
+	font-size: 1rem; color: greenyellow;
 }
 </style>

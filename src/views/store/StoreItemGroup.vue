@@ -18,8 +18,7 @@
 					<template #default>
 						<v-avatar size="52"
 							max-width="52"
-							style="border: 3px goldenrod solid;"
-							class="elevation-4"
+							class="elevation-4 golden-rod-border-3"
 						>
 							<v-img :src="group.image" />
 						</v-avatar>
@@ -384,7 +383,7 @@ export default {
 		line-height: 1rem;
 	}
 	:hover > & {
-		background-color: #fff7e3;
+		background-color: #fffaf0;
 	}
 }
 ::v-deep.v-expansion-panel-content > div {

@@ -28,9 +28,7 @@
 					color="transparent"
 					flat
 				>
-					<div class="py-0 pb-12 d-flex justify-space-between"
-						style="width: 100%"
-					>
+					<div class="py-0 pb-12 d-flex justify-space-between item-type-row">
 						<span
 							v-for="(type, index) in item.type"
 							:key="index"
@@ -155,5 +153,8 @@ export default {
 	font-weight: bold;
 	color: red;
 	padding-right: 4px;
+}
+.item-type-row {
+	width: 100%;
 }
 </style>

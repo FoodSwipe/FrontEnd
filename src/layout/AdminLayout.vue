@@ -80,7 +80,7 @@
 				>
 					<v-avatar
 						size="120"
-						style="border: 4px solid white; margin-top: -55px"
+						class="admin-profile-avatar"
 					>
 						<v-img src="https://randomuser.me/api/portraits/women/85.jpg" />
 					</v-avatar>
@@ -115,7 +115,7 @@
 				</v-list-item>
 			</v-list>
 		</v-navigation-drawer>
-		<v-main style="background: #e0e0da">
+		<v-main class="admin-layout-main">
 			<v-container fluid>
 				<router-view />
 			</v-container>
@@ -153,3 +153,11 @@ export default {
 	}
 }
 </script>
+<style lang="scss" scoped>
+.admin-profile-avatar {
+	border: 4px solid white; margin-top: -55px;
+}
+.admin-layout-main {
+	background: #e0e0da;
+}
+</style>

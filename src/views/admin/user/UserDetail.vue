@@ -5,7 +5,7 @@
 	>
 		<v-card-title class="py-1 d-flex justify-center">
 			<v-avatar size="60"
-				style="border: 3px solid goldenrod"
+				class="golden-rod-border-3"
 			>
 				<v-img src="https://image.freepik.com/free-vector/beard-man-barber-shop-logo-vector-illustration_56473-434.jpg" />
 			</v-avatar><span class="ml-4">John Doe</span>

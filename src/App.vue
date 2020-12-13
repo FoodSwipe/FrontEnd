@@ -11,6 +11,15 @@ export default {
 </script>
 <!--global css variables-->
 <style lang="scss">
+.golden-rod-border-2 {
+	border: 2px solid goldenrod;
+}
+.golden-rod-border-3 {
+	border: 3px solid goldenrod;
+}
+.golden-rod-border-4 {
+	border: 4px solid goldenrod;
+}
 .cursor {
 	cursor: pointer;
 }

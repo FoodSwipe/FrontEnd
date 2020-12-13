@@ -7,25 +7,73 @@
 					align="center"
 					no-gutters
 				>
-					<v-icon class="top-radio">
+					<v-icon class="top-radio"
+						:class="
+							['Confirm Payment', 'Confirm Order', 'Review Order'].includes($route.name)
+								? 'active-radio'
+								: ''
+						"
+					>
 						radio_button_checked
 					</v-icon>
-					<div class="hr" />
-					<v-icon class="top-radio slight-left">
+					<div class="hr"
+						:class="
+							['Confirm Payment', 'Confirm Order', 'Review Order'].includes($route.name)
+								? 'active-hr'
+								: ''
+						"
+					/>
+					<v-icon class="top-radio slight-left"
+						:class="
+							['Confirm Payment', 'Review Order'].includes($route.name)
+								? 'active-radio'
+								: ''
+						"
+					>
 						radio_button_checked
 					</v-icon>
-					<div class="hr" />
-					<v-icon class="top-radio slight-left">
+					<div class="hr"
+						:class="
+							['Confirm Payment', 'Review Order'].includes($route.name)
+								? 'active-hr'
+								: ''
+						"
+					/>
+					<v-icon class="top-radio slight-left"
+						:class="
+							['Review Order'].includes($route.name)
+								? 'active-radio'
+								: ''
+						"
+					>
 						radio_button_checked
 					</v-icon>
-					<div class="hr" />
-					<v-icon class="top-radio slight-left">
+					<div class="hr"
+						:class="
+							['Review Order'].includes($route.name)
+								? 'active-hr'
+								: ''
+						"
+					/>
+					<v-icon class="top-radio slight-left"
+						:class="
+							['Review Order'].includes($route.name)
+								? 'active-radio'
+								: ''
+						"
+					>
 						radio_button_checked
 					</v-icon>
 				</v-row>
-				<span class="top-text">Shipping</span>
-				<span class="mid-padding top-text">Payment</span>
-				<span class="top-text">Review</span>
+				<span class="top-text cursor"
+					@click="routeToOrderShipping()"
+				>Shipping</span>
+				<span class="mid-padding top-text cursor"
+					@click="routeToOrderPayment()"
+				>Payment</span>
+				<span class="top-text cursor"
+					@click="routeToOrderReview()"
+				>Review</span>
 			</div>
 			<div class="custom-shape-divider-bottom-1607775812">
 				<svg data-name="Layer 1"
@@ -48,11 +96,24 @@
 	</div>
 </template>
 <script>
+import router from "@/router"
+
 export default {
 	name: "OrderConfirmation",
 	data: () =>  ({
 		// do something
-	})
+	}),
+	methods: {
+		routeToOrderShipping() {
+			router.push({name: "Confirm Order"})
+		},
+		routeToOrderPayment() {
+			router.push({name: "Confirm Payment"})
+		},
+		routeToOrderReview() {
+			router.push({name: "Review Order"})
+		}
+	}
 }
 </script>
 <style lang="scss" scoped>
@@ -107,6 +168,9 @@ export default {
 	font-size: 1.2rem;
 	@media only screen and (max-width: 475px) {
 		font-size: .875rem;
+	}
+	&:hover {
+		color: #1c3e81;
 	}
 }
 .custom-shape-divider-bottom-1607775812 {

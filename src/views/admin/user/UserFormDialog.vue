@@ -11,8 +11,7 @@
 			<v-app-bar-nav-icon>
 				<v-avatar
 					size="40"
-					class="elevation-10"
-					style="border: 2px solid goldenrod;"
+					class="elevation-10 golden-rod-border-3"
 				>
 					<v-icon
 						size="20"

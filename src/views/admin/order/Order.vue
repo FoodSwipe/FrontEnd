@@ -67,11 +67,11 @@
 							<v-list-item
 								v-for="cartItem in order.items"
 								:key="order.id * cartItem.id"
-								style="height: 30px;"
+								class="order-cart-list-item"
 								@click="1"
 							>
 								<v-list-item-content class="py-0">
-									<v-list-item-title style="font-size: .8rem; font-weight: normal;">
+									<v-list-item-title class="cart-item-name">
 										{{ cartItem.name }}
 									</v-list-item-title>
 								</v-list-item-content>
@@ -218,5 +218,11 @@ export default {
 }
 .order-date {
 	font-size: .7rem; color: grey;
+}
+.order-cart-list-item {
+	height: 30px;
+}
+.cart-item-name {
+	font-size: .8rem; font-weight: normal;
 }
 </style>

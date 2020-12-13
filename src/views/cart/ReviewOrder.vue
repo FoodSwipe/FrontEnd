@@ -40,7 +40,7 @@
 						>
 							<template #append>
 								<v-icon color="#774803"
-									style="transform: rotate(305deg);"
+									class="tilt"
 								>
 									send
 								</v-icon>
@@ -84,5 +84,8 @@ export default {
 		margin: 0 0 50px 0;
 		background-color: transparent;
 	}
+}
+.tilt {
+	transform: rotate(305deg);
 }
 </style>

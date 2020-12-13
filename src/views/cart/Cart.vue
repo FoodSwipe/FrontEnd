@@ -27,9 +27,10 @@
 				lg="8"
 				md="8"
 			>
-				<v-card v-for="(item, index) in desserts"
+				<v-card
+					v-for="(item, index) in desserts"
 					:key="index"
-					class="mb-4"
+					class="mb-4 cart-item-card"
 				>
 					<v-row class="ma-0 pa-0"
 						align="center"
@@ -125,13 +126,12 @@
 					<v-card class="mx-auto"
 						max-width="960"
 					>
-						<v-toolbar class="px-4"
-							color="#FF9800"
+						<v-toolbar class="px-4 orange-gradient"
 							dark
 						>
 							<v-app-bar-nav-icon>
 								<v-avatar color="#fd966d"
-									style="border: 2px #fd966d solid;"
+									class="golden-rod-border-2"
 								>
 									<v-img
 										src="https://image.freepik.com/free-vector/beard-man-barber-shop-logo-vector-illustration_56473-434.jpg"
@@ -151,7 +151,7 @@
 									<v-icon>{{ summaryItem.icon }}</v-icon>
 								</v-list-item-icon>
 								<v-list-item-content>
-									<v-list-item-title style="font-size: 1rem; font-weight: 500;">
+									<v-list-item-title class="summary-item-value">
 										{{ summaryItem.value }}
 									</v-list-item-title>
 									<v-list-item-subtitle>{{ summaryItem.field }}</v-list-item-subtitle>
@@ -159,7 +159,7 @@
 							</v-list-item>
 						</v-list>
 						<v-card-actions>
-							<v-btn class="peach-gradient"
+							<v-btn class="brown-gradient"
 								block
 								large
 								dark
@@ -308,5 +308,14 @@ export default {
 		font-size: 1.2rem;
 		line-height: 1.2rem;
 	}
+}
+.cart-item-card {
+	background-color: #e5e5e5 !important;
+	:hover {
+		background-color: #fff7e3 !important;
+	}
+}
+.summary-item-value {
+	font-size: 1rem; font-weight: 500;
 }
 </style>
