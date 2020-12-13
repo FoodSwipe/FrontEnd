@@ -1,27 +1,9 @@
 <template>
 	<div>
-		<v-snackbar
-			v-model="snack"
-			absolute
-			top
-			right
-			:color="snackColor"
-		>
-			{{ snackText }}
-
-			<template #action="{ attrs }">
-				<v-btn
-					v-bind="attrs"
-					text
-					@click="snack = false"
-				>
-					Close
-				</v-btn>
-			</template>
-		</v-snackbar>
 		<v-app-bar
 			app
 			dark
+			height="58"
 			class="px-2"
 		>
 			<v-app-bar-nav-icon @click="toggleDrawer()">
@@ -53,6 +35,26 @@
 				<span>Home</span>
 			</v-tooltip>
 		</v-app-bar>
+		<v-snackbar
+			v-model="snack"
+			app
+			top
+			right
+			:color="snackColor"
+			class="admin-snackbar"
+		>
+			{{ snackText }}
+
+			<template #action="{ attrs }">
+				<v-btn
+					v-bind="attrs"
+					text
+					@click="snack = false"
+				>
+					Close
+				</v-btn>
+			</template>
+		</v-snackbar>
 		<v-navigation-drawer
 			v-model="drawer"
 			app
@@ -193,5 +195,9 @@ export default {
 }
 .admin-layout-main {
 	background: #e0e0da;
+	min-height: calc(100vh - 54px);
+}
+.admin-snackbar {
+	margin-top: -60px;
 }
 </style>
