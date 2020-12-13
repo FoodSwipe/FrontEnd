@@ -16,7 +16,9 @@
 				<v-icon>delete</v-icon>
 			</v-btn>
 		</v-toolbar>
-		<v-row>
+		<v-row class="ma-0 pa-0"
+			no-gutters
+		>
 			<v-col cols="12">
 				<v-data-table
 					:headers="headers"
@@ -170,6 +172,8 @@
 					</template>
 				</v-data-table>
 				<v-divider />
+			</v-col>
+			<v-col cols="12">
 				<v-list dark>
 					<v-subheader>Summary</v-subheader>
 					<v-row class="ma-0 pa-0"
