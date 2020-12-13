@@ -56,7 +56,24 @@
 						>
 							{{ item.name }}
 							<p class="subtitle-2">
-								non veg
+								<v-avatar tile
+									size="16"
+								>
+									<v-img
+										src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Indian-vegetarian-mark.svg/1200px-Indian-vegetarian-mark.svg.png"
+									/>
+								</v-avatar>
+								<v-avatar
+									color="white"
+									max-width="20"
+									max-height="22"
+									tile
+									class="ml-2"
+								>
+									<v-img
+										src="https://cdna.artstation.com/p/assets/images/images/022/547/676/large/dinh-trang-bui-spicy.jpg?1575846866"
+									/>
+								</v-avatar>
 							</p>
 							<p class="d-flex">
 								<v-btn icon
