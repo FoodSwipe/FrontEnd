@@ -17,8 +17,8 @@ export default {
 .red-gradient {
 	background: linear-gradient(45deg, #580404, #e05757)
 }
-.blue-gradient {
-	background: linear-gradient(45deg, #041958, #3b63dd)
+.our-blue-gradient {
+	background: linear-gradient(45deg, #032466, #3b63dd)
 }
 .orange-gradient {
 	background: linear-gradient(45deg, #582104, #c66c3c)
