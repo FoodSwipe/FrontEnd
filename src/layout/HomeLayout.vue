@@ -1,7 +1,13 @@
 <template>
 	<div>
 		<home-toolbar />
-		<router-view />
+		<v-main class="home-layout">
+			<v-container fluid
+				class="pa-0"
+			>
+				<router-view />
+			</v-container>
+		</v-main>
 		<home-footer />
 	</div>
 </template>
@@ -15,3 +21,9 @@ export default {
 	}
 }
 </script>
+<style scoped lang="scss">
+.home-layout {
+	min-height: calc(100vh - 48px);
+	padding: 0;
+}
+</style>

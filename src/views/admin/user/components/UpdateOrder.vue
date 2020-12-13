@@ -231,12 +231,14 @@
 							md="4"
 							sm="4"
 						>
-							<v-list-item>
+							<v-list-item :class="orderSummaryItem.class">
 								<v-list-item-avatar>
 									<v-avatar color="black"
 										class="elevation-12"
 									>
-										{{ orderSummaryItem.field[0] }}
+										<v-icon size="20">
+											{{ orderSummaryItem.icon }}
+										</v-icon>
 									</v-avatar>
 								</v-list-item-avatar>
 								<v-list-item-content>
@@ -308,11 +310,11 @@ export default {
 		},
 		orderSummaryItems() {
 			return [
-				{field: "Total Items", value: 6},
-				{field: "Sub Total", value: 1500},
-				{field: "Loyalty Discount (%)", value: this.order.loyalty_discount},
-				{field: "Delivery Charge", value: this.order.delivery_charge},
-				{field: "Grand Total", value: 1400}
+				{class: "total-items", field: "Total Items", value: 6, icon: "casino"},
+				{class: "sub-total", field: "Sub Total (NRs)", value: 1500, icon: "shopping_cart"},
+				{class: "loyalty-discount", field: "Loyalty Discount (%)", value: this.order.loyalty_discount, icon: "redeem"},
+				{class: "delivery-charge", field: "Delivery Charge (NRs)", value: this.order.delivery_charge, icon: "local_shipping"},
+				{class: "grand-total", field: "Grand Total (NRs)", value: 1400, icon: "text_fields"}
 			]
 		},
 		removeItemFromOrderCart(orderMenuItem) {
@@ -354,5 +356,19 @@ export default {
 }
 ::v-deep.v-autocomplete:not(.v-input--is-focused).v-select--chips input {
 	max-height: 25px;
+}
+.grand-total {
+	.v-list-item__title {
+		font-size: 1.4rem;
+	}
+}
+.loyalty-discount {
+	.v-list-item__title {
+		font-size: 1.4rem;
+		color: goldenrod;
+	}
+	.v-list-item__subtitle {
+		color: white;
+	}
 }
 </style>

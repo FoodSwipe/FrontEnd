@@ -1,5 +1,6 @@
 <template>
 	<v-app-bar
+		app
 		color="#FFC107"
 		height="58"
 		width="100vw"
