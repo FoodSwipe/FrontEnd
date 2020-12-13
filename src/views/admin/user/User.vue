@@ -3,7 +3,7 @@
 		dark
 		:search="searchUsers"
 		:headers="headers"
-		:items="desserts"
+		:items="users"
 		sort-by="calories"
 		class="elevation-1"
 	>
@@ -90,13 +90,13 @@
 		</template>
 		<!-- eslint-disable-next-line vue/valid-v-slot-->
 		<template #item.is_superuser="{item}">
-			<v-simple-checkbox v-model="item.is_superuser"
+			<v-checkbox v-model="item.is_superuser"
 				color="orange darken-3"
 			/>
 		</template>
 		<!-- eslint-disable-next-line vue/valid-v-slot-->
 		<template #item.is_staff="{item}">
-			<v-simple-checkbox v-model="item.is_staff"
+			<v-checkbox v-model="item.is_staff"
 				color="pink darken-3"
 			/>
 		</template>
@@ -120,7 +120,7 @@ export default {
 			{ text: "Superuser Status", value: "is_superuser" },
 			{ text: "Staff user Status", value: "is_staff" },
 		],
-		desserts: []
+		users: []
 	}),
 
 	created() {
@@ -133,18 +133,12 @@ export default {
 		},
 		openEditUserFormDialog(item) {
 			this.$bus.emit("open-user-form-dialog-edit-item", {
-				editedIndex: this.desserts.indexOf(item),
-				editedItem: Object.assign({}, item),
-			})
-		},
-		openDeleteUserFormDialog(item) {
-			this.$bus.emit("open-user-form-dialog-delete-item", {
-				editedIndex: this.desserts.indexOf(item),
+				editedIndex: this.users.indexOf(item),
 				editedItem: Object.assign({}, item),
 			})
 		},
 		async deleteUser(item) {
-			const index = this.desserts.indexOf(item)
+			const index = this.users.indexOf(item)
 			const reaction = confirm(`Are you sure you want to delete user "${item.username}"?`);
 			if (reaction === true) {
 				await this.$store.dispatch(
@@ -152,14 +146,14 @@ export default {
 					{
 						id: item.id,
 					})
-				this.desserts.splice(index, 1)
+				this.users.splice(index, 1)
 			}
 		},
 		routeToUserDetailPage(itemId) {
 			router.push({name: "User Detail", params: { id: itemId }})
 		},
 		initialize() {
-			this.desserts = [
+			this.users = [
 				{
 					id: 1,
 					f_name: "John",
@@ -226,6 +220,6 @@ export default {
 	},
 }
 </script>
-<style lang="scss" scoped>
+<!--<style lang="scss" scoped>-->
 
-</style>
+<!--</style>-->

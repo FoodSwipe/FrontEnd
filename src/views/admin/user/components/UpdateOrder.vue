@@ -29,45 +29,102 @@
 					<template #top>
 						<v-toolbar
 							flat
+							height="auto"
 						>
-							<v-text-field
-								id="search-user"
-								v-model="searchOrderItems"
-								solo
-								dense
-								clearable
-								hide-details
-								prepend-inner-icon="search"
-								placeholder="Search order items"
-							/>
-							<v-spacer />
-							<v-divider
-								inset
-								vertical
-								class="mx-4"
-							/>
-							<v-btn
-								dark
-								color="primary"
-								@click="openAddItemDialog"
-							>
-								<v-icon
-									dark
-									:class="$vuetify.breakpoint.smAndUp ? 'mr-2' : ''"
+							<template #default>
+								<v-row class="ma-0 pa-0"
+									align="center"
+									no-gutters
 								>
-									add_circle
-								</v-icon>
-								<span v-if="$vuetify.breakpoint.smAndUp">Add Items</span>
-							</v-btn>
+									<v-col cols="12"
+										xl="4"
+										lg="4"
+										md="4"
+										sm="4"
+									>
+										<v-text-field
+											id="search-user"
+											v-model="searchOrderItems"
+											solo
+											dense
+											clearable
+											hide-details
+											prepend-inner-icon="search"
+											placeholder="Search order items"
+										/>
+									</v-col>
+									<v-fade-transition>
+										<v-col
+											v-if="$vuetify.breakpoint.width > 600"
+											cols="1"
+											class="d-flex justify-center"
+										>
+											<div class="divider-search-inset" />
+										</v-col>
+									</v-fade-transition>
+									<v-col cols="12"
+										xl="7"
+										lg="7"
+										md="7"
+										sm="7"
+									>
+										<v-autocomplete
+											v-model="friends"
+											:disabled="isUpdating"
+											:items="people"
+											filled
+											chips
+											color="blue darken-2"
+											placeholder="Select menu item"
+											item-text="name"
+											item-value="name"
+											multiple
+											prepend-inner-icon="emoji_food_beverage"
+											hide-details="auto"
+											attach=""
+											clearable
+										>
+											<template #selection="data">
+												<v-chip
+													v-bind="data.attrs"
+													:input-value="data.selected"
+													close
+													@click="data.select"
+													@click:close="remove(data.item)"
+												>
+													<v-avatar left>
+														<v-img :src="data.item.avatar" />
+													</v-avatar>
+													{{ data.item.name }}
+												</v-chip>
+											</template>
+											<template #item="data">
+												<template v-if="typeof data.item !== 'object'">
+													<v-list-item-content v-text="data.item" />
+												</template>
+												<template v-else>
+													<v-list-item-avatar>
+														<img :src="data.item.avatar">
+													</v-list-item-avatar>
+													<v-list-item-content>
+														<v-list-item-title v-html="data.item.name" />
+														<v-list-item-subtitle v-html="data.item.group" />
+													</v-list-item-content>
+												</template>
+											</template>
+										</v-autocomplete>
+									</v-col>
+								</v-row>
+							</template>
 						</v-toolbar>
 					</template>
 					<!-- eslint-disable-next-line vue/valid-v-slot-->
 					<template #item.name="{ item }">
-						{{ item.menu_item.name }}
+						{{ item.name }}
 					</template>
 					<!-- eslint-disable-next-line vue/valid-v-slot-->
 					<template #item.subTotal="{ item }">
-						{{ item.menu_item.price * item. quantity }}
+						{{ getPriceOfItem(item.name) * item. quantity }}
 					</template>
 					<!-- eslint-disable-next-line vue/valid-v-slot-->
 					<template #item.actions="{ item }">
@@ -109,13 +166,99 @@
 						</v-edit-dialog>
 					</template>
 				</v-data-table>
+				<v-divider />
+				<v-list dark>
+					<v-subheader>Summary</v-subheader>
+					<v-row class="ma-0 pa-0"
+						no-gutters
+					>
+						<v-col cols="12"
+							class="pa-2"
+						>
+							<v-text-field
+								v-model="order.location"
+								filled
+								label="Delivery Location"
+								clearable
+								prepend-inner-icon="explore"
+								hide-details="auto"
+							/>
+						</v-col>
+						<v-col cols="12"
+							xl="6"
+							lg="6"
+							md="6"
+							sm="6"
+							class="pa-2"
+						>
+							<v-text-field
+								v-model="order.delivery_charge"
+								filled
+								label="Delivery Charge"
+								type="number"
+								prepend-inner-icon="money"
+								hide-details="auto"
+							/>
+						</v-col>
+						<v-col cols="12"
+							xl="6"
+							lg="6"
+							md="6"
+							sm="6"
+							class="pa-2"
+						>
+							<v-text-field
+								v-model="order.loyalty_discount"
+								filled
+								label="Loyalty Discount (%)"
+								type="number"
+								prepend-inner-icon="emoji_symbols"
+								hide-details="auto"
+							/>
+						</v-col>
+						<v-col v-for="(orderSummaryItem, index) in orderSummaryItems()"
+							:key="index"
+							cols="12"
+							xl="4"
+							lg="4"
+							md="4"
+							sm="4"
+						>
+							<v-list-item>
+								<v-list-item-avatar>
+									<v-avatar color="black"
+										class="elevation-12"
+									>
+										{{ orderSummaryItem.field[0] }}
+									</v-avatar>
+								</v-list-item-avatar>
+								<v-list-item-content>
+									<v-list-item-title>
+										{{ orderSummaryItem.value }}
+									</v-list-item-title>
+									<v-list-item-subtitle>
+										{{ orderSummaryItem.field }}
+									</v-list-item-subtitle>
+								</v-list-item-content>
+							</v-list-item>
+						</v-col>
+					</v-row>
+				</v-list>
+			</v-col>
+			<v-col cols="12">
+				<v-btn block
+					large
+				>
+					<v-icon>save</v-icon><span class="pl-2">Update Order</span>
+				</v-btn>
 			</v-col>
 		</v-row>
 		<v-divider />
 		<v-snackbar
-			v-model="updateOrderSnack"
+			v-model="snack"
 			:timeout="3000"
 			:color="snackColor"
+			bottom
 		>
 			{{ snackText }}
 
@@ -132,12 +275,14 @@
 	</v-card>
 </template>
 <script>
+import helper from "@/Helper"
+
 export default {
 	name: "UpdateUserOrderByAdminComponent",
 	data: () => ({
 		searchOrderItems: "",
-		addItemDialog: false,
-		updateOrderSnack: false,
+		isUpdating: false,
+		snack: false,
 		snackColor: "",
 		snackText: "",
 		headers: [
@@ -149,27 +294,60 @@ export default {
 		order: {
 			id: 55896,
 			items: [
-				{id: 5, menu_item: { name: "Veg Momo", price: 150 }, quantity: 1},
-				{id: 6, menu_item: { name: "Buff Momo", price: 150 }, quantity: 2},
-				{id: 7, menu_item: { name: "Chicken Chowmein", price: 150 }, quantity: 3},
+				{id: 5, name: "Veg Momo", quantity: 1},
+				{id: 6, name: "Buff Momo", quantity: 2},
+				{id: 7, name: "Chicken Chowmein", quantity: 3},
+			],
+			delivery_charge: 150,
+			loyalty_discount: 15,
+			location: "Lorem, ipsum - 16 Sed"
+		},
+		friends: [],
+	}),
+	computed: {
+		people() {
+			return helper.returnMockMenuItems()
+		},
+		srcs() {
+			return helper.returnMockSrcs()
+		}
+	},
+	methods: {
+		getPriceOfItem(item) {
+			const priceMenu = {
+				"Veg Momo": 100,
+				"Buff Momo": 200,
+				"Chicken Chowmein": 150,
+			}
+			return priceMenu[item]
+		},
+		orderSummaryItems() {
+			return [
+				{field: "Total Items", value: 6},
+				{field: "Sub Total", value: 1500},
+				{field: "Loyalty Discount (%)", value: this.order.loyalty_discount},
+				{field: "Delivery Charge", value: this.order.delivery_charge},
+				{field: "Grand Total", value: 1400}
 			]
 		},
-	}),
-	methods: {
 		removeItemFromOrderCart(orderMenuItem) {
 			const index = this.order.items.indexOf(orderMenuItem)
 			this.order.items.splice(index, 1)
+			this.snack = true
+			this.snackColor = "error"
+			this.snackText = orderMenuItem.name + " removed from cart."
 		},
-		openAddItemDialog() {
-			this.addItemDialog = true
+		remove(item) {
+			const index = this.friends.indexOf(item.name)
+			if (index >= 0) this.friends.splice(index, 1)
 		},
 		updateQuantity() {
-			this.updateOrderSnack = true
+			this.snack = true
 			this.snackColor = "success"
 			this.snackText = "Quantity updated successfully."
 		},
 		cancelQuantityUpdate() {
-			this.updateOrderSnack = true
+			this.snack = true
 			this.snackColor = "error"
 			this.snackText = "Quantity update aborted."
 		},
@@ -182,3 +360,14 @@ export default {
 	}
 }
 </script>
+<style lang="scss" scoped>
+.divider-search-inset {
+	height: 40px;
+	width: 2px;
+	background: #4a4a4a;
+	border-radius: 10px;
+}
+::v-deep.v-autocomplete:not(.v-input--is-focused).v-select--chips input {
+	max-height: 25px;
+}
+</style>
