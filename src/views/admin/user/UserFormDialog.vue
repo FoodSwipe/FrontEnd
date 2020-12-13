@@ -7,39 +7,44 @@
 		open-delay="1000"
 		transition="dialog-bottom-transition"
 	>
-		<v-card
-			class="zero-border-radius"
-			color="rgb(251 250 241)"
-		>
-			<v-card-title class="sticky-dialog-top">
+		<v-toolbar dark>
+			<v-app-bar-nav-icon>
 				<v-avatar
 					size="40"
-					class="mr-4 elevation-3"
+					class="elevation-10"
+					style="border: 2px solid goldenrod;"
 				>
 					<v-icon
-						dark
-						size="22"
+						size="20"
 					>
 						{{ formIcon }}
 					</v-icon>
 				</v-avatar>
-				<span class="form-title">{{ formTitle }}</span>
-				<v-spacer />
-				<span>
-					<v-btn
-						icon
-						style="background: grey;"
-						@click="close"
-					>
-						<v-icon color="white">close</v-icon>
-					</v-btn>
-				</span>
-			</v-card-title>
+			</v-app-bar-nav-icon>
+			<v-toolbar-title class="form-title">
+				{{ formTitle }}
+			</v-toolbar-title>
+			<v-spacer />
+			<v-btn
+				icon
+				@click="close"
+			>
+				<v-icon>
+					close
+				</v-icon>
+			</v-btn>
+		</v-toolbar>
+		<v-card
+			class="rounded"
+			color="rgb(251 250 241)"
+		>
 			<v-card flat
 				max-width="800"
 				class="mx-auto" color="transparent"
 			>
-				<v-row class="ma-0 pa-0"
+				<v-row
+					v-show="editedIndex !== -1"
+					class="ma-0 pa-0"
 					justify="center" align="center"
 				>
 					<v-col cols="12"
@@ -47,12 +52,12 @@
 						lg="4"
 						md="4"
 						sm="4"
+						class="text-center"
 					>
 						<v-avatar
 							size="180"
 						>
 							<v-img
-								v-if="editedIndex !== -1"
 								:src="editedItem.image"
 							/>
 						</v-avatar>
@@ -64,7 +69,6 @@
 						sm="8"
 					>
 						<v-list
-							v-show="editedIndex !== -1"
 							class="pa-0 mt-3"
 						>
 							<v-list-item>
@@ -77,7 +81,6 @@
 										<v-tooltip bottom>
 											<template #activator="{ on, attrs }">
 												<v-icon
-													v-ripple
 													v-bind="attrs"
 													color="green darken-1"
 													v-on="on"
@@ -158,23 +161,98 @@
 							>
 								account_circle
 							</v-icon>
-							Personal Information
+							Account Information
 						</p>
 						<v-divider class="pb-2" />
 					</v-col>
 					<v-col
 						cols="12"
-						class="ma-0 pa-0"
+						xl="6"
+						lg="6"
+						md="6"
+						sm="6"
+						class="ma-0 pa-0 pr-sm-2 pr-md-2 pr-lg-2 pr-xl-2"
 					>
 						<v-text-field
-							id="branch-name"
-							v-model="editedItem.name"
+							id="username"
+							v-model="editedItem.username"
 							class="ma-0"
 							outlined
 							dense
 							clearable
-							label="Name"
-							prepend-inner-icon="mdi-form-textbox"
+							label="Username"
+							prepend-inner-icon="account_circle"
+						/>
+					</v-col>
+					<v-col
+						cols="12"
+						xl="6"
+						lg="6"
+						md="6"
+						sm="6"
+						class="ma-0 pa-0"
+					>
+						<v-text-field
+							id="email"
+							v-model="editedItem.email"
+							class="ma-0 pl-sm-2 pl-md-2 pl-lg-2 pl-xl-2"
+							outlined
+							dense
+							clearable
+							label="Email address"
+							prepend-inner-icon="alternate_email"
+						/>
+					</v-col>
+					<v-col
+						cols="12"
+						class="pl-0"
+					>
+						<p class="heading ma-0 pa-0">
+							<v-icon class="pb-1"
+								size="30"
+							>
+								face
+							</v-icon>
+							Profile Information
+						</p>
+						<v-divider class="pb-2" />
+					</v-col>
+					<v-col
+						cols="12"
+						xl="6"
+						lg="6"
+						md="6"
+						sm="6"
+						class="ma-0 pa-0"
+					>
+						<v-text-field
+							id="first-name"
+							v-model="editedItem.f_name"
+							class="ma-0 pr-sm-2 pr-md-2 pr-lg-2 pr-xl-2"
+							outlined
+							dense
+							clearable
+							label="First name"
+							prepend-inner-icon="title"
+						/>
+					</v-col>
+					<v-col
+						cols="12"
+						xl="6"
+						lg="6"
+						md="6"
+						sm="6"
+						class="ma-0 pa-0"
+					>
+						<v-text-field
+							id="last-name"
+							v-model="editedItem.l_name"
+							class="ma-0 pl-sm-2 pl-md-2 pl-lg-2 pl-xl-2"
+							outlined
+							dense
+							clearable
+							label="Last name"
+							prepend-inner-icon="title"
 						/>
 					</v-col>
 					<v-col
@@ -196,31 +274,7 @@
 							dense
 							attach=""
 							clearable
-							prepend-inner-icon="mdi-phone-classic"
-						/>
-					</v-col>
-					<v-col
-						cols="12"
-						class="ma-0 pa-0 checkbox-input-column"
-					>
-						<v-checkbox
-							id="is_main"
-							v-model="editedItem.is_main"
-							label="Is Main Branch?"
-							append-icon="mdi-map-marker-star-outline"
-							hide-details="auto"
-						/>
-					</v-col>
-					<v-col
-						cols="12"
-						class="ma-0 pa-0 checkbox-input-column"
-					>
-						<v-checkbox
-							id="is_approved"
-							v-model="editedItem.is_approved"
-							label="Approval Status"
-							append-icon="mdi-check-circle"
-							hide-details="auto"
+							prepend-inner-icon="contact_phone"
 						/>
 					</v-col>
 					<v-col
@@ -228,7 +282,7 @@
 						class="ma-0 pa-0"
 					>
 						<v-file-input
-							id="member-image-input"
+							id="user-image-input"
 							v-model="editedItem.imageForUpload"
 							class="ma-0"
 							outlined
@@ -236,11 +290,27 @@
 							small-chips
 							show-size
 							accept="image/*"
-							label="Branch Image"
+							label="Profile Image"
 							clearable
 							multiple
 							prepend-icon=""
-							prepend-inner-icon="mdi-camera"
+							prepend-inner-icon="camera"
+						/>
+					</v-col>
+					<v-col
+						cols="12"
+						class="ma-0 pa-0"
+					>
+						<v-textarea
+							id="user-bio"
+							v-model="editedItem.bio"
+							class="ma-0"
+							outlined
+							dense
+							counter
+							label="Bio"
+							clearable
+							prepend-inner-icon="info"
 						/>
 					</v-col>
 					<v-col
@@ -251,226 +321,38 @@
 							<v-icon class="pb-1"
 								size="30"
 							>
-								mdi-map-marker
+								vpn_key
 							</v-icon>
-							Location Information
+							Permissions Information
 						</p>
 						<v-divider class="pb-2" />
 					</v-col>
 					<v-col
-						id="country-input-column"
 						cols="12"
-						class="ma-0 pa-0"
+						class="ma-0 pa-0 checkbox-input-column"
 					>
-						<v-autocomplete
-							id="event-country"
-							v-model="editedItem.country"
-							loading="countriesLoading"
-							class="ma-0"
-							allow-overflow
-							dense
-							cache-items
-							item-text="name"
-							item-value="id"
-							:items="countries"
-							attach=""
-							outlined
-							label="Country"
-							clearable
-							prepend-inner-icon="mdi-web"
-						>
-							<template #no-data>
-								<v-list-item>
-									<v-list-item-title>
-										No <code>country</code> found.
-									</v-list-item-title>
-								</v-list-item>
-							</template>
-						</v-autocomplete>
+						<v-checkbox
+							id="is_main"
+							v-model="editedItem.is_superuser"
+							label="Is super user?"
+							append-icon="stars"
+							hide-details="auto"
+						/>
 					</v-col>
 					<v-col
 						cols="12"
-						class="ma-0 pa-0"
+						class="ma-0 pa-0 checkbox-input-column"
 					>
-						<v-autocomplete
-							id="event-province"
-							v-model="editedItem.province"
-							loading="provincesLoading"
-							class="ma-0"
-							allow-overflow
-							dense
-							cache-items
-							outlined
-							attach=""
-							label="Province"
-							item-text="name"
-							item-value="id"
-							:items="provinces"
-							clearable
-							prepend-inner-icon="mdi-office-building-marker-outline"
+						<v-checkbox
+							id="is_main"
+							v-model="editedItem.is_staff"
+							label="Is staff user?"
+							hide-details="auto"
 						>
-							<template #no-data>
-								<v-list-item>
-									<v-list-item-title>
-										No <code>provinces</code> found.
-									</v-list-item-title>
-								</v-list-item>
+							<template #append>
+								<v-icon>account_circle</v-icon>
 							</template>
-						</v-autocomplete>
-					</v-col>
-					<v-col
-						cols="12"
-						class="ma-0 pa-0"
-					>
-						<v-autocomplete
-							id="event-districts"
-							v-model="editedItem.district"
-							loading="districtsLoading"
-							cache-items
-							item-text="name"
-							item-value="id"
-							class="ma-0"
-							allow-overflow
-							dense
-							outlined
-							attach=""
-							:items="districts"
-							label="District"
-							clearable
-							prepend-inner-icon="mdi-map-marker-multiple-outline"
-						>
-							<template #no-data>
-								<v-list-item>
-									<v-list-item-title>
-										No <code>district</code> found.
-									</v-list-item-title>
-								</v-list-item>
-							</template>
-						</v-autocomplete>
-					</v-col>
-					<v-col
-						cols="12"
-						class="ma-0 pa-0"
-					>
-						<v-autocomplete
-							id="event-municipality"
-							v-model="editedItem.municipality"
-							loading="municipalitiesLoading"
-							cache-items
-							item-text="name"
-							item-value="id"
-							class="ma-0"
-							allow-overflow
-							dense
-							outlined
-							attach=""
-							label="Municipality"
-							:items="municipalities"
-							clearable
-							prepend-inner-icon="mdi-google-maps"
-							:disabled="editedItem.vdc > 0"
-						>
-							<template #no-data>
-								<v-list-item>
-									<v-list-item-title>
-										No <code>municipality</code> found.
-									</v-list-item-title>
-								</v-list-item>
-							</template>
-						</v-autocomplete>
-					</v-col>
-					<v-col
-						cols="12"
-						class="ma-0 pa-0"
-					>
-						<v-autocomplete
-							id="event-municipality-ward"
-							v-model="editedItem.municipality_ward"
-							loading="municipalityWardsLoading"
-							item-text="name"
-							item-value="id"
-							class="ma-0"
-							allow-overflow
-							cache-items
-							dense
-							outlined
-							clearable
-							attach=""
-							label="Municipality Ward"
-							:items="municipality_wards"
-							:disabled="editedItem.vdc > 0"
-							prepend-inner-icon="mdi-numeric"
-						>
-							<template #no-data>
-								<v-list-item>
-									<v-list-item-title>
-										No <code>municipality ward</code> found.
-									</v-list-item-title>
-								</v-list-item>
-							</template>
-						</v-autocomplete>
-					</v-col>
-					<v-col
-						cols="12"
-						class="ma-0 pa-0"
-					>
-						<v-autocomplete
-							id="event-vdc"
-							v-model="editedItem.vdc"
-							loading="vdcsLoading"
-							cache-items
-							item-text="name"
-							item-value="id"
-							allow-overflow
-							class="ma-0"
-							dense
-							attach=""
-							outlined
-							label="VDC"
-							:items="vdcs"
-							clearable
-							prepend-inner-icon="mdi-home-map-marker"
-							:disabled="editedItem.municipality > 0"
-						>
-							<template #no-data>
-								<v-list-item>
-									<v-list-item-title>
-										No <code>vdc</code> found.
-									</v-list-item-title>
-								</v-list-item>
-							</template>
-						</v-autocomplete>
-					</v-col>
-					<v-col
-						cols="12"
-						class="ma-0 pa-0 event-vdc-col"
-					>
-						<v-autocomplete
-							id="event-vdc-ward"
-							v-model="editedItem.vdc_ward"
-							loading="vdcWardsLoading"
-							item-text="name"
-							item-value="id"
-							class="ma-0"
-							allow-overflow
-							cache-items
-							dense
-							outlined
-							clearable
-							attach=""
-							label="VDC Ward"
-							:items="vdc_wards"
-							:disabled="editedItem.municipality > 0"
-							prepend-inner-icon="mdi-numeric"
-						>
-							<template #no-data>
-								<v-list-item>
-									<v-list-item-title>
-										No <code>vdc ward</code> found.
-									</v-list-item-title>
-								</v-list-item>
-							</template>
-						</v-autocomplete>
+						</v-checkbox>
 					</v-col>
 					<v-col cols="12"
 						class="pb-16"
@@ -514,7 +396,11 @@ export default {
 			f_name: "",
 			l_name: "",
 			email: "",
-			phone: null,
+			username: "",
+			bio: "",
+			contacts: [],
+			birth_date: null,
+			current_city: "",
 			address: "",
 			is_superuser: false,
 			is_staff: false,
@@ -593,14 +479,12 @@ export default {
 }
 </script>
 <style lang="sass" scoped>
-.zero-border-radius
-	border-radius: 0
-
-	.sticky-dialog-top
-		position: sticky
-		position: -webkit-sticky
-		top: 0
-		z-index: 200
+.sticky-dialog-top
+	position: sticky
+	position: -webkit-sticky
+	top: 0
+	z-index: 200
+	height: 55px
 
 .form-title
 	color: white
@@ -608,24 +492,8 @@ export default {
 	@media only screen and (max-width: 255px)
 		display: none
 
-.v-input--selection-controls
-	margin-top: 0
-
-.small-detail-icon
-	margin-top: -4px
-	margin-right: 4px
-
 .v-card__title
 	background-color: #535151 !important
-
-.branch-name
-	margin: 0
-	padding: 0
-	font-size: 18px
-	font-weight: 300
-
-.cursor
-	cursor: pointer
 
 .checkbox-input-column
 	::v-deep.v-input--checkbox

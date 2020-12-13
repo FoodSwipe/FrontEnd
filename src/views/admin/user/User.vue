@@ -58,7 +58,7 @@
 		</template>
 		<!-- eslint-disable-next-line vue/valid-v-slot-->
 		<template #item.username="{item}">
-			<span style="cursor: pointer;"
+			<span class="cursor"
 				@click="routeToUserDetailPage(item.id)"
 			>{{ item.username }}</span>
 		</template>
@@ -115,7 +115,7 @@ export default {
 		headers: [
 			{ text: "Actions", value: "actions", sortable: false, align: "center" },
 			{ text: "Username", value: "username", align: "start"},
-			{ text: "Phone", value: "phone" },
+			{ text: "Phone", value: "contacts" },
 			{ text: "Address", value: "address" },
 			{ text: "Superuser Status", value: "is_superuser" },
 			{ text: "Staff user Status", value: "is_staff" },
@@ -166,7 +166,7 @@ export default {
 					l_name: "Doe",
 					username: "foodLover",
 					email: "foo@bar.com",
-					phone: 9854159951,
+					contacts: [9854159951, 9856000000,],
 					address: "Lorem ipsum dolar met",
 					created_at: "June 5, 2020",
 					is_superuser: false,
@@ -179,7 +179,7 @@ export default {
 					l_name: "Williams",
 					username: "goSandra",
 					email: "foo@goo.com",
-					phone: 9854159951,
+					contacts: [9854159951, 9856000000,],
 					address: "Lorem ipsum dolar met",
 					created_at: "June 5, 2020",
 					is_superuser: false,
@@ -191,7 +191,7 @@ export default {
 					l_name: "Ali",
 					username: "octagon345",
 					email: "sar@lar.com",
-					phone: 9854159951,
+					contacts: [9854159951, 9856000000,],
 					address: "Lorem ipsum dolar met",
 					created_at: "June 5, 2020",
 					is_superuser: false,
@@ -203,7 +203,7 @@ export default {
 					l_name: "Messi",
 					username: "heroUser",
 					email: "par@kar.com",
-					phone: 9854159951,
+					contacts: [9854159951, 9856000000,],
 					address: "Lorem ipsum dolar met",
 					created_at: "June 5, 2020",
 					is_superuser: true,
@@ -215,7 +215,7 @@ export default {
 					l_name: "McGregor",
 					username: "rocky123",
 					email: "hel@sel.com",
-					phone: 9854159951,
+					contacts: [9854159951, 9856000000,],
 					address: "Lorem ipsum dolar met",
 					created_at: "June 5, 2020",
 					is_superuser: false,

@@ -105,7 +105,11 @@ export default {
 </script>
 <style lang="scss" scoped>
 .delivery-details-card {
+	transition: all .3s ease;
 	margin: -180px 0 20px 0;
 	background-color: #ffc1072b;
+	@media only screen and (max-width: 475px) {
+		margin: -50px 0 20px 0;
+	}
 }
 </style>

@@ -34,7 +34,7 @@
 					<div class="to-cart-column mb-1">
 						<v-avatar v-ripple
 							icon
-							class="to-cart-avatar elevation-4 blue-gradient"
+							class="cursor elevation-4 blue-gradient"
 							size="48"
 						>
 							<v-icon dark>
@@ -393,11 +393,6 @@ export default {
 .item-detail-card {
 	scroll-behavior: smooth;
 }
-.dotted-underline {
-	cursor: pointer;
-	border-bottom: 2px dotted darkslategrey;
-	text-decoration: none;
-}
 .price {
 	transition: all .3s;
 	font-family: 'Yeon Sung', cursive;
@@ -417,9 +412,6 @@ export default {
 	display: flex;
 	justify-content: center;
 	margin-top: -24px;
-}
-.to-cart-avatar {
-	cursor: pointer;
 }
 .reviews {
 	transition: all .3s;

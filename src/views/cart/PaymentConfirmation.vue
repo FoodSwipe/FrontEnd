@@ -11,18 +11,24 @@
 		</v-card-subtitle>
 		<v-divider class="mx-4" />
 		<v-card-text>
-			<v-card color="peach-gradient"
-				min-height="100"
-			>
-				<v-row class="ma-0 pa-0"
+			<v-card color="peach-gradient">
+				<v-row class="ma-0 pa-0 py-4 fill-height"
 					justify="center" align="center"
+					no-gutters
 				>
-					<v-col cols="1">
+					<v-col cols="2"
+						class="d-flex justify-center"
+					>
 						<v-checkbox v-model="isCashOnDeliverySelected"
 							color="black"
 						/>
 					</v-col>
-					<v-col cols="8">
+					<v-col cols="10"
+						xl="7"
+						lg="7"
+						md="7"
+						sm="7"
+					>
 						<v-card-title>Cash on delivery</v-card-title>
 						<v-card-subtitle>Pay at your doorstep</v-card-subtitle>
 					</v-col>
@@ -31,7 +37,7 @@
 						lg="3"
 						md="3"
 						sm="3"
-						class="d-flex justify-center"
+						class="d-flex justify-center align-center"
 					>
 						<v-avatar color="#eec661"
 							size="84"
@@ -46,18 +52,25 @@
 			</v-card>
 			<v-card color="purple-gradient"
 				class="mt-6"
-				min-height="100"
 			>
-				<v-row class="ma-0 pa-0"
+				<v-row class="ma-0 pa-0 py-4 fill-height"
 					justify="center" align="center"
+					no-gutters
 				>
-					<v-col cols="1">
+					<v-col cols="2"
+						class="d-flex justify-center"
+					>
 						<v-checkbox v-model="isOnlinePaymentSelected"
 							color="black"
 							disabled
 						/>
 					</v-col>
-					<v-col cols="8">
+					<v-col cols="10"
+						xl="7"
+						lg="7"
+						md="7"
+						sm="7"
+					>
 						<v-card-title>Online Payment System</v-card-title>
 						<v-card-subtitle>
 							Under construction
@@ -68,7 +81,7 @@
 						lg="3"
 						md="3"
 						sm="3"
-						class="d-flex justify-center"
+						class="d-flex justify-center align-center"
 					>
 						<v-avatar color="#eec661"
 							size="84"

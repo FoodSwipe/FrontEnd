@@ -41,7 +41,7 @@
 						v-show="$route.name !== 'Profile'"
 						icon
 						small
-						class="pr-0 mr-sm-6 mr-md-6 mr-lg-6 mr-xl-6 profile-avatar"
+						class="pr-0 mr-sm-6 mr-md-6 mr-lg-6 mr-xl-6 profile-avatar cursor"
 						v-bind="attrs"
 						@click="toProfile()"
 						v-on="on"
@@ -207,6 +207,5 @@ export default {
 		font-size: .8rem
 		line-height: .8rem
 .profile-avatar
-	cursor: pointer
 	border: 2px solid white
 </style>
