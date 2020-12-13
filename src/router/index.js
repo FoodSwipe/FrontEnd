@@ -78,7 +78,7 @@ const routes = [
 			},
 			{
 				path: "order",
-				name: "Order",
+				name: "Order Administration",
 				component: () => import("@/views/admin/order/Order")
 			},
 			{

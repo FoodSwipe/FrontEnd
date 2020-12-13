@@ -70,6 +70,7 @@
 									>
 										<v-autocomplete
 											v-model="friends"
+											dark
 											:disabled="isUpdating"
 											:items="people"
 											filled
@@ -86,11 +87,12 @@
 										>
 											<template #selection="data">
 												<v-chip
+													dark
 													v-bind="data.attrs"
 													:input-value="data.selected"
 													close
 													@click="data.select"
-													@click:close="remove(data.item)"
+													@click:close="removeItemFromAutoComplete(data.item)"
 												>
 													<v-avatar left>
 														<v-img :src="data.item.avatar" />
@@ -104,11 +106,11 @@
 												</template>
 												<template v-else>
 													<v-list-item-avatar>
-														<img :src="data.item.avatar">
+														<v-img :src="data.item.avatar" />
 													</v-list-item-avatar>
 													<v-list-item-content>
-														<v-list-item-title v-html="data.item.name" />
-														<v-list-item-subtitle v-html="data.item.group" />
+														<v-list-item-title>{{ data.item.name }}</v-list-item-title>
+														<v-list-item-subtitle>{{ data.item.group }}</v-list-item-subtitle>
 													</v-list-item-content>
 												</template>
 											</template>
@@ -150,6 +152,7 @@
 						<v-edit-dialog
 							v-model:return-value="props.item.quantity"
 							dark
+							persistent
 							@save="updateQuantity"
 							@cancel="cancelQuantityUpdate"
 							@open="openUpdateQuantityEditDialog"
@@ -253,25 +256,6 @@
 				</v-btn>
 			</v-col>
 		</v-row>
-		<v-divider />
-		<v-snackbar
-			v-model="snack"
-			:timeout="3000"
-			:color="snackColor"
-			bottom
-		>
-			{{ snackText }}
-
-			<template #action="{ attrs }">
-				<v-btn
-					v-bind="attrs"
-					text
-					@click="snack = false"
-				>
-					Close
-				</v-btn>
-			</template>
-		</v-snackbar>
 	</v-card>
 </template>
 <script>
@@ -282,9 +266,6 @@ export default {
 	data: () => ({
 		searchOrderItems: "",
 		isUpdating: false,
-		snack: false,
-		snackColor: "",
-		snackText: "",
 		headers: [
 			{ text: "Actions", value: "actions", sortable: false, align: "center" },
 			{ text: "Menu Item", value: "name", align: "start"},
@@ -333,11 +314,11 @@ export default {
 		removeItemFromOrderCart(orderMenuItem) {
 			const index = this.order.items.indexOf(orderMenuItem)
 			this.order.items.splice(index, 1)
-			this.snack = true
-			this.snackColor = "error"
-			this.snackText = orderMenuItem.name + " removed from cart."
+			this.$store.dispatch("snack/setSnackState", true)
+			this.$store.dispatch("snack/setSnackColor", "error")
+			this.$store.dispatch("snack/setSnackText", orderMenuItem.name + " removed from cart.")
 		},
-		remove(item) {
+		removeItemFromAutoComplete(item) {
 			const index = this.friends.indexOf(item.name)
 			if (index >= 0) this.friends.splice(index, 1)
 		},

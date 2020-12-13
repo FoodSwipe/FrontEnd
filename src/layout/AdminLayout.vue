@@ -1,5 +1,24 @@
 <template>
 	<div>
+		<v-snackbar
+			v-model="snack"
+			absolute
+			top
+			right
+			:color="snackColor"
+		>
+			{{ snackText }}
+
+			<template #action="{ attrs }">
+				<v-btn
+					v-bind="attrs"
+					text
+					@click="snack = false"
+				>
+					Close
+				</v-btn>
+			</template>
+		</v-snackbar>
 		<v-app-bar
 			app
 			dark
@@ -125,6 +144,7 @@
 </template>
 <script>
 import router from "@/router"
+import { mapGetters } from "vuex"
 
 export default {
 	name: "AdminLayout",
@@ -143,6 +163,20 @@ export default {
 			{ title: "Utilities", icon: "stars", to: "/admin/utilities" },
 		],
 	}),
+	computed: {
+		...mapGetters({
+			snackText: "snack/snackText",
+			snackColor: "snack/snackColor"
+		}),
+		snack: {
+			get() {
+				return this.$store.state.snack.snack
+			},
+			set(v) {
+				this.$store.dispatch("snack/setSnackState", v)
+			}
+		}
+	},
 	methods: {
 		routeToHomePage() {
 			router.push({name: "Food Swipe"})
