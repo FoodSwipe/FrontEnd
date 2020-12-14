@@ -17,7 +17,7 @@
 				</v-expand-transition>
 			</v-app-bar-nav-icon>
 
-			<v-toolbar-title>{{ $route.name }}</v-toolbar-title>
+			<v-toolbar-title>Food Swipe Administration</v-toolbar-title>
 
 			<v-spacer />
 			<v-tooltip left>

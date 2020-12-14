@@ -1,8 +1,63 @@
 <template>
 	<v-card dark>
-		<v-card-title class="py-2">
-			Orders
-		</v-card-title>
+		<v-toolbar height="auto">
+			<v-app-bar-nav-icon><v-icon>receipt</v-icon></v-app-bar-nav-icon>
+			<v-fade-transition mode="in-out">
+				<v-toolbar-title v-show="$vuetify.breakpoint.width > 615">
+					Orders
+				</v-toolbar-title>
+			</v-fade-transition>
+			<div :class="
+				$vuetify.breakpoint.width > 615
+					? 'pl-12'
+					: ''
+			"
+			>
+				<v-text-field
+					v-model="searchOrders"
+					dense
+					hide-details
+					solo
+					label="Search Orders"
+					clearable
+					prepend-inner-icon="search"
+				/>
+			</div>
+			<v-spacer />
+			<div class="px-1">
+				<v-menu
+					offset-y
+				>
+					<template #activator="{ on, attrs }">
+						<v-btn
+							icon
+							v-bind="attrs"
+							v-on="on"
+						>
+							<v-icon>style</v-icon>
+						</v-btn>
+					</template>
+					<v-list dark>
+						<!-- eslint-disable-next-line vue/no-v-for-template-key-on-child-->
+						<v-list-item v-for="(item, index) in orderFilter"
+							:key="index"
+						>
+							<v-list-item-icon><v-icon>{{ item.icon }}</v-icon></v-list-item-icon>
+							<v-list-item-content>
+								<v-list-item-title>{{ item.title }}</v-list-item-title>
+							</v-list-item-content>
+						</v-list-item>
+					</v-list>
+				</v-menu>
+			</div>
+			<div class="px-1">
+				<v-btn icon>
+					<v-icon class="goldenrod">
+						add_circle
+					</v-icon>
+				</v-btn>
+			</div>
+		</v-toolbar>
 		<v-divider />
 		<v-row
 			justify="start"
@@ -105,6 +160,7 @@ import router from "@/router"
 export default {
 	name: "OrderAdministration",
 	data: () => ({
+		searchOrders: "",
 		colors: [
 			"our-blue-gradient",
 			"red-gradient",
@@ -114,6 +170,12 @@ export default {
 			"green-gradient",
 			"dark-purple-gradient",
 			"brown-gradient",
+		],
+		orderFilter: [
+			{title: "Top", icon: "favorite"},
+			{title: "Latest", icon: "history"},
+			{title: "Pending", icon: "hdr_strong"},
+			{title: "Delivered", icon: "check"},
 		],
 		orders: [
 			{
@@ -201,7 +263,7 @@ export default {
 					{id: 19, name: "Fried Rice Chowmein", quality: 2},
 				]
 			}
-		]
+		],
 	}),
 	methods: {
 		routeToOrderDetail(id) {

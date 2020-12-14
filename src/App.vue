@@ -11,6 +11,12 @@ export default {
 </script>
 <!--global css variables-->
 <style lang="scss">
+.dark-slate-border-2 {
+	border: 2px solid darkslategrey !important;
+}
+.goldenrod {
+	color: goldenrod !important;
+}
 .golden-rod-border-2 {
 	border: 2px solid goldenrod;
 }
