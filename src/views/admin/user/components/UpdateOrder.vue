@@ -11,6 +11,12 @@
 			</v-toolbar-title>
 			<v-spacer />
 			<v-btn icon
+				color="green"
+				@click="generatePDF()"
+			>
+				<v-icon>print</v-icon>
+			</v-btn>
+			<v-btn icon
 				color="error"
 			>
 				<v-icon>delete</v-icon>
@@ -266,6 +272,8 @@
 </template>
 <script>
 import helper from "@/Helper"
+import jsPDF from "jspdf"
+import "jspdf-autotable"
 
 export default {
 	name: "UpdateUserOrderByAdminComponent",
@@ -290,6 +298,26 @@ export default {
 			location: "Lorem, ipsum - 16 Sed"
 		},
 		friends: [],
+		doc: null,
+		document: {
+			heading: "Food Swipe and Online Market Company Pvt. Ltd.",
+			location: "New-road, Pokhara",
+			vat: "2525252525",
+			invoiceText: "ABBREVIATED TAX INVOICE",
+			billID: "123-456-789",
+			transactionTimestamp: "2020-12-02 05:30 PM",
+			invoiceDate: "2020-12-02 05:30 PM",
+			paymentMode: "Cash",
+			items: [
+				{ id: 555, particular: "Buff Chowmein", quantity: 2, rate: 500, amount: 1000 },
+				{ id: 555, particular: "Chicken Momo", quantity: 2, rate: 500, amount: 1000 },
+				{ id: 555, particular: "Old Durbar", quantity: 2, rate: 500, amount: 1000 },
+				{ id: 555, particular: "Chicken Korma", quantity: 2, rate: 500, amount: 1000 },
+			],
+			tel: "9843530425/9856000000/9874000000",
+			counter: "TELLER 1 (05:30:19 PM)",
+			cashier: "Kiran Parajuli"
+		}
 	}),
 	computed: {
 		people() {
@@ -300,6 +328,166 @@ export default {
 		}
 	},
 	methods: {
+		generatePDF() {
+			const columns = [
+				{title: "ID", dataKey: "id"},
+				{title: "Particulars", dataKey: "particular"},
+				{title: "Qty", dataKey: "quantity"},
+				{title: "Rate", dataKey: "rate"},
+				{title: "Amount", dataKey: "amount"}
+			]
+			this.doc = new jsPDF({
+				orientation: "portrait",
+				uint: "in",
+				format: "letter",
+			})
+			var img = require("@/assets/food_swipe_logo.png")
+			this.doc.addImage(img, "png", 30,25,35,32)
+			this.doc
+				.setFontSize(14)
+				.text(
+					this.document.heading,
+					60 + 5,
+					29,
+				)
+			this.doc
+				.setFontSize(10)
+				.text(
+					this.document.location,
+					95 + 5,
+					34,
+				)
+			this.doc
+				.setFontSize(10)
+				.text(
+					"VAT No.: " + this.document.vat,
+					92 + 5,
+					38,
+				)
+			this.doc
+				.setFontSize(10)
+				.text(
+					this.document.invoiceText,
+					85 + 5,
+					44,
+				)
+			this.doc
+				.setFontSize(10)
+				.text(
+					"Bill #: " + this.document.billID,
+					70,
+					50,
+				)
+			this.doc
+				.setFontSize(10)
+				.text(
+					"Transaction Date: " + this.document.transactionTimestamp,
+					70,
+					54,
+				)
+			this.doc
+				.setFontSize(10)
+				.text(
+					"Invoice Date: " + this.document.invoiceDate,
+					70,
+					58,
+				)
+			this.doc
+				.setFontSize(10)
+				.text(
+					"Payment Mode: " + this.document.paymentMode,
+					70,
+					62,
+				)
+			this.doc.autoTable({
+				columns,
+				// headStyles: {
+				// 	fillColor: [],
+				// },
+				styles: {
+					fillColor: [128, 128, 128],
+					cellPadding: 2.1,
+					fontSize: 10,
+					cellWidth: 31
+				},
+				body: this.document.items,
+				margin: {left: 30, top: 66},
+				tableWidth: "wrap",
+			})
+			this.doc
+				.setFontSize(10)
+				.text(
+					"Net Amount: 255.00",
+					110+30,
+					this.doc.lastAutoTable.finalY + 7,
+				)
+			this.doc
+				.setFontSize(10)
+				.text(
+					"Tender: 300",
+					110+30,
+					this.doc.lastAutoTable.finalY + 13,
+				)
+			this.doc
+				.setFontSize(10)
+				.text(
+					"Change: 45",
+					110+30,
+					this.doc.lastAutoTable.finalY + 18,
+				)
+			this.doc
+				.setFontSize(10)
+				.text(
+					"Total Qty: 4",
+					30,
+					this.doc.lastAutoTable.finalY + 23,
+				)
+
+			this.doc
+				.setFontSize(10)
+				.text(
+					"Customer: 9893000000",
+					30,
+					this.doc.lastAutoTable.finalY + 7,
+				)
+			this.doc
+				.setFontSize(10)
+				.text(
+					"Delivery Charge: NRs 80.00",
+					30,
+					this.doc.lastAutoTable.finalY + 13,
+				)
+			this.doc
+				.setFontSize(10)
+				.text(
+					"Loyalty Discount: 5%",
+					30,
+					this.doc.lastAutoTable.finalY + 18,
+				)
+
+			this.doc
+				.setFontSize(10)
+				.text(
+					"Tel: " + this.document.tel,
+					30,
+					this.doc.lastAutoTable.finalY + 30+4,
+				)
+			this.doc
+				.setFontSize(10)
+				.text(
+					"Counter: " + this.document.counter,
+					30,
+					this.doc.lastAutoTable.finalY + 34+4,
+				)
+			this.doc
+				.setFontSize(10)
+				.text(
+					"Cashier: " + this.document.cashier,
+					30,
+					this.doc.lastAutoTable.finalY + 38+4,
+				)
+			this.doc.save("hello.pdf")
+		},
 		getPriceOfItem(item) {
 			const priceMenu = {
 				"Veg Momo": 100,

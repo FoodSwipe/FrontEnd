@@ -8,6 +8,7 @@
 			right
 			:timeout="3000"
 			color="error"
+			style="margin-top: -60px;"
 		>
 			{{ snackText }}
 
@@ -27,111 +28,119 @@
 				lg="8"
 				md="8"
 			>
-				<v-card
-					v-for="(item, index) in desserts"
-					:key="index"
-					class="mb-4 cart-item-card"
+				<transition-group
+					appear
+					:css="false"
+					@before-enter="beforeEnter"
+					@enter="enter"
+					@leave="leave"
 				>
-					<v-row class="ma-0 pa-0"
-						align="center"
+					<v-card
+						v-for="(item, index) in desserts"
+						:key="index"
+						class="mb-4 cart-item-card"
 					>
-						<v-col cols="6"
-							xl="3"
-							lg="3"
-							md="3"
-							sm="3"
+						<v-row class="ma-0 pa-0"
+							align="center"
 						>
-							<v-img
-								src="https://i.ndtvimg.com/i/2017-10/spicy-chicken-recipe_620x330_71508233435.jpg"
-								max-width="200"
-								min-width="50"
-								height="100"
-							/>
-						</v-col>
-						<v-col cols="6"
-							xl="3"
-							lg="3"
-							md="3"
-							sm="3"
-						>
-							{{ item.name }}
-							<p class="subtitle-2">
-								<v-avatar tile
-									size="16"
-								>
-									<v-img
-										src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Indian-vegetarian-mark.svg/1200px-Indian-vegetarian-mark.svg.png"
-									/>
-								</v-avatar>
-								<v-avatar
-									color="white"
-									max-width="20"
-									max-height="22"
-									tile
-									class="ml-2"
-								>
-									<v-img
-										src="https://cdna.artstation.com/p/assets/images/images/022/547/676/large/dinh-trang-bui-spicy.jpg?1575846866"
-									/>
-								</v-avatar>
-							</p>
-							<p class="d-flex">
-								<v-btn icon
-									color="error"
-									@click="removeItemFromCart(item)"
-								>
-									<v-icon>delete</v-icon>
-								</v-btn>
-								<v-icon class="pl-2">
-									favorite
-								</v-icon>
-							</p>
-						</v-col>
-						<v-col cols="8"
-							xl="4"
-							lg="4"
-							md="4"
-							sm="4"
-						>
-							<div class="d-flex align-center">
-								<v-btn
-									icon
-									color="error"
-									height="56"
-									class="rounded-0"
-									:disabled="item.quantity === 1"
-									@click="subtractQuantity(item)"
-								>
-									<v-icon>remove</v-icon>
-								</v-btn>
-								<v-text-field v-model="item.quantity"
-									filled
-									type="number"
-									hide-details="auto"
-									persistent-hint
+							<v-col cols="6"
+								xl="3"
+								lg="3"
+								md="3"
+								sm="3"
+							>
+								<v-img
+									src="https://i.ndtvimg.com/i/2017-10/spicy-chicken-recipe_620x330_71508233435.jpg"
+									max-width="200"
+									min-width="50"
+									height="100"
 								/>
-								<v-btn icon
-									height="56"
-									color="primary"
-									class="rounded-0"
-									@click="addQuantity(item)"
-								>
-									<v-icon>add</v-icon>
-								</v-btn>
-							</div>
-						</v-col>
-						<v-col cols="4"
-							xl="2"
-							lg="2"
-							md="2"
-							sm="2"
-						>
-							<div class="item-sub-total">
-								Rs {{ item.quantity * item.price }}
-							</div>
-						</v-col>
-					</v-row>
-				</v-card>
+							</v-col>
+							<v-col cols="6"
+								xl="3"
+								lg="3"
+								md="3"
+								sm="3"
+							>
+								{{ item.name }}
+								<p class="subtitle-2">
+									<v-avatar tile
+										size="16"
+									>
+										<v-img
+											src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Indian-vegetarian-mark.svg/1200px-Indian-vegetarian-mark.svg.png"
+										/>
+									</v-avatar>
+									<v-avatar
+										color="white"
+										max-width="20"
+										max-height="22"
+										tile
+										class="ml-2"
+									>
+										<v-img
+											src="https://cdna.artstation.com/p/assets/images/images/022/547/676/large/dinh-trang-bui-spicy.jpg?1575846866"
+										/>
+									</v-avatar>
+								</p>
+								<p class="d-flex">
+									<v-btn icon
+										color="error"
+										@click="removeItemFromCart(item)"
+									>
+										<v-icon>delete</v-icon>
+									</v-btn>
+									<v-icon class="pl-2">
+										favorite
+									</v-icon>
+								</p>
+							</v-col>
+							<v-col cols="8"
+								xl="4"
+								lg="4"
+								md="4"
+								sm="4"
+							>
+								<div class="d-flex align-center">
+									<v-btn
+										icon
+										color="error"
+										height="56"
+										class="rounded-0"
+										:disabled="item.quantity === 1"
+										@click="subtractQuantity(item)"
+									>
+										<v-icon>remove</v-icon>
+									</v-btn>
+									<v-text-field v-model="item.quantity"
+										filled
+										type="number"
+										hide-details="auto"
+										persistent-hint
+									/>
+									<v-btn icon
+										height="56"
+										color="primary"
+										class="rounded-0"
+										@click="addQuantity(item)"
+									>
+										<v-icon>add</v-icon>
+									</v-btn>
+								</div>
+							</v-col>
+							<v-col cols="4"
+								xl="2"
+								lg="2"
+								md="2"
+								sm="2"
+							>
+								<div class="item-sub-total">
+									Rs {{ item.quantity * item.price }}
+								</div>
+							</v-col>
+						</v-row>
+					</v-card>
+				</transition-group>
 			</v-col>
 			<v-scale-transition mode="out-in">
 				<v-col
@@ -193,6 +202,7 @@
 </template>
 <script>
 import router from "@/router"
+import Velocity from "velocity-animate"
 
 export default {
 	name: "CartView",
@@ -265,6 +275,28 @@ export default {
 		}
 	},
 	methods: {
+		beforeEnter(el) {
+			el.style.opacity = 0
+			el.style.width = "0em"
+		},
+		enter(el, done) {
+			Velocity(
+				el,
+				{opacity: 1, width: "100%"},
+				{duration: 1500, easing: [70, 8], complete: done}
+			)
+		},
+		leave(el, done) {
+			Velocity(el,
+				{opacity: 0, width: "0em"},
+				{
+					duration: 300,
+					ease: "easeOutCubic",
+					complete: done
+				}
+			)
+		},
+
 		addQuantity(item) {
 			item.quantity += 1
 		},

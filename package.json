@@ -10,9 +10,12 @@
   },
   "dependencies": {
     "core-js": "^3.6.5",
+    "jspdf": "^2.2.0",
+    "jspdf-autotable": "^3.5.13",
     "material-design-icons-iconfont": "^5.0.1",
     "roboto-fontface": "*",
     "swiper": "^6.3.5",
+    "velocity-animate": "^1.5.2",
     "vue": "^2.6.11",
     "vue-bus": "^1.2.1",
     "vue-router": "^3.2.0",
