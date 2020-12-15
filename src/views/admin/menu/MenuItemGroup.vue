@@ -78,54 +78,6 @@
 									/>
 								</v-col>
 								<v-col cols="12">
-									<v-autocomplete
-										v-model="friends"
-										:disabled="isUpdating"
-										:items="people"
-										filled
-										chips
-										color="blue darken-2"
-										placeholder="Select menu item group"
-										item-text="name"
-										item-value="name"
-										multiple
-										prepend-inner-icon="emoji_food_beverage"
-										hide-details="auto"
-										attach=""
-										clearable
-										dark
-									>
-										<template #selection="data">
-											<v-chip
-												v-bind="data.attrs"
-												:input-value="data.selected"
-												close
-												@click="data.select"
-												@click:close="remove(data.item)"
-											>
-												<v-avatar left>
-													<v-img :src="data.item.avatar" />
-												</v-avatar>
-												{{ data.item.name }}
-											</v-chip>
-										</template>
-										<template #item="data">
-											<template v-if="typeof data.item !== 'object'">
-												<v-list-item-content v-text="data.item" />
-											</template>
-											<template v-else>
-												<v-list-item-avatar>
-													<v-img :src="data.item.avatar" />
-												</v-list-item-avatar>
-												<v-list-item-content>
-													<v-list-item-title>{{ data.item.name }}</v-list-item-title>
-													<v-list-item-subtitle>{{ data.item.group }}</v-list-item-subtitle>
-												</v-list-item-content>
-											</template>
-										</template>
-									</v-autocomplete>
-								</v-col>
-								<v-col cols="12">
 									<v-file-input
 										id="member-image-input"
 										v-model="editedItem.imageForUpload"
@@ -275,8 +227,6 @@ import helper from "@/Helper"
 export default {
 	name: "MenuItemGroupAdministration",
 	data: () => ({
-		friends: [],
-		isUpdating: false,
 		dialog: false,
 		dialogDelete: false,
 		searchMenuItemGroup: "",
@@ -312,12 +262,6 @@ export default {
 		formTitle() {
 			return this.editedIndex === -1 ? "New Menu Item Group" : "Edit Menu Item Group"
 		},
-		people() {
-			return helper.returnMockMenuItems()
-		},
-		srcs() {
-			return helper.returnMockSrcs()
-		}
 	},
 
 	watch: {
@@ -682,10 +626,6 @@ export default {
 				this.desserts.push(this.editedItem)
 			}
 			this.close()
-		},
-		remove(item) {
-			const index = this.friends.indexOf(item.name)
-			if (index >= 0) this.friends.splice(index, 1)
 		},
 	},
 }
