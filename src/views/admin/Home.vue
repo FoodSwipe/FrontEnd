@@ -90,14 +90,14 @@
 				</v-card>
 			</v-col>
 			<v-col cols="12">
-				<v-card color="grey darken-1"
-					dark
-				>
-					<v-card-title>
-						<v-icon size="40">
-							recent_actors
-						</v-icon>
-						<span class="pl-3">Recent Activities</span>
+				<v-card dark>
+					<v-toolbar height="auto">
+						<v-app-bar-nav-icon>
+							<v-icon size="40">
+								recent_actors
+							</v-icon>
+						</v-app-bar-nav-icon>
+						<v-toolbar-title>Recent Activities</v-toolbar-title>
 						<v-spacer />
 						<v-text-field
 							v-model="search"
@@ -108,7 +108,7 @@
 							hide-details
 							clearable
 						/>
-					</v-card-title>
+					</v-toolbar>
 					<v-data-table
 						:headers="headers"
 						:items="adminLogs"

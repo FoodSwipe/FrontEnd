@@ -1,5 +1,11 @@
 <template>
 	<v-card dark>
+		<v-overlay :value="overlay">
+			<v-progress-circular
+				indeterminate
+				size="64"
+			/>
+		</v-overlay>
 		<v-toolbar>
 			<v-app-bar-nav-icon>
 				<v-avatar tile>
@@ -54,7 +60,6 @@
 											id="search-user"
 											v-model="searchOrderItems"
 											solo
-											dense
 											clearable
 											hide-details
 											prepend-inner-icon="search"
@@ -160,7 +165,6 @@
 						<v-edit-dialog
 							v-model:return-value="props.item.quantity"
 							dark
-							persistent
 							@save="updateQuantity"
 							@cancel="cancelQuantityUpdate"
 							@open="openUpdateQuantityEditDialog"
@@ -278,6 +282,7 @@ import "jspdf-autotable"
 export default {
 	name: "UpdateUserOrderByAdminComponent",
 	data: () => ({
+		overlay: false,
 		searchOrderItems: "",
 		isUpdating: false,
 		headers: [
@@ -329,6 +334,7 @@ export default {
 	},
 	methods: {
 		generatePDF() {
+			this.overlay = true
 			const columns = [
 				{title: "ID", dataKey: "id"},
 				{title: "Particulars", dataKey: "particular"},
@@ -487,6 +493,11 @@ export default {
 					this.doc.lastAutoTable.finalY + 38+4,
 				)
 			this.doc.save("hello.pdf")
+			this.doc.autoPrint()
+			this.$store.dispatch("snack/setSnackState", true)
+			this.$store.dispatch("snack/setSnackColor", "success")
+			this.$store.dispatch("snack/setSnackText", "Vat bill for #" + this.order.id + " downloaded successfully.")
+			this.overlay = false
 		},
 		getPriceOfItem(item) {
 			const priceMenu = {

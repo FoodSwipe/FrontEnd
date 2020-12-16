@@ -1,6 +1,7 @@
 <template>
 	<v-dialog
 		v-model="dialog"
+		dark
 		fullscreen
 		hide-overlay
 		close-delay="1000"
@@ -34,8 +35,8 @@
 			</v-btn>
 		</v-toolbar>
 		<v-card
+			dark
 			class="rounded"
-			color="rgb(251 250 241)"
 		>
 			<v-card flat
 				max-width="800"
@@ -94,7 +95,7 @@
 									<div class="mb-2">
 										<v-chip
 											label
-											color="blue lighten-5"
+											color="purple lighten-1"
 											class="mr-1 mb-1"
 										>
 											<v-icon left>
@@ -152,7 +153,7 @@
 				<v-row class="ma-0 pa-0 px-4">
 					<v-col
 						cols="12"
-						class="pl-0"
+						class="form-group-heading"
 					>
 						<p class="heading ma-0 pa-0">
 							<v-icon class="pb-1"
@@ -162,7 +163,7 @@
 							</v-icon>
 							Account Information
 						</p>
-						<v-divider class="pb-2" />
+						<v-divider />
 					</v-col>
 					<v-col
 						cols="12"
@@ -170,14 +171,13 @@
 						lg="6"
 						md="6"
 						sm="6"
-						class="ma-0 pa-0 pr-sm-2 pr-md-2 pr-lg-2 pr-xl-2"
 					>
 						<v-text-field
 							id="username"
 							v-model="editedItem.username"
 							class="ma-0"
-							outlined
-							dense
+							filled
+							hide-details="auto"
 							clearable
 							label="Username"
 							prepend-inner-icon="account_circle"
@@ -189,14 +189,13 @@
 						lg="6"
 						md="6"
 						sm="6"
-						class="ma-0 pa-0"
 					>
 						<v-text-field
 							id="email"
 							v-model="editedItem.email"
 							class="ma-0 pl-sm-2 pl-md-2 pl-lg-2 pl-xl-2"
-							outlined
-							dense
+							filled
+							hide-details="auto"
 							clearable
 							label="Email address"
 							prepend-inner-icon="alternate_email"
@@ -204,7 +203,7 @@
 					</v-col>
 					<v-col
 						cols="12"
-						class="pl-0"
+						class="form-group-heading"
 					>
 						<p class="heading ma-0 pa-0">
 							<v-icon class="pb-1"
@@ -214,7 +213,7 @@
 							</v-icon>
 							Profile Information
 						</p>
-						<v-divider class="pb-2" />
+						<v-divider />
 					</v-col>
 					<v-col
 						cols="12"
@@ -222,14 +221,12 @@
 						lg="6"
 						md="6"
 						sm="6"
-						class="ma-0 pa-0"
 					>
 						<v-text-field
 							id="first-name"
 							v-model="editedItem.f_name"
-							class="ma-0 pr-sm-2 pr-md-2 pr-lg-2 pr-xl-2"
-							outlined
-							dense
+							filled
+							hide-details="auto"
 							clearable
 							label="First name"
 							prepend-inner-icon="title"
@@ -241,14 +238,12 @@
 						lg="6"
 						md="6"
 						sm="6"
-						class="ma-0 pa-0"
 					>
 						<v-text-field
 							id="last-name"
 							v-model="editedItem.l_name"
-							class="ma-0 pl-sm-2 pl-md-2 pl-lg-2 pl-xl-2"
-							outlined
-							dense
+							filled
+							hide-details="auto"
 							clearable
 							label="Last name"
 							prepend-inner-icon="title"
@@ -256,36 +251,26 @@
 					</v-col>
 					<v-col
 						cols="12"
-						class="ma-0 pa-0"
 					>
-						<v-combobox
-							v-model="editedItem.contacts"
-							class="ma-0 pa-0"
-							:items="[]"
-							hide-selected
-							hint="Add contact number and hit Enter to add a new one."
-							label="Contacts"
-							multiple
-							small-chips
-							deletable-chips
+						<v-text-field
+							v-model="editedItem.contact"
+							label="Contact"
 							type="number"
-							outlined
-							dense
-							attach=""
+							filled
+							hide-details="auto"
 							clearable
 							prepend-inner-icon="contact_phone"
 						/>
 					</v-col>
 					<v-col
 						cols="12"
-						class="ma-0 pa-0"
 					>
 						<v-file-input
 							id="user-image-input"
 							v-model="editedItem.imageForUpload"
-							class="ma-0"
-							outlined
-							dense
+							filled
+							hide-details="auto"
+							height="auto"
 							small-chips
 							show-size
 							accept="image/*"
@@ -298,14 +283,12 @@
 					</v-col>
 					<v-col
 						cols="12"
-						class="ma-0 pa-0"
 					>
 						<v-textarea
 							id="user-bio"
 							v-model="editedItem.bio"
-							class="ma-0"
-							outlined
-							dense
+							filled
+							hide-details="auto"
 							counter
 							label="Bio"
 							clearable
@@ -314,7 +297,7 @@
 					</v-col>
 					<v-col
 						cols="12"
-						class="pl-0"
+						class="form-group-heading"
 					>
 						<p class="heading ma-0 pa-0">
 							<v-icon class="pb-1"
@@ -324,11 +307,11 @@
 							</v-icon>
 							Permissions Information
 						</p>
-						<v-divider class="pb-2" />
+						<v-divider />
 					</v-col>
 					<v-col
 						cols="12"
-						class="ma-0 pa-0 checkbox-input-column"
+						class="checkbox-input-column"
 					>
 						<v-checkbox
 							id="is_main"
@@ -340,7 +323,7 @@
 					</v-col>
 					<v-col
 						cols="12"
-						class="ma-0 pa-0 checkbox-input-column"
+						class="checkbox-input-column"
 					>
 						<v-checkbox
 							id="is_main"
@@ -494,12 +477,23 @@ export default {
 .v-card__title
 	background-color: #535151 !important
 
-.checkbox-input-column
-	::v-deep.v-input--checkbox
-		margin: -5px 0 25px
-		padding: 10px 10px
-		border: 1px solid rgb(156 155 150) !important
-		border-radius: 3px
-	::v-deep.v-input--checkbox:hover
-		border: 1px solid black !important
+.form-group-heading
+	font-weight: 500
+	background-color: rgba(86, 86, 86, 0.4)
+	border-radius: 10px
+	margin: 10px 0 7px 0
+</style>
+<style lang="scss" scoped>
+.checkbox-input-column {
+	::v-deep.v-input--checkbox {
+		background-color: rgb(255 255 255 / 8%);
+		margin-top: 0;
+		padding: 18px 12px;
+		border-bottom: 1px solid rgb(156 155 150) !important;
+		border-radius: 3px 3px 0 0;
+		&:hover {
+			background-color: #484848;
+		}
+	}
+}
 </style>

@@ -145,8 +145,22 @@
 			</v-toolbar>
 		</template>
 		<!-- eslint-disable-next-line vue/valid-v-slot-->
-		<template #item.name="{ item }">
-			<span style="font-size: 1.1rem; line-height: 1.3rem;">{{ item.name }}</span>
+		<template #item.name="props">
+			<v-edit-dialog
+				v-model:return-value="props.item.name"
+				dark
+				@save="updateName"
+				@cancel="cancelNameUpdate"
+			>
+				<span style="font-size: 1.1rem; line-height: 1.3rem;">{{ props.item.name }}</span>
+				<template #input>
+					<v-text-field
+						v-model="props.item.name"
+						single-line
+						counter
+					/>
+				</template>
+			</v-edit-dialog>
 		</template>
 		<!-- eslint-disable-next-line vue/valid-v-slot-->
 		<template #item.items="{ item }">
@@ -278,6 +292,16 @@ export default {
 	},
 
 	methods: {
+		updateName() {
+			this.$store.dispatch("snack/setSnackState", true)
+			this.$store.dispatch("snack/setSnackColor", "success")
+			this.$store.dispatch("snack/setSnackText", "Menu item group name updated successfully.")
+		},
+		cancelNameUpdate() {
+			this.$store.dispatch("snack/setSnackState", true)
+			this.$store.dispatch("snack/setSnackColor", "error")
+			this.$store.dispatch("snack/setSnackText", "Menu item group name update aborted.")
+		},
 		initialize() {
 			this.desserts = [
 				{

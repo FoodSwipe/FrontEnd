@@ -1,62 +1,66 @@
 <template>
 	<v-card dark>
 		<v-toolbar height="auto">
-			<v-app-bar-nav-icon><v-icon>receipt</v-icon></v-app-bar-nav-icon>
-			<v-fade-transition mode="in-out">
-				<v-toolbar-title v-show="$vuetify.breakpoint.width > 615">
-					Orders
-				</v-toolbar-title>
-			</v-fade-transition>
-			<div :class="
-				$vuetify.breakpoint.width > 615
-					? 'pl-12'
-					: ''
-			"
-			>
-				<v-text-field
-					v-model="searchOrders"
-					dense
-					hide-details
-					solo
-					label="Search Orders"
-					clearable
-					prepend-inner-icon="search"
-				/>
-			</div>
-			<v-spacer />
-			<div class="px-1">
-				<v-menu
-					offset-y
-				>
-					<template #activator="{ on, attrs }">
-						<v-btn
-							icon
-							v-bind="attrs"
-							v-on="on"
-						>
-							<v-icon>style</v-icon>
-						</v-btn>
-					</template>
-					<v-list dark>
-						<!-- eslint-disable-next-line vue/no-v-for-template-key-on-child-->
-						<v-list-item v-for="(item, index) in orderFilter"
-							:key="index"
-						>
-							<v-list-item-icon><v-icon>{{ item.icon }}</v-icon></v-list-item-icon>
-							<v-list-item-content>
-								<v-list-item-title>{{ item.title }}</v-list-item-title>
-							</v-list-item-content>
-						</v-list-item>
-					</v-list>
-				</v-menu>
-			</div>
-			<div class="px-1">
-				<v-btn icon>
-					<v-icon class="goldenrod">
-						add_circle
-					</v-icon>
-				</v-btn>
-			</div>
+			<template #default>
+				<v-row class="ma-0 pa-0">
+					<v-col cols="12"
+						class="d-flex align-center"
+					>
+						<v-app-bar-nav-icon><v-icon>receipt</v-icon></v-app-bar-nav-icon>
+						<v-fade-transition mode="in-out">
+							<v-toolbar-title v-show="$vuetify.breakpoint.width > 615">
+								Orders
+							</v-toolbar-title>
+						</v-fade-transition>
+						<v-spacer />
+						<div class="px-1">
+							<v-menu
+								offset-y
+							>
+								<template #activator="{ on, attrs }">
+									<v-btn
+										icon
+										v-bind="attrs"
+										v-on="on"
+									>
+										<v-icon>style</v-icon>
+									</v-btn>
+								</template>
+								<dropdown-list :filter-options="orderFilter" />
+							</v-menu>
+						</div>
+						<div class="px-1">
+							<v-btn icon>
+								<v-icon class="goldenrod">
+									add_circle
+								</v-icon>
+							</v-btn>
+						</div>
+					</v-col>
+					<v-col cols="12"
+						xl="6" lg="6"
+						md="6" sm="6"
+					>
+						<div>
+							<v-text-field
+								v-model="searchOrders"
+								dense
+								hide-details
+								solo
+								label="Search Orders"
+								clearable
+								prepend-inner-icon="search"
+							/>
+						</div>
+					</v-col>
+					<v-col cols="12"
+						xl="6" lg="6"
+						md="6" sm="6"
+					>
+						<date-filter what-to-filter="transaction" />
+					</v-col>
+				</v-row>
+			</template>
 		</v-toolbar>
 		<v-divider />
 		<v-row
@@ -159,6 +163,10 @@ import router from "@/router"
 
 export default {
 	name: "OrderAdministration",
+	components: {
+		DropdownList: () => import("@/components/DropdownList"),
+		DateFilter: () => import("@/components/DateFilter"),
+	},
 	data: () => ({
 		searchOrders: "",
 		colors: [

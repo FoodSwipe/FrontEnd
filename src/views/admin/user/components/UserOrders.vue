@@ -1,8 +1,12 @@
 <template>
 	<v-card dark>
-		<v-card-title class="py-2">
-			Orders
-		</v-card-title>
+		<v-toolbar height="50"
+			class="float-top pl-2"
+		>
+			<v-card-title class="px-0">
+				Orders
+			</v-card-title>
+		</v-toolbar>
 		<v-divider />
 		<div class="user-order-list pa-4">
 			<v-card
@@ -139,5 +143,11 @@ export default {
 }
 .g-total {
 	font-size: 1rem; color: greenyellow;
+}
+.float-top {
+	position: sticky;
+	position: -webkit-sticky;
+	top: -15px;
+	z-index: 2;
 }
 </style>

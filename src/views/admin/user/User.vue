@@ -57,10 +57,57 @@
 			</v-toolbar>
 		</template>
 		<!-- eslint-disable-next-line vue/valid-v-slot-->
-		<template #item.username="{item}">
-			<span class="cursor"
+		<template #item.profile="{item}">
+			<v-avatar size="40"
+				class="cursor golden-rod-border-2"
 				@click="routeToUserDetailPage(item.id)"
-			>{{ item.username }}</span>
+			>
+				<v-img
+					v-if="item.image"
+					:src="item.image"
+				/>
+				<template v-else
+					class="text-capitalize"
+				>
+					{{ item.f_name[0] }}
+				</template>
+			</v-avatar>
+		</template>
+		<!-- eslint-disable-next-line vue/valid-v-slot-->
+		<template #item.contact="props">
+			<v-edit-dialog
+				v-model:return-value="props.item.contact"
+				dark
+				@save="updatePhone"
+				@cancel="cancelPhoneUpdate"
+			>
+				<span class="user-phone">{{ props.item.contact }}</span>
+				<template #input>
+					<v-text-field
+						v-model="props.item.name"
+						single-line
+						type="number"
+					/>
+				</template>
+			</v-edit-dialog>
+		</template>
+		<!-- eslint-disable-next-line vue/valid-v-slot-->
+		<template #item.address="props">
+			<v-edit-dialog
+				v-model:return-value="props.item.address"
+				dark
+				@save="updateAddress"
+				@cancel="cancelAddressUpdate"
+			>
+				<span class="user-address">{{ props.item.address }}</span>
+				<template #input>
+					<v-text-field
+						v-model="props.item.address"
+						single-line
+						counter
+					/>
+				</template>
+			</v-edit-dialog>
 		</template>
 		<!-- eslint-disable-next-line vue/valid-v-slot-->
 		<template #item.actions="{ item }">
@@ -114,8 +161,9 @@ export default {
 		searchUsers: "",
 		headers: [
 			{ text: "Actions", value: "actions", sortable: false, align: "center" },
+			{text: "Avatar", value: "profile", sortable: false, align: "center"},
 			{ text: "Username", value: "username", align: "start"},
-			{ text: "Phone", value: "contacts" },
+			{ text: "Phone", value: "contact" },
 			{ text: "Address", value: "address" },
 			{ text: "Superuser Status", value: "is_superuser" },
 			{ text: "Staff user Status", value: "is_staff" },
@@ -128,6 +176,26 @@ export default {
 	},
 
 	methods: {
+		updatePhone() {
+			this.$store.dispatch("snack/setSnackState", true)
+			this.$store.dispatch("snack/setSnackColor", "success")
+			this.$store.dispatch("snack/setSnackText", "User contact updated successfully.")
+		},
+		cancelPhoneUpdate() {
+			this.$store.dispatch("snack/setSnackState", true)
+			this.$store.dispatch("snack/setSnackColor", "error")
+			this.$store.dispatch("snack/setSnackText", "User contact update aborted.")
+		},
+		updateAddress() {
+			this.$store.dispatch("snack/setSnackState", true)
+			this.$store.dispatch("snack/setSnackColor", "success")
+			this.$store.dispatch("snack/setSnackText", "User address updated successfully.")
+		},
+		cancelAddressUpdate() {
+			this.$store.dispatch("snack/setSnackState", true)
+			this.$store.dispatch("snack/setSnackColor", "error")
+			this.$store.dispatch("snack/setSnackText", "User address update aborted.")
+		},
 		openAddUserFormDialog() {
 			this.$bus.emit("open-user-form-dialog-add-item")
 		},
@@ -160,7 +228,7 @@ export default {
 					l_name: "Doe",
 					username: "foodLover",
 					email: "foo@bar.com",
-					contacts: [9854159951, 9856000000,],
+					contact: 9854159951,
 					address: "Lorem ipsum dolar met",
 					created_at: "June 5, 2020",
 					is_superuser: false,
@@ -173,7 +241,7 @@ export default {
 					l_name: "Williams",
 					username: "goSandra",
 					email: "foo@goo.com",
-					contacts: [9854159951, 9856000000,],
+					contact: 9854159951,
 					address: "Lorem ipsum dolar met",
 					created_at: "June 5, 2020",
 					is_superuser: false,
@@ -185,7 +253,7 @@ export default {
 					l_name: "Ali",
 					username: "octagon345",
 					email: "sar@lar.com",
-					contacts: [9854159951, 9856000000,],
+					contact: 9854159951,
 					address: "Lorem ipsum dolar met",
 					created_at: "June 5, 2020",
 					is_superuser: false,
@@ -197,7 +265,7 @@ export default {
 					l_name: "Messi",
 					username: "heroUser",
 					email: "par@kar.com",
-					contacts: [9854159951, 9856000000,],
+					contact: 9854159951,
 					address: "Lorem ipsum dolar met",
 					created_at: "June 5, 2020",
 					is_superuser: true,
@@ -209,7 +277,7 @@ export default {
 					l_name: "McGregor",
 					username: "rocky123",
 					email: "hel@sel.com",
-					contacts: [9854159951, 9856000000,],
+					contact: 9854159951,
 					address: "Lorem ipsum dolar met",
 					created_at: "June 5, 2020",
 					is_superuser: false,
@@ -220,6 +288,11 @@ export default {
 	},
 }
 </script>
-<!--<style lang="scss" scoped>-->
-
-<!--</style>-->
+<style lang="scss" scoped>
+.user-phone {
+	font-size: 1.1rem; line-height: 1.3rem;
+}
+.user-address {
+	//font-size: .9rem; line-height: 1rem;
+}
+</style>

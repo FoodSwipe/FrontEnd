@@ -93,13 +93,17 @@
 										hide-details="auto"
 									/>
 								</v-col>
-								<v-col cols="6">
+								<v-col cols="6"
+									class="checkbox-input-column"
+								>
 									<v-checkbox v-model="editedItem.is_veg"
 										label="Vegetarian ?"
 										hide-details="auto"
 									/>
 								</v-col>
-								<v-col cols="6">
+								<v-col cols="6"
+									class="checkbox-input-column"
+								>
 									<v-checkbox v-model="editedItem.is_available"
 										label="Available ?"
 										hide-details="auto"
@@ -252,12 +256,40 @@
 			</v-toolbar>
 		</template>
 		<!-- eslint-disable-next-line vue/valid-v-slot-->
-		<template #item.name="{ item }">
-			<span style="font-size: 1.1rem; line-height: 1.3rem;">{{ item.name }}</span>
+		<template #item.name="props">
+			<v-edit-dialog
+				v-model:return-value="props.item.name"
+				dark
+				@save="updateName"
+				@cancel="cancelNameUpdate"
+			>
+				<span class="menu-item-name">{{ props.item.name }}</span>
+				<template #input>
+					<v-text-field
+						v-model="props.item.name"
+						single-line
+						counter
+					/>
+				</template>
+			</v-edit-dialog>
 		</template>
 		<!-- eslint-disable-next-line vue/valid-v-slot-->
-		<template #item.price="{ item }">
-			<span style="font-size: 1.1rem; line-height: 1.3rem;">{{ item.price }}</span>
+		<template #item.price="props">
+			<v-edit-dialog
+				v-model:return-value="props.item.price"
+				dark
+				@save="updatePrice"
+				@cancel="cancelPriceUpdate"
+			>
+				<span class="menu-item-price">{{ props.item.price }}</span>
+				<template #input>
+					<v-text-field
+						v-model="props.item.price"
+						single-line
+						type="number"
+					/>
+				</template>
+			</v-edit-dialog>
 		</template>
 		<!-- eslint-disable-next-line vue/valid-v-slot-->
 		<template #item.is_veg="{ item }">
@@ -396,6 +428,27 @@ export default {
 	},
 
 	methods: {
+		updatePrice() {
+			this.$store.dispatch("snack/setSnackState", true)
+			this.$store.dispatch("snack/setSnackColor", "success")
+			this.$store.dispatch("snack/setSnackText", "Menu item price updated successfully.")
+		},
+		cancelPriceUpdate() {
+			this.$store.dispatch("snack/setSnackState", true)
+			this.$store.dispatch("snack/setSnackColor", "error")
+			this.$store.dispatch("snack/setSnackText", "Menu item price update aborted.")
+		},
+		updateName() {
+			this.$store.dispatch("snack/setSnackState", true)
+			this.$store.dispatch("snack/setSnackColor", "success")
+			this.$store.dispatch("snack/setSnackText", "Menu item name updated successfully.")
+		},
+		cancelNameUpdate() {
+			this.$store.dispatch("snack/setSnackState", true)
+			this.$store.dispatch("snack/setSnackColor", "error")
+			this.$store.dispatch("snack/setSnackText", "Menu item name update aborted.")
+		},
+
 		remove(item) {
 			const index = this.friends.indexOf(item.name)
 			if (index >= 0) this.friends.splice(index, 1)
@@ -726,5 +779,23 @@ export default {
 <style lang="scss" scoped>
 ::v-deep.v-autocomplete:not(.v-input--is-focused).v-select--chips input {
 	max-height: 25px;
+}
+.checkbox-input-column {
+	::v-deep.v-input--checkbox {
+		background-color: rgb(255 255 255 / 8%);
+		margin-top: 0;
+		padding: 18px 12px;
+		border-bottom: 1px solid rgb(156 155 150) !important;
+		border-radius: 3px 3px 0 0;
+		&:hover {
+			background-color: #484848;
+		}
+	}
+}
+.menu-item-name {
+	font-size: 1.1rem; line-height: 1.3rem;
+}
+.menu-item-price {
+	font-size: 1.1rem; line-height: 1.3rem;
 }
 </style>

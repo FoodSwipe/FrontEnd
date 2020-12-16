@@ -194,7 +194,7 @@ export default {
 	border: 4px solid white; margin-top: -55px;
 }
 .admin-layout-main {
-	background: #e0e0da;
+	background: #2d2d2d;
 	min-height: calc(100vh - 54px);
 }
 .admin-snackbar {

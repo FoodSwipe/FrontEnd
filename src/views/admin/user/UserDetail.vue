@@ -15,6 +15,7 @@
 				lg="3"
 				md="3"
 				cols="12"
+				class="overflow-y"
 			>
 				<user-orders />
 			</v-col>
@@ -99,3 +100,13 @@ export default {
 
 }
 </script>
+<style lang="sass" scoped>
+.overflow-y
+	height: 80vh
+	width: 100%
+	overflow-y: auto
+	-ms-overflow-style: none
+	scrollbar-width: none
+.overflow-y::-webkit-scrollbar
+	display: none
+</style>
