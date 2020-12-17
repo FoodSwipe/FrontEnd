@@ -90,12 +90,6 @@ export default {
 }
 </script>
 
-<style>
-.green-gradient-rgba {
-	background: linear-gradient(40deg, rgb(153, 208, 117), rgb(16, 157, 105)) !important
-}
-</style>
-
 <style scoped>
 
 * { box-sizing: border-box; }

@@ -29,6 +29,12 @@ export default {
 .cursor {
 	cursor: pointer;
 }
+
+// gradient backgrounds
+
+.green-gradient-rgba {
+	background: linear-gradient(40deg, rgb(153, 208, 117), rgb(16, 157, 105)) !important
+}
 .red-gradient {
 	background: linear-gradient(45deg, #580404, #e05757)
 }
