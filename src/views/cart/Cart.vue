@@ -2,26 +2,6 @@
 	<v-card flat
 		class="rounded-0 mt-4 mx-auto" width="1200"
 	>
-		<v-snackbar
-			v-model="snack"
-			top
-			right
-			:timeout="3000"
-			color="error"
-			style="margin-top: -60px;"
-		>
-			{{ snackText }}
-
-			<template #action="{ attrs }">
-				<v-btn
-					v-bind="attrs"
-					text
-					@click="snack = false"
-				>
-					Close
-				</v-btn>
-			</template>
-		</v-snackbar>
 		<v-row class="ma-0 pa-0">
 			<v-col cols="12"
 				xl="8"
@@ -304,19 +284,15 @@ export default {
 			if (item.quantity === 1) return
 			item.quantity -=1
 		},
-		save() {
-			this.snack = true
-			this.snackColor = "success"
-			this.snackText = "Data saved"
-		},
-		openSnack(text) {
-			this.snack = true
-			this.snackText = text
+		openSnack(text, color) {
+			this.$store.dispatch("snack/setSnackState", true)
+			this.$store.dispatch("snack/setSnackColor", color)
+			this.$store.dispatch("snack/setSnackText", text)
 		},
 		removeItemFromCart(item) {
 			const indexOfItemToRemove = this.desserts.indexOf(item)
 			this.desserts.splice(indexOfItemToRemove, 1)
-			this.openSnack(item.name + " removed from cart.")
+			this.openSnack(item.name + " removed from cart.", "error")
 		},
 		routeToOrderConfirmation() {
 			router.push({name: "Confirm Order"})

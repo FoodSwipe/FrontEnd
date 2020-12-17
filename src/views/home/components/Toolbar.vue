@@ -208,56 +208,255 @@
 					</v-col>
 				</v-row>
 			</v-img>
+			<v-form>
+				<v-row class="ma-0 pa-0"
+					justify="center" align="center"
+				>
+					<v-col cols="12">
+						<p class="organization-title text-center">
+							Food Swipe Online Pvt. Ltd.
+						</p>
+						<p class="login-to-proceed">
+							Login to proceed
+						</p>
+					</v-col>
+					<v-col cols="12">
+						<v-text-field
+							id="login-username"
+							v-model="login.username"
+							filled
+							label="Username"
+							prepend-inner-icon="account_circle"
+							hide-details="auto"
+						/>
+					</v-col>
+					<v-col cols="12">
+						<v-text-field
+							id="login-password"
+							v-model="login.password"
+							filled
+							label="Password"
+							prepend-inner-icon="lock"
+							type="password"
+							autocomplete="on"
+							hide-details="auto"
+						/>
+					</v-col>
+				</v-row>
+			</v-form>
 			<v-row class="ma-0 pa-0"
-				justify="center" align="center"
+				align="center"
 			>
-				<v-col cols="12">
-					<p class="organization-title text-center">
-						Food Swipe Online Pvt. Ltd.
-					</p>
-					<p class="login-to-proceed">
-						Login to proceed
-					</p>
-				</v-col>
-				<v-col cols="12">
-					<v-text-field
-						filled
-						label="Username"
-						clearable
-						prepend-inner-icon="account_circle"
-						hide-details="auto"
-					/>
-				</v-col>
-				<v-col cols="12">
-					<v-text-field
-						filled
-						label="Password"
-						clearable
-						prepend-inner-icon="lock"
-						type="password"
-						hide-details="auto"
-					/>
-				</v-col>
 				<v-col cols="6">
-					<v-btn text
-						color="error"
+					<v-dialog
+						id="reset-password-dialog"
+						v-model="resetPasswordDialog"
+						width="500"
 					>
-						Forget password?
-					</v-btn>
+						<template #activator="{ on, attrs }">
+							<v-btn text
+								color="error"
+								v-bind="attrs"
+								v-on="on"
+							>
+								Forget password?
+							</v-btn>
+						</template>
+
+						<v-card>
+							<v-card-title class="headline grey lighten-2">
+								Reset your password
+							</v-card-title>
+
+							<v-card-text class="pt-4">
+								<v-text-field
+									id="reset-email"
+									v-model="resetPassword.email"
+									type="email"
+									filled
+									hide-details="auto"
+									prepend-inner-icon="email"
+									placeholder="Email Address"
+									hint="Reset password link will be sent to the provided email address."
+									persistent-hint
+								/>
+							</v-card-text>
+
+							<v-divider />
+
+							<v-card-actions class="d-flex justify-center">
+								<v-btn
+									dark
+									color="orange"
+									@click="submitResetPasswordForm()"
+								>
+									<v-icon>update</v-icon><span class="pl-2">Reset Password</span>
+								</v-btn>
+							</v-card-actions>
+						</v-card>
+					</v-dialog>
 				</v-col>
 				<v-col cols="6"
 					class="text-right"
 				>
-					<v-btn text
-						color="primary"
+					<v-dialog
+						id="register-dialog"
+						v-model="registerDialog"
+						max-width="500"
 					>
-						Register
-					</v-btn>
+						<template #activator="{ on, attrs }">
+							<v-btn text
+								color="primary"
+								v-bind="attrs"
+								v-on="on"
+							>
+								Register
+							</v-btn>
+						</template>
+
+						<v-card>
+							<v-card-title class="grey lighten-2">
+								<v-icon size="30">
+									person_add
+								</v-icon><span class="pl-3">Register Now</span>
+							</v-card-title>
+
+							<v-form>
+								<v-row class="ma-0 pa-0"
+									align="center"
+								>
+									<v-col cols="12"
+										xl="6" lg="6"
+										md="6" sm="6"
+									>
+										<v-text-field
+											id="first-name"
+											v-model="register.f_name"
+											dense
+											filled
+											clearable
+											prepend-inner-icon="face"
+											hide-details="auto"
+											label="First name"
+										/>
+									</v-col>
+									<v-col cols="12"
+										xl="6" lg="6"
+										md="6" sm="6"
+									>
+										<v-text-field
+											id="last-name"
+											v-model="register.l_name"
+											dense
+											filled
+											clearable
+											prepend-inner-icon="face"
+											hide-details="auto"
+											label="Last name"
+										/>
+									</v-col>
+									<v-col cols="12"
+										xl="6" lg="6"
+										md="6" sm="6"
+									>
+										<v-text-field
+											id="username"
+											v-model="register.username"
+											dense
+											filled
+											clearable
+											prepend-inner-icon="account_circle"
+											hide-details="auto"
+											label="Username"
+										/>
+									</v-col>
+									<v-col cols="12"
+										xl="6" lg="6"
+										md="6" sm="6"
+									>
+										<v-text-field
+											id="phone"
+											v-model="register.phone"
+											dense
+											filled
+											clearable
+											type="number"
+											prepend-inner-icon="call"
+											hide-details="auto"
+											label="Phone number"
+										/>
+									</v-col>
+									<v-col cols="12">
+										<v-text-field
+											id="email"
+											v-model="register.email"
+											dense
+											filled
+											clearable
+											prepend-inner-icon="email"
+											hide-details="auto"
+											label="Email address"
+										/>
+									</v-col>
+									<v-col cols="12">
+										<v-text-field
+											id="password"
+											v-model="register.password"
+											dense
+											filled
+											clearable
+											prepend-inner-icon="lock"
+											hide-details="auto"
+											label="Password"
+										/>
+									</v-col>
+									<v-col cols="12">
+										<v-text-field
+											id="address"
+											v-model="register.address"
+											dense
+											filled
+											clearable
+											prepend-inner-icon="room"
+											hide-details="auto"
+											label="Address"
+										/>
+									</v-col>
+								</v-row>
+							</v-form>
+
+							<v-divider />
+							<v-card-text class="d-flex align-center">
+								<v-checkbox v-model="agree"
+									hide-details
+								>
+									<template #label>
+										<div class="login-terms">
+											By clicking <code>Register</code>, you agree to our <code>Terms</code>, <code>Data Policy</code> and <code>Cookies Policy</code>.
+											We will track your last <code>Orders</code>, <code>Locations</code> and try to serve you more better.
+										</div>
+									</template>
+								</v-checkbox>
+							</v-card-text>
+
+							<v-card-actions class="d-flex justify-center pt-0 pb-4">
+								<v-btn color="orange lighten-3"
+									@click="submitRegister()"
+								>
+									<v-icon>add_circle</v-icon>
+									<span class="pl-2">Register</span>
+								</v-btn>
+							</v-card-actions>
+						</v-card>
+					</v-dialog>
 				</v-col>
 				<v-col cols="12">
-					<v-btn block
+					<v-btn
+						id="submit-login"
+						block
 						dark
 						class="peach-gradient"
+						@click="submitLogin()"
 					>
 						<v-icon>input</v-icon><span class="pl-3">Login</span>
 					</v-btn>
@@ -265,7 +464,7 @@
 				<v-col cols="12">
 					<div class="login-terms">
 						By clicking <code>Login</code>, you agree to our <code>Terms</code>, <code>Data Policy</code> and <code>Cookies Policy</code>.
-						You may receive <i>Email Notifications</i> from us and can opt out any time. We will track your last <code>orders</code>, <code>locations</code> and try to serve you more better.
+						You may receive <i>Email Notifications</i> from us and can opt out any time. We will track your last <code>Orders</code>, <code>Locations</code> and try to serve you more better.
 					</div>
 				</v-col>
 			</v-row>
@@ -279,14 +478,38 @@ import router from "@/router"
 export default {
 	name: "HomeToolbarComponent",
 	data: () => ({
+		agree: false,
 		drawer: null,
+		resetPasswordDialog: false,
+		registerDialog: false,
 		loginBanner: require("@/assets/banner_1.jpg"),
 		items: [
 			{ title: "Home", icon: "mdi-view-dashboard" },
 			{ title: "About", icon: "mdi-forum" },
 		],
+		resetPassword: {
+			email: ""
+		},
+		login: {
+			username: "",
+			password: ""
+		},
+		register: {
+			f_name: "",
+			l_name: "",
+			username: "",
+			email: "",
+			phone: null,
+			address: "",
+			password: ""
+		}
 	}),
 	methods: {
+		openSnack(text, color="success") {
+			this.$store.dispatch("snack/setSnackState", true)
+			this.$store.dispatch("snack/setSnackColor", color)
+			this.$store.dispatch("snack/setSnackText", text)
+		},
 		toCart() {
 			router.push({name: "Cart"})
 		},
@@ -301,6 +524,18 @@ export default {
 		},
 		toAdminPanel() {
 			router.push({name: "Administration"})
+		},
+		submitLogin() {
+			this.openSnack("Logged in successfully.")
+			this.drawer = false
+		},
+		submitRegister() {
+			this.openSnack("New user added successfully.")
+			this.registerDialog = false
+		},
+		submitResetPasswordForm() {
+			this.openSnack("Email address sent to email successfully.")
+			this.resetPasswordDialog = false
 		}
 	}
 }
