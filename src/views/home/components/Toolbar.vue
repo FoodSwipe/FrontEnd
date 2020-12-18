@@ -15,6 +15,31 @@
 				<template #activator="{on, attrs}">
 					<v-scale-transition>
 						<v-btn
+							v-if="currentUser !== null"
+							icon
+							small
+							class="pr-0 mr-sm-6 mr-md-6 mr-lg-6 mr-xl-6"
+							v-bind="attrs"
+							@click="logOut()"
+							v-on="on"
+						>
+							<v-icon :size="
+								$vuetify.breakpoint.width > 300
+									? ''
+									: '16'
+							"
+							>
+								logout
+							</v-icon>
+						</v-btn>
+					</v-scale-transition>
+				</template>
+				<span>Logout</span>
+			</v-tooltip>
+			<v-tooltip bottom>
+				<template #activator="{on, attrs}">
+					<v-scale-transition>
+						<v-btn
 							v-show="$route.name !== 'Food Swipe'"
 							icon
 							small
@@ -41,7 +66,9 @@
 					<v-scale-transition>
 						<!-- v-if not authenticated -->
 
-						<v-btn v-bind="attrs"
+						<v-btn
+							v-if="currentUser === null"
+							v-bind="attrs"
 							icon
 							small
 							class="pr-0 mr-sm-6 mr-md-6 mr-lg-6 mr-xl-6 cursor"
@@ -55,25 +82,25 @@
 								input
 							</v-icon>
 						</v-btn>
-						<!-- v-if authenticated -->
-						<!--					<v-btn-->
-						<!--						v-show="$route.name !== 'Profile'"-->
-						<!--						icon-->
-						<!--						small-->
-						<!--						class="pr-0 mr-sm-6 mr-md-6 mr-lg-6 mr-xl-6 profile-avatar cursor"-->
-						<!--						v-bind="attrs"-->
-						<!--						@click="toProfile()"-->
-						<!--						v-on="on"-->
-						<!--					>-->
-						<!--						<v-icon :size="-->
-						<!--							$vuetify.breakpoint.width > 300-->
-						<!--								? ''-->
-						<!--								: '16'-->
-						<!--						"-->
-						<!--						>-->
-						<!--							account_circle-->
-						<!--						</v-icon>-->
-						<!--					</v-btn>-->
+						<v-btn
+							v-else
+							v-show="$route.name !== 'Profile'"
+							icon
+							small
+							class="pr-0 mr-sm-6 mr-md-6 mr-lg-6 mr-xl-6 profile-avatar cursor"
+							v-bind="attrs"
+							@click="toProfile()"
+							v-on="on"
+						>
+							<v-icon :size="
+								$vuetify.breakpoint.width > 300
+									? ''
+									: '16'
+							"
+							>
+								account_circle
+							</v-icon>
+						</v-btn>
 					</v-scale-transition>
 				</template>
 				<span>Login</span>
@@ -228,6 +255,7 @@
 							label="Username"
 							prepend-inner-icon="account_circle"
 							hide-details="auto"
+							:error-messages="loginFieldErrors.username"
 						/>
 					</v-col>
 					<v-col cols="12">
@@ -240,6 +268,7 @@
 							type="password"
 							autocomplete="on"
 							hide-details="auto"
+							:error-messages="loginFieldErrors.password"
 						/>
 					</v-col>
 				</v-row>
@@ -331,13 +360,14 @@
 									>
 										<v-text-field
 											id="first-name"
-											v-model="register.f_name"
+											v-model="register.first_name"
 											dense
 											filled
 											clearable
 											prepend-inner-icon="face"
 											hide-details="auto"
 											label="First name"
+											:error-messages="registrationErrors.first_name"
 										/>
 									</v-col>
 									<v-col cols="12"
@@ -346,13 +376,14 @@
 									>
 										<v-text-field
 											id="last-name"
-											v-model="register.l_name"
+											v-model="register.last_name"
 											dense
 											filled
 											clearable
 											prepend-inner-icon="face"
 											hide-details="auto"
 											label="Last name"
+											:error-messages="registrationErrors.last_name"
 										/>
 									</v-col>
 									<v-col cols="12"
@@ -368,6 +399,7 @@
 											prepend-inner-icon="account_circle"
 											hide-details="auto"
 											label="Username"
+											:error-messages="registrationErrors.username"
 										/>
 									</v-col>
 									<v-col cols="12"
@@ -376,7 +408,7 @@
 									>
 										<v-text-field
 											id="phone"
-											v-model="register.phone"
+											v-model="register.contact"
 											dense
 											filled
 											clearable
@@ -384,6 +416,7 @@
 											prepend-inner-icon="call"
 											hide-details="auto"
 											label="Phone number"
+											:error-messages="registrationErrors.contact"
 										/>
 									</v-col>
 									<v-col cols="12">
@@ -396,6 +429,7 @@
 											prepend-inner-icon="email"
 											hide-details="auto"
 											label="Email address"
+											:error-messages="registrationErrors.email"
 										/>
 									</v-col>
 									<v-col cols="12">
@@ -403,11 +437,14 @@
 											id="password"
 											v-model="register.password"
 											dense
+											autocomplete="on"
 											filled
 											clearable
 											prepend-inner-icon="lock"
 											hide-details="auto"
 											label="Password"
+											type="password"
+											:error-messages="registrationErrors.password"
 										/>
 									</v-col>
 									<v-col cols="12">
@@ -420,6 +457,7 @@
 											prepend-inner-icon="room"
 											hide-details="auto"
 											label="Address"
+											:error-messages="registrationErrors.address"
 										/>
 									</v-col>
 								</v-row>
@@ -474,6 +512,7 @@
 
 <script>
 import router from "@/router"
+import { mapGetters } from "vuex"
 
 export default {
 	name: "HomeToolbarComponent",
@@ -495,15 +534,22 @@ export default {
 			password: ""
 		},
 		register: {
-			f_name: "",
-			l_name: "",
+			first_name: "",
+			last_name: "",
 			username: "",
 			email: "",
-			phone: null,
+			contact: null,
 			address: "",
 			password: ""
 		}
 	}),
+	computed: {
+		...mapGetters({
+			currentUser: "auth/currentUser",
+			registrationErrors: "user/registrationErrors",
+			loginFieldErrors: "auth/loginFieldErrorMessages"
+		})
+	},
 	methods: {
 		openSnack(text, color="success") {
 			this.$store.dispatch("snack/setSnackState", true)
@@ -525,13 +571,34 @@ export default {
 		toAdminPanel() {
 			router.push({name: "Administration"})
 		},
-		submitLogin() {
-			this.openSnack("Logged in successfully.")
-			this.drawer = false
+		async submitLogin() {
+			const loggedIn = await this.$store.dispatch("auth/login", this.login)
+			if (loggedIn === true) {
+				this.openSnack("Logged in successfully.")
+				this.drawer = false
+			} else if(loggedIn === 500) {
+				this.openSnack("Internal Server Error.", "error")
+			} else if(loggedIn === 400) {
+				this.openSnack("Login failed.", "error")
+			} else if (loggedIn.message) {
+				this.openSnack(loggedIn.message, "error")
+			}
 		},
-		submitRegister() {
-			this.openSnack("New user added successfully.")
-			this.registerDialog = false
+		logOut() {
+			this.$store.dispatch("auth/logout", { username: this.currentUser.username })
+				.then(() => {
+					this.openSnack("Logged out successfully.")
+				})
+		},
+		async submitRegister() {
+			const registered = await this.$store.dispatch("user/register", this.register)
+			if (registered === true) {
+				this.openSnack("User registered successfully.")
+				this.registerDialog = false
+			} else {
+				if (registered === 500) this.openSnack("Internal server error.", "error")
+				else this.openSnack("User registered failed.", "error")
+			}
 		},
 		submitResetPasswordForm() {
 			this.openSnack("Email address sent to email successfully.")
