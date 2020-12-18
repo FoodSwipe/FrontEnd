@@ -7,8 +7,10 @@ import VueBus from "vue-bus"
 import "roboto-fontface/css/roboto/roboto-fontface.css"
 import "material-design-icons-iconfont/dist/material-design-icons.css"
 import "swiper/swiper-bundle.css"
+import api from "@/handler/axios"
 
 Vue.config.productionTip = false
+Vue.prototype.$api = api
 
 Vue.use(VueBus)
 
