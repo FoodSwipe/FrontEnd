@@ -7,19 +7,29 @@ const userUrls = urls.user
 export const SET_USER = "SET_USER"
 export const SET_USERS = "SET_USERS"
 export const SET_REGISTER_ERROR_MESSAGES = "SET_REGISTER_ERROR_MESSAGES"
+export const SET_ADD_USER_ERROR_MESSAGES = "SET_ADD_USER_ERROR_MESSAGES"
+
+const defaultSet = {
+	first_name: null,
+	last_name: null,
+	username: null,
+	email: null,
+	contact: null,
+	address: null,
+	password: null,
+}
+
 
 const state = {
 	users: [],
 	user: {},
 	registerError: {
-		first_name: null,
-		last_name: null,
-		username: null,
-		email: null,
-		contact: null,
-		address: null,
-		password: null,
-	}
+		...defaultSet,
+	},
+	addUserErrors: {
+		...defaultSet,
+		birth_date: null
+	},
 }
 
 const mutations = {
@@ -31,7 +41,10 @@ const mutations = {
 	},
 	[SET_REGISTER_ERROR_MESSAGES](state, value) {
 		state.registerError = value
-	}
+	},
+	[SET_ADD_USER_ERROR_MESSAGES](state, value) {
+		state.addUserErrors = value
+	},
 }
 
 const getters = {
@@ -43,6 +56,9 @@ const getters = {
 	},
 	registrationErrors: state => {
 		return state.registerError
+	},
+	addUserErrorMessages: state => {
+		return state.addUserErrors
 	}
 }
 
@@ -108,13 +124,46 @@ const actions = {
 			throw err
 		}
 	},
-	async register({state, commit}, payload) {
+	async register({commit}, payload) {
 		try {
 			await $api.post(userUrls.register, payload)
 			return true
 		} catch(e) {
 			if (e.response.status === 400) {
 				commit("SET_REGISTER_ERROR_MESSAGES", e.response.data)
+				return false
+			}
+			return 500
+		}
+	},
+	clearAddUserErrorMessages({commit}) {
+		commit("SET_ADD_USER_ERROR_MESSAGES", {
+			...defaultSet,
+			birth_date: null
+		})
+	},
+	async addUser({commit}, payload) {
+		try {
+			await $api.post(userUrls.addUser, payload)
+			return true
+		} catch(e) {
+			if (e.response.status === 400) {
+				commit("SET_ADD_USER_ERROR_MESSAGES", e.response.data)
+				return false
+			}
+			return 500
+		}
+	},
+	async update({commit}, payload) {
+		try {
+			await $api.put(
+				util.format(userUrls.updateUserWithProfile, payload.id),
+				payload.body
+			)
+			return true
+		} catch(e) {
+			if (e.response.status === 400) {
+				commit("SET_ADD_USER_ERROR_MESSAGES", e.response.data)
 				return false
 			}
 			return 500
