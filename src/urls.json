@@ -1,0 +1,15 @@
+{
+  "user": {
+    "register": "register",
+    "listUsers": "user",
+    "userDetail": "user/%s",
+    "userProfile": "user/%s/profile"
+  },
+  "auth": {
+    "login": "login",
+    "logout": "logout",
+    "updatePassword": "user/update-password",
+    "requestResetPassword": "user/reset-password",
+    "resetPassword": "user/reset-password/%s/"
+  }
+}
