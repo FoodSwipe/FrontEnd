@@ -1,10 +1,10 @@
 <template>
 	<v-data-table
+		:loading="loading"
 		dark
 		:search="searchUsers"
 		:headers="headers"
 		:items="users"
-		sort-by="calories"
 		class="elevation-1"
 	>
 		<template #top>
@@ -57,34 +57,26 @@
 			</v-toolbar>
 		</template>
 		<!-- eslint-disable-next-line vue/valid-v-slot-->
-		<template #item.profile="{item}">
-			<v-avatar size="40"
-				class="cursor golden-rod-border-2"
-				@click="routeToUserDetailPage(item.id)"
+		<template #item.username="{item}">
+			<div
+				class="cursor"
+				@click="routeToUserDetailPage(item.user.id)"
 			>
-				<v-img
-					v-if="item.image"
-					:src="item.image"
-				/>
-				<template v-else
-					class="text-capitalize"
-				>
-					{{ item.f_name[0] }}
-				</template>
-			</v-avatar>
+				{{ item.user.username }}
+			</div>
 		</template>
 		<!-- eslint-disable-next-line vue/valid-v-slot-->
 		<template #item.contact="props">
 			<v-edit-dialog
 				v-model:return-value="props.item.contact"
 				dark
-				@save="updatePhone"
+				@save="updatePhone(props.item)"
 				@cancel="cancelPhoneUpdate"
 			>
 				<span class="user-phone">{{ props.item.contact }}</span>
 				<template #input>
 					<v-text-field
-						v-model="props.item.name"
+						v-model="props.item.contact"
 						single-line
 						type="number"
 					/>
@@ -96,7 +88,7 @@
 			<v-edit-dialog
 				v-model:return-value="props.item.address"
 				dark
-				@save="updateAddress"
+				@save="updateAddress(props.item)"
 				@cancel="cancelAddressUpdate"
 			>
 				<span class="user-address">{{ props.item.address }}</span>
@@ -137,20 +129,23 @@
 		</template>
 		<!-- eslint-disable-next-line vue/valid-v-slot-->
 		<template #item.is_superuser="{item}">
-			<v-checkbox v-model="item.is_superuser"
+			<v-checkbox v-model="item.user.is_superuser"
 				color="orange darken-3"
+				@change="toggleSuperUserStatus(item)"
 			/>
 		</template>
 		<!-- eslint-disable-next-line vue/valid-v-slot-->
 		<template #item.is_staff="{item}">
-			<v-checkbox v-model="item.is_staff"
+			<v-checkbox v-model="item.user.is_staff"
 				color="pink darken-3"
+				@change="toggleStaffUserStatus(item)"
 			/>
 		</template>
 	</v-data-table>
 </template>
 <script>
 import router from "@/router"
+import { mapGetters } from "vuex"
 
 export default {
 	name: "UserAdministration",
@@ -158,43 +153,80 @@ export default {
 		UserFormDialog: () => import("./UserFormDialog")
 	},
 	data: () => ({
+		loading: false,
 		searchUsers: "",
 		headers: [
 			{ text: "Actions", value: "actions", sortable: false, align: "center" },
-			{text: "Avatar", value: "profile", sortable: false, align: "center"},
 			{ text: "Username", value: "username", align: "start"},
 			{ text: "Phone", value: "contact" },
 			{ text: "Address", value: "address" },
 			{ text: "Superuser Status", value: "is_superuser" },
 			{ text: "Staff user Status", value: "is_staff" },
 		],
-		users: []
 	}),
 
-	created() {
-		this.initialize()
+	computed: {
+		...mapGetters({
+			users: "user/allUsers"
+		})
+	},
+	async created() {
+		await this.initialize()
 	},
 
 	methods: {
-		updatePhone() {
-			this.$store.dispatch("snack/setSnackState", true)
-			this.$store.dispatch("snack/setSnackColor", "success")
-			this.$store.dispatch("snack/setSnackText", "User contact updated successfully.")
+		async toggleSuperUserStatus(item) {
+			const updated = await this.$store.dispatch("user/toggleSuperUserStatus", {
+				userId: item.user.id
+			})
+			if (updated === true) {
+				await this.openSnack("User superuser status updated successfully.", "success")
+			}
+		},
+		async toggleStaffUserStatus(item) {
+			const updated = await this.$store.dispatch("user/toggleStaffUserStatus", {
+				userId: item.user.id
+			})
+			if (updated === true) {
+				await this.openSnack("User staff status updated successfully.", "success")
+			}
+		},
+		async openSnack(text, color="error") {
+			await this.$store.dispatch("snack/setSnackState", true)
+			await this.$store.dispatch("snack/setSnackColor", color)
+			await this.$store.dispatch("snack/setSnackText", text)
+		},
+		async updatePhone(item) {
+			const updated = await this.$store.dispatch("user/updateContact", {
+				profileId: item.id,
+				contact: item.contact
+			})
+			if (updated === true) {
+				await this.openSnack("User contact updated successfully.", "success")
+			} else if(updated === 500) {
+				await this.openSnack("Internal Server Error.")
+			} else {
+				await this.openSnack(updated.contact[0])
+			}
 		},
 		cancelPhoneUpdate() {
-			this.$store.dispatch("snack/setSnackState", true)
-			this.$store.dispatch("snack/setSnackColor", "error")
-			this.$store.dispatch("snack/setSnackText", "User contact update aborted.")
+			// do nothing
 		},
-		updateAddress() {
-			this.$store.dispatch("snack/setSnackState", true)
-			this.$store.dispatch("snack/setSnackColor", "success")
-			this.$store.dispatch("snack/setSnackText", "User address updated successfully.")
+		async updateAddress(item) {
+			const updated = await this.$store.dispatch("user/updateAddress", {
+				profileId: item.id,
+				address: item.address
+			})
+			if (updated === true) {
+				await this.openSnack("User address updated successfully.", "success")
+			} else if (updated === 500) {
+				await this.openSnack("Internal Server Error.")
+			} else {
+				await this.openSnack(updated.address[0])
+			}
 		},
 		cancelAddressUpdate() {
-			this.$store.dispatch("snack/setSnackState", true)
-			this.$store.dispatch("snack/setSnackColor", "error")
-			this.$store.dispatch("snack/setSnackText", "User address update aborted.")
+			// do nothing
 		},
 		openAddUserFormDialog() {
 			this.$bus.emit("open-user-form-dialog-add-item")
@@ -207,83 +239,24 @@ export default {
 		},
 		async deleteUser(item) {
 			const index = this.users.indexOf(item)
-			const reaction = confirm(`Are you sure you want to delete user "${item.username}"?`);
+			const reaction = confirm(`Are you sure you want to delete user "${item.user.username}"?`);
 			if (reaction === true) {
 				await this.$store.dispatch(
 					"user/delete",
 					{
-						id: item.id,
+						id: item.user.id,
 					})
 				this.users.splice(index, 1)
+				this.openSnack("User deleted successfully.")
 			}
 		},
 		routeToUserDetailPage(itemId) {
 			router.push({name: "User Detail", params: { id: itemId }})
 		},
-		initialize() {
-			this.users = [
-				{
-					id: 1,
-					f_name: "John",
-					l_name: "Doe",
-					username: "foodLover",
-					email: "foo@bar.com",
-					contact: 9854159951,
-					address: "Lorem ipsum dolar met",
-					created_at: "June 5, 2020",
-					is_superuser: false,
-					is_staff: false,
-					image: "https://www.pavilionweb.com/wp-content/uploads/2017/03/man-300x300.png"
-				},
-				{
-					id: 2,
-					f_name: "Sandra",
-					l_name: "Williams",
-					username: "goSandra",
-					email: "foo@goo.com",
-					contact: 9854159951,
-					address: "Lorem ipsum dolar met",
-					created_at: "June 5, 2020",
-					is_superuser: false,
-					is_staff: false,
-				},
-				{
-					id: 3,
-					f_name: "Muhammad",
-					l_name: "Ali",
-					username: "octagon345",
-					email: "sar@lar.com",
-					contact: 9854159951,
-					address: "Lorem ipsum dolar met",
-					created_at: "June 5, 2020",
-					is_superuser: false,
-					is_staff: true,
-				},
-				{
-					id: 4,
-					f_name: "Lionel",
-					l_name: "Messi",
-					username: "heroUser",
-					email: "par@kar.com",
-					contact: 9854159951,
-					address: "Lorem ipsum dolar met",
-					created_at: "June 5, 2020",
-					is_superuser: true,
-					is_staff: true,
-				},
-				{
-					id: 5,
-					f_name: "Conor",
-					l_name: "McGregor",
-					username: "rocky123",
-					email: "hel@sel.com",
-					contact: 9854159951,
-					address: "Lorem ipsum dolar met",
-					created_at: "June 5, 2020",
-					is_superuser: false,
-					is_staff: false,
-				},
-			]
+		async initialize() {
+			this.loading = true
+			await this.$store.dispatch("user/getAll")
+			this.loading = false
 		},
 	},
 }

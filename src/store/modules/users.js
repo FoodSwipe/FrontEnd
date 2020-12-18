@@ -1,5 +1,6 @@
 import $api from "@/handler/axios"
 import urls from "@/urls.json"
+const util = require("util")
 
 const userUrls = urls.user
 
@@ -46,17 +47,66 @@ const getters = {
 }
 
 const actions = {
-	getAllUsers({commit}) {
-		$api.get(userUrls.listUsers).then(res => {
-			commit("SET_USERS", res)
-			resolve(res)
-		})
+	async getAll({commit}) {
+		const res = await $api.get(userUrls.listProfiles)
+		commit("SET_USERS", res)
 	},
-	getUser({commit}, payload) {
-		$api.get(utils.format(userUrls.userDetail, payload.id)).then(res => {
-			commit("SET_USER", res)
-			resolve(res)
-		})
+	async getSingle({ commit }, payload) {
+		const res = await $api.get(util.format(userUrls.userDetail, payload.id))
+		commit("SET_USER", res)
+	},
+	async delete({}, payload) {
+		try {
+			await $api.delete(util.format(userUrls.userDetail, payload.id))
+		} catch (err) {
+			throw err
+		}
+	},
+	async updateContact({}, payload) {
+		try {
+			await $api.patch(
+				util.format(userUrls.profileDetail, payload.profileId),
+				{ contact: payload.contact }
+			)
+			return true
+		} catch (err) {
+			if (err.response.status === 400) {
+				return err.response.data
+			} else {
+				return 500
+			}
+		}
+	},
+	async updateAddress({}, payload) {
+		try {
+			await $api.patch(
+				util.format(userUrls.profileDetail, payload.profileId),
+				{ address: payload.address }
+			)
+			return true
+		} catch (err) {
+			if (err.response.status === 400) {
+				return err.response.data
+			} else {
+				return 500
+			}
+		}
+	},
+	async toggleSuperUserStatus({}, payload) {
+		try {
+			await $api.post(util.format(userUrls.toggleSuperUserStatus, payload.userId))
+			return true
+		} catch (err) {
+			throw err
+		}
+	},
+	async toggleStaffUserStatus({}, payload) {
+		try {
+			await $api.post(util.format(userUrls.toggleStaffStatus, payload.userId))
+			return true
+		} catch (err) {
+			throw err
+		}
 	},
 	async register({state, commit}, payload) {
 		try {

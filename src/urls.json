@@ -1,9 +1,13 @@
 {
   "user": {
+    "listProfiles": "profiles",
     "register": "register",
     "listUsers": "user",
     "userDetail": "user/%s",
-    "userProfile": "user/%s/profile"
+    "userProfile": "user/%s/profile",
+    "profileDetail": "profile/%s",
+    "toggleSuperUserStatus": "user/%s/toggle-superuser-status",
+    "toggleStaffStatus": "user/%s/toggle-staff-status"
   },
   "auth": {
     "login": "login",
