@@ -2,6 +2,8 @@
   "user": {
     "listProfiles": "profiles",
     "register": "register",
+    "addUser": "add-user",
+    "updateUserWithProfile": "user-update/%s",
     "listUsers": "user",
     "userDetail": "user/%s",
     "userProfile": "user/%s/profile",
