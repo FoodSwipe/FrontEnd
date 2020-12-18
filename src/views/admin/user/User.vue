@@ -171,7 +171,11 @@ export default {
 		})
 	},
 	async created() {
+		this.$bus.on("reload-users", this.initialize)
 		await this.initialize()
+	},
+	beforeUnmount() {
+		this.$bus.off("reload-users", this.initialize)
 	},
 
 	methods: {
@@ -232,6 +236,7 @@ export default {
 			this.$bus.emit("open-user-form-dialog-add-item")
 		},
 		openEditUserFormDialog(item) {
+			console.log(item)
 			this.$bus.emit("open-user-form-dialog-edit-item", {
 				editedIndex: this.users.indexOf(item),
 				editedItem: Object.assign({}, item),
