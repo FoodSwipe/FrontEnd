@@ -253,6 +253,7 @@
 							v-model="login.username"
 							filled
 							label="Username"
+							clearable
 							prepend-inner-icon="account_circle"
 							hide-details="auto"
 							:error-messages="loginFieldErrors.username"
@@ -262,7 +263,9 @@
 						<v-text-field
 							id="login-password"
 							v-model="login.password"
+							background-color="white"
 							filled
+							clearable
 							label="Password"
 							prepend-inner-icon="lock"
 							type="password"
