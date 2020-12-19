@@ -267,6 +267,10 @@ export default {
 		},
 		closeDialog(){
 			this.$store.dispatch("itemType/clearAddItemTypeErrorMessages")
+			this.newItemType = {
+				name: "",
+				badge: null,
+			}
 			this.dialog = false
 		},
 		async saveDialogForm() {
