@@ -513,13 +513,6 @@ export default {
 }
 </script>
 <style lang="sass" scoped>
-.sticky-dialog-top
-	position: sticky
-	position: -webkit-sticky
-	top: 0
-	z-index: 200
-	height: 55px
-
 .form-title
 	color: white
 	display: block

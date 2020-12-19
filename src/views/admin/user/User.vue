@@ -210,7 +210,7 @@ export default {
 			} else if(updated === 500) {
 				await this.openSnack("Internal Server Error.")
 			} else {
-				await this.openSnack(updated.contact[0])
+				await this.openSnack(updated)
 			}
 		},
 		cancelPhoneUpdate() {
@@ -252,7 +252,7 @@ export default {
 						id: item.user.id,
 					})
 				this.users.splice(index, 1)
-				this.openSnack("User deleted successfully.")
+				await this.openSnack(`${item.user.username} deleted successfully.`)
 			}
 		},
 		routeToUserDetailPage(itemId) {
