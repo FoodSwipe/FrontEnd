@@ -21,5 +21,13 @@
   "itemType": {
     "list": "item-type/",
     "detail": "item-type/%s/"
+  },
+  "menuItem": {
+    "list": "menu-item/",
+    "detail": "menu-item/%s/"
+  },
+  "menuItemGroup": {
+    "list": "menu-item-group/",
+    "detail": "menu-item-group/%s/"
   }
 }
