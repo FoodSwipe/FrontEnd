@@ -17,5 +17,9 @@
     "updatePassword": "user/update-password",
     "requestResetPassword": "user/reset-password",
     "resetPassword": "user/reset-password/%s/"
+  },
+  "itemType": {
+    "list": "item-type/",
+    "detail": "item-type/%s/"
   }
 }

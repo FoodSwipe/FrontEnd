@@ -97,6 +97,11 @@ const routes = [
 				component: () =>import("@/views/admin/menu/MenuItem")
 			},
 			{
+				path: "item-type",
+				name: "Item Type",
+				component: () =>import("@/views/admin/menu/ItemType")
+			},
+			{
 				path: "menu-item-group",
 				name: "Menu Item Group",
 				component: () =>import("@/views/admin/menu/MenuItemGroup")
