@@ -9,12 +9,18 @@ export const SET_MENU_ITEM_GROUP = "SET_MENU_ITEM_GROUP"
 export const SET_MENU_ITEM_GROUP_FORM_ERRORS = "SET_MENU_ITEM_GROUP_FORM_ERRORS"
 
 const defaultErrors = {
-
+	name: null,
+	description: null,
+	created_at: null,
+	created_by: null,
+	updated_at: null,
+	updated_by: null,
+	image: null,
 }
 
 const state = {
-	itemTypes: {},
-	itemType: {},
+	menuItemGroups: {},
+	menuItemGroup: {},
 	menuItemGroupFormErrors: {
 		...defaultErrors
 	}
@@ -22,10 +28,10 @@ const state = {
 
 const mutations = {
 	[SET_MENU_ITEM_GROUPS](state, value){
-		state.itemTypes = value.results
+		state.menuItemGroups = value
 	},
 	[SET_MENU_ITEM_GROUP](state, value) {
-		state.itemType = value
+		state.menuItemGroup = value
 	},
 	[SET_MENU_ITEM_GROUP_FORM_ERRORS](state, value) {
 		state.menuItemGroupFormErrors = value
@@ -34,10 +40,10 @@ const mutations = {
 
 const getters = {
 	allMenuItemGroups: state => {
-		return state.itemTypes
+		return state.menuItemGroups.results
 	},
 	detailMenuItemGroup: state => {
-		return state.itemType
+		return state.menuItemGroup
 	},
 	menuItemGroupFormErrors: state => {
 		return state.menuItemGroupFormErrors
@@ -66,6 +72,18 @@ const actions = {
 			return 500
 		}
 	},
+	async update({commit}, payload) {
+		try {
+			await $api.put(util.format(menuItemGroupUrls.detail, payload.id), payload.body)
+			return true
+		} catch (e) {
+			if (e.response.status === 400) {
+				commit("SET_MENU_ITEM_GROUP_FORM_ERRORS", e.response.data)
+				return false
+			}
+			return 500
+		}
+	},
 	async delete({}, payload) {
 		try {
 			await $api.delete(util.format(menuItemGroupUrls.detail, payload.id))
@@ -80,8 +98,7 @@ const actions = {
 			return true
 		} catch (e) {
 			if (e.response.status === 400) {
-				commit("SET_MENU_ITEM_FORM_ERRORS", e.response.data)
-				return false
+				return e.response.data
 			}
 			return 500
 		}

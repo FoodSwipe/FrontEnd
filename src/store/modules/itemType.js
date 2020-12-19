@@ -85,8 +85,7 @@ const actions = {
 			return true
 		} catch (e) {
 			if (e.response.status === 400) {
-				commit("SET_ADD_ITEM_TYPE_ERROR_MSGS", e.response.data)
-				return false
+				return e.response.data
 			}
 			return 500
 		}

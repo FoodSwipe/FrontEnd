@@ -167,16 +167,17 @@
 						<v-autocomplete
 							id="item-group"
 							v-model="editedItem.menu_item_group"
-							dark
-							label="Item Group (*)"
-							filled
-							clearable
 							:items="menuItemGroups"
-							prepend-inner-icon="bubble_chart"
-							hide-details="auto"
 							item-text="name"
 							item-value="id"
-							item-color="grey"
+							filled
+							clearable
+							attach=""
+							label="Item Group (*)"
+							hide-details="auto"
+							prepend-inner-icon="bubble_chart"
+							:value="editedItem.menu_item_group"
+							return-object
 							:error-messages="menuItemFormErrors.menu_item_group"
 						>
 							<template #no-data>
@@ -230,7 +231,8 @@
 							label="Item type"
 							hide-details="auto"
 							prepend-inner-icon="group_work"
-							:error-messages="menuItemFormErrors.menu_item_group"
+							return-object
+							:error-messages="menuItemFormErrors.item_type"
 						/>
 					</v-col>
 					<v-col cols="12">
@@ -434,6 +436,7 @@ export default {
 		openDialog() {
 			this.dialog = true
 			this.$store.dispatch("menuItem/clearFormErrors")
+			this.imageForUpload = []
 		},
 
 		openEditDialog(args) {
@@ -470,11 +473,13 @@ export default {
 		},
 		async save() {
 			if (this.editedIndex > -1) {
+				if (this.imageForUpload.length > 0) {
+					this.editedItem = this.imageForUpload[0]
+				} else {
+					delete this.editedItem.image
+				}
 				const rawData = cookEditData(this.editedItem, ["item_type", "menu_item_group"])
-				const payload = getFormData({
-					...rawData,
-					image: this.imageForUpload[0]
-				})
+				const payload = getFormData(rawData)
 				const updated = await this.$store.dispatch(
 					"menuItem/update",
 					{
@@ -492,13 +497,14 @@ export default {
 					await this.openSnack("Please load a valid form.")
 				}
 			} else {
+				const rawData = cookEditData(this.editedItem, ["item_type", "menu_item_group"])
 				const payload = getFormData({
-					...this.editedItem,
+					...rawData,
 					image: this.imageForUpload[0]
 				})
 				const created = await this.$store.dispatch("menuItem/create", payload)
 				if (created === true) {
-					await this.openSnack("User added successfully.", "success")
+					await this.openSnack("Menu item added successfully.", "success")
 					this.$bus.emit("reload-menu-items")
 					this.close()
 				} else if (created === 500) {

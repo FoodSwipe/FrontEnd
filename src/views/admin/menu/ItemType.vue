@@ -229,11 +229,14 @@ export default {
 					name: item.name
 				}
 			})
-			if (patched) {
+			if (patched === true) {
 				await this.openSnack("Item type name updated successfully.", "success")
-			} else {
+			} else if (patched === 500) {
 				await this.openSnack("Internal Server Error.")
+			} else {
+				await this.openSnack(patched.name[0])
 			}
+			await this.initialize()
 		},
 		cancelNameUpdate() {
 			//
@@ -246,15 +249,17 @@ export default {
 				id: item.id,
 				body: payload
 			})
-			if (patched) {
+			if (patched === true) {
 				await this.openSnack("Item type image updated successfully.", "success")
 				this.initialize()
-			} else {
+			} else if (patched === 500) {
 				await this.openSnack("Internal Server Error.")
+			} else {
+				await this.openSnack(patched.badge[0])
 			}
 		},
 		cancelItemBadgeUpdate() {
-			//
+			this.imageForUpload = []
 		},
 		async deleteItemType(item) {
 			const deleted = await this.$store.dispatch("itemType/delete", { id: item.id })
