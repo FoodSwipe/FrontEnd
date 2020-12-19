@@ -87,7 +87,7 @@ const actions = {
 			return true
 		} catch (err) {
 			if (err.response.status === 400) {
-				return err.response.data
+				return err.response.data.contact[0]
 			} else {
 				return 500
 			}
