@@ -11,17 +11,18 @@
 			>
 				<v-col cols="12"
 					class="pa-1"
-					xl="6"
-					lg="6"
-					md="5"
-					sm="7"
+					xl="4"
+					lg="4"
+					md="12"
+					sm="12"
 				>
 					<v-autocomplete
-						v-model="order.selectedItems"
+						v-model="selectedItems"
 						:disabled="isUpdating"
 						:items="orderNowRefinedList"
 						filled
 						chips
+						deletable-chips
 						color="orange darken-4"
 						placeholder="Select menu items"
 						item-text="name"
@@ -33,6 +34,8 @@
 						attach=""
 						clearable
 						hint="Order as much as you can, service guaranteed!"
+						:error-messages="startOrderFormErrors.custom_location"
+						:open-on-clear="false"
 					>
 						<template #selection="data">
 							<v-chip
@@ -67,32 +70,51 @@
 				</v-col>
 				<v-col cols="12"
 					class="pa-1"
-					xl="4"
-					lg="4"
-					md="4"
-					sm="5"
+					xl="3"
+					lg="3"
+					md="6"
+					sm="6"
 				>
 					<v-text-field
-						v-model="order.location"
+						v-model="order.custom_location"
 						color="orange darken-4"
 						clearable
 						filled
 						prepend-inner-icon="explore"
 						label="Your location here..."
-						hint="Try to be more precies so that we can know your doorstep."
+						hint="Try to be more precise so that we can know your doorstep."
 						hide-details="auto"
+					/>
+				</v-col>
+				<v-col cols="12"
+					xl="3"
+					lg="3"
+					md="6"
+					sm="6"
+				>
+					<v-text-field
+						id="custom-contact"
+						v-model="order.custom_contact"
+						filled
+						type="number"
+						prepend-inner-icon="call"
+						hide-details="auto"
+						label="Contact number"
+						clearable
+						:error-messages="startOrderFormErrors.custom_contact"
 					/>
 				</v-col>
 				<v-col cols="12"
 					xl="2"
 					lg="2"
-					md="3"
+					md="12"
 					sm="12"
 					class="d-flex justify-center pa-1"
 				>
 					<v-btn depressed
 						class="purple-gradient"
 						dark
+						@click="startShopping()"
 					>
 						<v-icon>fastfood</v-icon>
 						<span v-if="$vuetify.breakpoint.width > 255"
@@ -111,9 +133,10 @@ import { mapGetters } from "vuex"
 export default {
 	name: "OrderNowComponent",
 	data: () => ({
+		selectedItems: [],
 		order: {
-			location: "",
-			selectedItems: []
+			custom_location: "",
+			custom_contact: ""
 		},
 		isUpdating: false,
 		orderNowRefinedList: []
@@ -121,6 +144,7 @@ export default {
 	computed: {
 		...mapGetters({
 			orderNowList: "menuItem/allMenuItems",
+			startOrderFormErrors: "order/orderFormFieldErrors"
 		}),
 	},
 	async created() {
@@ -130,15 +154,17 @@ export default {
 	},
 	methods: {
 		removeItemFromSelectedOrderInput(item) {
-			const index = this.order.selectedItems.indexOf(item.name)
-			if (index >= 0) this.order.selectedItems.splice(index, 1)
+			const index = this.selectedItems.indexOf(item.id)
+			if (index >= 0) this.selectedItems.splice(index, 1)
 		},
+
 	},
 }
 </script>
 <style scoped>
 ::v-deep.v-autocomplete:not(.v-input--is-focused).v-select--chips input {
 	max-height: 25px;
+	color: black;
 }
 .order-now-card {
 	/*background: linear-gradient(rgba(248, 249, 250, 0), rgba(246, 242, 248, 0)), url("https://media-cdn.tripadvisor.com/media/photo-s/0b/05/09/21/dessert.jpg") no-repeat fixed center;*/
