@@ -3,11 +3,9 @@ import urls from "@/urls.json"
 
 const authUrls = urls.auth
 
-export const SET_CURRENT_USER = "SET_CURRENT_USER"
 export const SET_LOGIN_ERROR_MESSAGES = "SET_LOGIN_ERROR_MESSAGES"
 
 const state = {
-	user: null,
 	loginError: {
 		username: null,
 		password: null
@@ -15,18 +13,12 @@ const state = {
 }
 
 const mutations = {
-	[SET_CURRENT_USER](state, value){
-		state.user = value
-	},
 	[SET_LOGIN_ERROR_MESSAGES](state, value) {
 		state.loginError = value
-	}
+	},
 }
 
 const getters = {
-	currentUser: state => {
-		return state.user
-	},
 	loginFieldErrorMessages: state => {
 		return state.loginError
 	}
@@ -36,8 +28,8 @@ const actions = {
 	async login({commit}, payload) {
 		try {
 			const res = await $api.post(authUrls.login, payload)
-			commit("SET_CURRENT_USER", res.data)
 			localStorage.setItem("token", res.token)
+			localStorage.setItem("currentUser", JSON.stringify(res.data))
 			return true
 		} catch (e) {
 			if (e.response.status === 400) {
@@ -50,12 +42,15 @@ const actions = {
 			}
 		}
 	},
-	logout({commit}, payload) {
-		$api.post(authUrls.logout, payload)
-			.then(res => {
-				localStorage.removeItem("token")
-				commit("SET_CURRENT_USER", null)
-			})
+	async logout({}, payload) {
+		try {
+			await $api.post(authUrls.logout, payload)
+			localStorage.removeItem("token")
+			localStorage.removeItem("currentUser")
+			return true
+		} catch(err) {
+			return err.response.data
+		}
 	},
 	changePassword(payload) {
 		$api.post(authUrls.logout, payload).then(res => {

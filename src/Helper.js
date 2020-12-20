@@ -57,5 +57,17 @@ module.exports = {
 			})
 		}
 		return orderNowRefinedList
+	},
+	getCurrentUser() {
+		return JSON.parse(localStorage.getItem("currentUser"));
+	},
+	isAdminUser() {
+		const currentUser = this.getCurrentUser()
+		if (currentUser) return (currentUser.is_superuser === true)
+		else return false
+	},
+	isAuthenticated() {
+		const currentUser = this.getCurrentUser()
+		return (currentUser !== null)
 	}
 }

@@ -73,7 +73,7 @@
 							small
 							class="pr-0 mr-sm-6 mr-md-6 mr-lg-6 mr-xl-6 cursor"
 							v-on="on"
-							@click.stop="drawer = !drawer"
+							@click.stop="toggleDrawerState()"
 						>
 							<v-icon size="$vuetify.breakpoint.width > 300
 									? ''
@@ -103,7 +103,7 @@
 						</v-btn>
 					</v-scale-transition>
 				</template>
-				<span>Login</span>
+				<span>Profile</span>
 			</v-tooltip>
 			<v-tooltip bottom>
 				<template #activator="{on, attrs}">
@@ -134,6 +134,7 @@
 				<template #activator="{on, attrs}">
 					<v-slide-x-transition>
 						<v-btn
+							v-show="showAdminButton"
 							icon
 							small
 							class="pr-0 mr-sm-6 mr-md-6 mr-lg-6 mr-xl-6"
@@ -522,6 +523,7 @@ export default {
 	data: () => ({
 		agree: false,
 		drawer: null,
+		showAdminButton: false,
 		resetPasswordDialog: false,
 		registerDialog: false,
 		loginBanner: require("@/assets/banner_1.jpg"),
@@ -544,16 +546,27 @@ export default {
 			contact: null,
 			address: "",
 			password: ""
-		}
+		},
+		currentUser: null
 	}),
 	computed: {
 		...mapGetters({
-			currentUser: "auth/currentUser",
-			registrationErrors: "user/registrationErrors",
-			loginFieldErrors: "auth/loginFieldErrorMessages"
-		})
+			loginFieldErrors: "auth/loginFieldErrorMessages",
+			registrationErrors: "user/registrationErrors"
+		}),
+	},
+	created() {
+		this.currentUser = JSON.parse(localStorage.getItem("currentUser"))
+		this.showAdminButton = this.$helper.isAdminUser()
 	},
 	methods: {
+		toggleDrawerState() {
+			this.login = {
+				username: "",
+				password: ""
+			}
+			this.drawer = !this.drawer
+		},
 		openSnack(text, color="success") {
 			this.$store.dispatch("snack/setSnackState", true)
 			this.$store.dispatch("snack/setSnackColor", color)
@@ -578,7 +591,9 @@ export default {
 			const loggedIn = await this.$store.dispatch("auth/login", this.login)
 			if (loggedIn === true) {
 				this.openSnack("Logged in successfully.")
+				this.currentUser = JSON.parse(localStorage.getItem("currentUser"))
 				this.drawer = false
+				this.showAdminButton = this.$helper.isAdminUser()
 			} else if(loggedIn === 500) {
 				this.openSnack("Internal Server Error.", "error")
 			} else if(loggedIn === 400) {
@@ -587,11 +602,16 @@ export default {
 				this.openSnack(loggedIn.message, "error")
 			}
 		},
-		logOut() {
-			this.$store.dispatch("auth/logout", { username: this.currentUser.username })
-				.then(() => {
-					this.openSnack("Logged out successfully.")
-				})
+		async logOut() {
+			const isLoggedOut = await this.$store.dispatch("auth/logout", { username: this.currentUser.username })
+			if (isLoggedOut === true) {
+				this.openSnack("Logged out successfully.")
+				this.currentUser = null
+				this.showAdminButton = false
+			} else {
+				this.openSnack(isLoggedOut, "error")
+			}
+
 		},
 		async submitRegister() {
 			const registered = await this.$store.dispatch("user/register", this.register)
