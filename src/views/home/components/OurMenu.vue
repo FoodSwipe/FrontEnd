@@ -47,7 +47,7 @@
 								md="6"
 								sm="6"
 							>
-								<v-list-item>
+								<v-list-item class="no-hovering-anim">
 									<v-list-item-icon>
 										<v-avatar size="30"
 											color="grey darken-3"
@@ -501,5 +501,9 @@ export default {
 .menu-item-group-name {
 	font-size: 1.2rem;
 	font-family: "Crete Round", serif;
+}
+
+.no-hovering-anim {
+	pointer-events: none;
 }
 </style>
