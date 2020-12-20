@@ -223,8 +223,11 @@ export default {
 				if (addedToCart === true) {
 					await this.openSnack(`Cheers! ${item.name} added to cart.`, "success")
 				} else {
-					console.log(addedToCart)
-					await this.openSnack(addedToCart.non_field_errors[0])
+					if (addedToCart.non_field_errors !== undefined) {
+						if (Array.isArray(addedToCart.non_field_errors)) {
+							await this.openSnack(addedToCart.non_field_errors[0])
+						}
+					}
 				}
 			} else {
 				await this.$store.dispatch("order/clearFormErrors")

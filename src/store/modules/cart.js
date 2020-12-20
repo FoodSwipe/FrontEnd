@@ -67,7 +67,6 @@ const actions = {
 		}
 	},
 	async patch({commit}, payload) {
-		console.log(payload)
 		try {
 			await $api.patch(util.format(cartUrls.detail, payload.id), payload.body)
 			return true

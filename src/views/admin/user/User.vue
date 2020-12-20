@@ -236,7 +236,6 @@ export default {
 			this.$bus.emit("open-user-form-dialog-add-item")
 		},
 		openEditUserFormDialog(item) {
-			console.log(item)
 			this.$bus.emit("open-user-form-dialog-edit-item", {
 				editedIndex: this.users.indexOf(item),
 				editedItem: Object.assign({}, item),
