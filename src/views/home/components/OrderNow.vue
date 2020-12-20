@@ -17,20 +17,22 @@
 					sm="7"
 				>
 					<v-autocomplete
-						v-model="friends"
+						v-model="order.selectedItems"
 						:disabled="isUpdating"
-						:items="people"
+						:items="orderNowRefinedList"
 						filled
 						chips
-						color="blue darken-2"
-						placeholder="Select menu item group"
+						color="orange darken-4"
+						placeholder="Select menu items"
 						item-text="name"
-						item-value="name"
+						item-value="id"
+						item-color="orange darken-2"
 						multiple
 						prepend-inner-icon="emoji_food_beverage"
 						hide-details="auto"
 						attach=""
 						clearable
+						hint="Order as much as you can, service guaranteed!"
 					>
 						<template #selection="data">
 							<v-chip
@@ -38,7 +40,7 @@
 								:input-value="data.selected"
 								close
 								@click="data.select"
-								@click:close="remove(data.item)"
+								@click:close="removeItemFromSelectedOrderInput(data.item)"
 							>
 								<v-avatar left>
 									<v-img :src="data.item.avatar" />
@@ -52,12 +54,13 @@
 							</template>
 							<template v-else>
 								<v-list-item-avatar>
-									<img :src="data.item.avatar">
+									<v-img :src="data.item.avatar" />
 								</v-list-item-avatar>
 								<v-list-item-content>
-									<v-list-item-title v-html="data.item.name" />
-									<v-list-item-subtitle v-html="data.item.group" />
+									<v-list-item-title>{{ data.item.name }}"</v-list-item-title>
+									<v-list-item-subtitle>{{ data.item.group }}"</v-list-item-subtitle>
 								</v-list-item-content>
+								<v-list-item-action-text>{{ data.item.price }}</v-list-item-action-text>
 							</template>
 						</template>
 					</v-autocomplete>
@@ -71,10 +74,12 @@
 				>
 					<v-text-field
 						v-model="order.location"
+						color="orange darken-4"
 						clearable
 						filled
 						prepend-inner-icon="explore"
 						label="Your location here..."
+						hint="Try to be more precies so that we can know your doorstep."
 						hide-details="auto"
 					/>
 				</v-col>
@@ -100,29 +105,33 @@
 	</div>
 </template>
 <script>
-import helper from "@/Helper"
+import { refineOrderNowList } from "@/Helper"
+import { mapGetters } from "vuex"
+
 export default {
 	name: "OrderNowComponent",
 	data: () => ({
 		order: {
-			location: ""
+			location: "",
+			selectedItems: []
 		},
-		friends: [],
 		isUpdating: false,
-		name: "Midnight Crew",
+		orderNowRefinedList: []
 	}),
 	computed: {
-		people() {
-			return helper.returnMockMenuItems()
-		},
-		srcs() {
-			return helper.returnMockSrcs()
-		}
+		...mapGetters({
+			orderNowList: "menuItem/allMenuItems",
+		}),
+	},
+	async created() {
+		await this.$store.dispatch("menuItem/fetchOrderNowList")
+
+		this.orderNowRefinedList = refineOrderNowList(this.orderNowList)
 	},
 	methods: {
-		remove(item) {
-			const index = this.friends.indexOf(item.name)
-			if (index >= 0) this.friends.splice(index, 1)
+		removeItemFromSelectedOrderInput(item) {
+			const index = this.order.selectedItems.indexOf(item.name)
+			if (index >= 0) this.order.selectedItems.splice(index, 1)
 		},
 	},
 }

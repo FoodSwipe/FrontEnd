@@ -56,6 +56,10 @@ const actions = {
 			...defaultErrors
 		})
 	},
+	async withItems({commit}) {
+		const res = await $api.get(menuItemGroupUrls.withItems)
+		commit("SET_MENU_ITEM_GROUPS", res)
+	},
 	async fetchAll({ commit }) {
 		const res = await $api.get(menuItemGroupUrls.list)
 		commit("SET_MENU_ITEM_GROUPS", res)

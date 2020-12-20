@@ -65,6 +65,10 @@ const actions = {
 			...defaultErrors
 		})
 	},
+	async fetchOrderNowList({commit}) {
+		const res = await $api.get(menuItemUrls.orderNowList)
+		commit("SET_MENU_ITEMS", res)
+	},
 	async fetchAll({ commit }) {
 		const res = await $api.get(menuItemUrls.list)
 		commit("SET_MENU_ITEMS", res)

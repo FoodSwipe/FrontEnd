@@ -24,10 +24,12 @@
   },
   "menuItem": {
     "list": "menu-item/",
-    "detail": "menu-item/%s/"
+    "detail": "menu-item/%s/",
+    "orderNowList": "order-now-list"
   },
   "menuItemGroup": {
     "list": "menu-item-group/",
-    "detail": "menu-item-group/%s/"
+    "detail": "menu-item-group/%s/",
+    "withItems": "item-group-with-items"
   }
 }
