@@ -302,6 +302,14 @@ export default {
 			)
 		},
 
+		emitCartQuantityUpdate() {
+			let totalItems = 0
+			this.cartItemsList.forEach(item => {
+				totalItems += item.quantity
+			})
+			this.$bus.emit("set-cart-count", totalItems)
+		},
+
 		addQuantity(item) {
 			item.quantity += 1
 			this.$store.dispatch("cart/patch", {
@@ -310,6 +318,7 @@ export default {
 					quantity: item.quantity
 				}
 			})
+			this.emitCartQuantityUpdate()
 		},
 		subtractQuantity(item) {
 			if (item.quantity === 1) return
@@ -320,6 +329,7 @@ export default {
 					quantity: item.quantity
 				}
 			})
+			this.emitCartQuantityUpdate()
 		},
 		openSnack(text, color) {
 			this.$store.dispatch("snack/setSnackState", true)

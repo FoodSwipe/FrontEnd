@@ -158,7 +158,6 @@
 
 			<v-fade-transition>
 				<v-badge
-					v-show="$route.name !== 'Cart'"
 					dark
 					color="black"
 					:content="cartCount"
@@ -558,6 +557,8 @@ export default {
 		}),
 	},
 	async created() {
+		this.$bus.on("set-cart-count", this.setCartCount)
+		this.$bus.on("add-cart-count", this.addCartCount)
 		this.currentUser = JSON.parse(localStorage.getItem("currentUser"))
 		this.showAdminButton = this.$helper.isAdminUser()
 		const cookingOrder = localStorage.getItem("cookingOrder")
@@ -568,7 +569,17 @@ export default {
 			this.cartCount = this.alreadyCookingOrder.total_items.toString()
 		}
 	},
+	beforeUnmount() {
+		this.$bus.off("set-cart-count", this.setCartCount)
+		this.$bus.off("add-cart-count", this.addCartCount)
+	},
 	methods: {
+		addCartCount() {
+			this.cartCount = (parseInt(this.cartCount) + 1).toString()
+		},
+		setCartCount(count) {
+			this.cartCount = count.toString()
+		},
 		toggleDrawerState() {
 			this.login = {
 				username: "",

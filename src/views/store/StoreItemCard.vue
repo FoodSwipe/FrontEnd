@@ -222,6 +222,7 @@ export default {
 				})
 				if (addedToCart === true) {
 					await this.openSnack(`Cheers! ${item.name} added to cart.`, "success")
+					this.$bus.emit("add-cart-count")
 				} else {
 					if (addedToCart.non_field_errors !== undefined) {
 						if (Array.isArray(addedToCart.non_field_errors)) {
