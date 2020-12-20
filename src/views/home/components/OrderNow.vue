@@ -24,7 +24,7 @@
 						chips
 						deletable-chips
 						color="orange darken-4"
-						placeholder="Select menu items"
+						placeholder="Select menu items (*)"
 						item-text="name"
 						item-value="id"
 						item-color="orange darken-2"
@@ -34,8 +34,8 @@
 						attach=""
 						clearable
 						hint="Order as much as you can, service guaranteed!"
-						:error-messages="startOrderFormErrors.custom_location"
 						:open-on-clear="false"
+						:error-messages="itemsFieldRequiredErrorMessage"
 					>
 						<template #selection="data">
 							<v-chip
@@ -81,9 +81,10 @@
 						clearable
 						filled
 						prepend-inner-icon="explore"
-						label="Your location here..."
+						label="Your location here... (*)"
 						hint="Try to be more precise so that we can know your doorstep."
 						hide-details="auto"
+						:error-messages="startOrderFormErrors.custom_location"
 					/>
 				</v-col>
 				<v-col cols="12"
@@ -91,6 +92,7 @@
 					lg="3"
 					md="6"
 					sm="6"
+					class="pa-1"
 				>
 					<v-text-field
 						id="custom-contact"
@@ -99,7 +101,7 @@
 						type="number"
 						prepend-inner-icon="call"
 						hide-details="auto"
-						label="Contact number"
+						label="Contact number (*)"
 						clearable
 						:error-messages="startOrderFormErrors.custom_contact"
 					/>
@@ -114,6 +116,7 @@
 					<v-btn depressed
 						class="purple-gradient"
 						dark
+						:disabled="isDisabled"
 						@click="startShopping()"
 					>
 						<v-icon>fastfood</v-icon>
@@ -133,6 +136,8 @@ import { mapGetters } from "vuex"
 export default {
 	name: "OrderNowComponent",
 	data: () => ({
+		itemsFieldRequiredErrorMessage: null,
+		isDisabled: false,
 		selectedItems: [],
 		order: {
 			custom_location: "",
@@ -149,7 +154,7 @@ export default {
 	},
 	async created() {
 		await this.$store.dispatch("menuItem/fetchOrderNowList")
-
+		this.isDisabled = (localStorage.getItem("cookingOrder") !== null)
 		this.orderNowRefinedList = refineOrderNowList(this.orderNowList)
 	},
 	methods: {
@@ -157,7 +162,38 @@ export default {
 			const index = this.selectedItems.indexOf(item.id)
 			if (index >= 0) this.selectedItems.splice(index, 1)
 		},
-
+		async openSnack(text, color="error") {
+			await this.$store.dispatch("snack/setSnackState", true)
+			await this.$store.dispatch("snack/setSnackColor", color)
+			await this.$store.dispatch("snack/setSnackText", text)
+		},
+		async startShopping() {
+			if (this.selectedItems.length === 0) {
+				this.itemsFieldRequiredErrorMessage = "This field is required."
+				return
+			}
+			const started = await this.$store.dispatch("order/startOrder", this.order)
+			if (started === true) {
+				for (const itemId of this.selectedItems) {
+					await this.$store.dispatch("cart/addToCart", {
+						order: localStorage.getItem("cookingOrder"),
+						item: itemId
+					})
+				}
+				this.$bus.emit("set-cart-count", this.selectedItems.length)
+				this.selectedItems = []
+				this.order = {
+					custom_location: "",
+					custom_contact: ""
+				}
+				this.isDisabled = true
+				await this.openSnack("Cheers! Selected items has been added to cart.", "success")
+			} else if (started === 500) {
+				await this.openSnack("Internal Server Error.")
+			} else {
+				await this.openSnack("Please load a valid form.")
+			}
+		}
 	},
 }
 </script>
