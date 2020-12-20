@@ -161,7 +161,7 @@
 					v-show="$route.name !== 'Cart'"
 					dark
 					color="black"
-					content="5"
+					:content="cartCount"
 					offset-x="10"
 					offset-y="15"
 				>
@@ -547,17 +547,26 @@ export default {
 			address: "",
 			password: ""
 		},
-		currentUser: null
+		currentUser: null,
+		cartCount: "0",
 	}),
 	computed: {
 		...mapGetters({
 			loginFieldErrors: "auth/loginFieldErrorMessages",
-			registrationErrors: "user/registrationErrors"
+			registrationErrors: "user/registrationErrors",
+			alreadyCookingOrder: "order/detailOrder"
 		}),
 	},
-	created() {
+	async created() {
 		this.currentUser = JSON.parse(localStorage.getItem("currentUser"))
 		this.showAdminButton = this.$helper.isAdminUser()
+		const cookingOrder = localStorage.getItem("cookingOrder")
+		if (cookingOrder) {
+			await this.$store.dispatch("order/withCartItems", {
+				id: cookingOrder
+			})
+			this.cartCount = this.alreadyCookingOrder.total_items.toString()
+		}
 	},
 	methods: {
 		toggleDrawerState() {

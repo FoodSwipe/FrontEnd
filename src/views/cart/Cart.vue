@@ -8,7 +8,13 @@
 				lg="8"
 				md="8"
 			>
+				<v-card v-if="cartItemsList.length === 0"
+					color="error" dark
+				>
+					<v-card-title>No items added yet</v-card-title>
+				</v-card>
 				<transition-group
+					v-else
 					appear
 					:css="false"
 					@before-enter="beforeEnter"
@@ -16,7 +22,7 @@
 					@leave="leave"
 				>
 					<v-card
-						v-for="(item, index) in desserts"
+						v-for="(item, index) in cartItemsList"
 						:key="index"
 						class="mb-4 cart-item-card"
 					>
@@ -30,7 +36,7 @@
 								sm="3"
 							>
 								<v-img
-									src="https://i.ndtvimg.com/i/2017-10/spicy-chicken-recipe_620x330_71508233435.jpg"
+									:src="item.item.image"
 									max-width="200"
 									min-width="50"
 									height="100"
@@ -42,24 +48,18 @@
 								md="3"
 								sm="3"
 							>
-								{{ item.name }}
+								{{ item.item.name }}
 								<p class="subtitle-2">
-									<v-avatar tile
-										size="16"
-									>
-										<v-img
-											src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Indian-vegetarian-mark.svg/1200px-Indian-vegetarian-mark.svg.png"
-										/>
-									</v-avatar>
-									<v-avatar
-										color="white"
-										max-width="20"
-										max-height="22"
+									<v-avatar v-for="(typeOfItem, indic) in item.item.item_type"
+										:key="typeOfItem.id +55 *37"
 										tile
-										class="ml-2"
+										size="20"
+										:class="
+											(indic +1 === item.item.item_type.length) ? '' : 'pr-2'
+										"
 									>
 										<v-img
-											src="https://cdna.artstation.com/p/assets/images/images/022/547/676/large/dinh-trang-bui-spicy.jpg?1575846866"
+											:src="typeOfItem.badge"
 										/>
 									</v-avatar>
 								</p>
@@ -87,7 +87,7 @@
 										color="error"
 										height="56"
 										class="rounded-0"
-										:disabled="item.quantity === 1"
+										:disabled="item.quantity <= 1"
 										@click="subtractQuantity(item)"
 									>
 										<v-icon>remove</v-icon>
@@ -115,7 +115,7 @@
 								sm="2"
 							>
 								<div class="item-sub-total">
-									Rs {{ item.quantity * item.price }}
+									Rs {{ item.quantity * item.item.price }}
 								</div>
 							</v-col>
 						</v-row>
@@ -169,6 +169,7 @@
 								block
 								large
 								dark
+								:disabled="cartItemsList.length === 0"
 								@click="routeToOrderConfirmation()"
 							>
 								Proceed
@@ -183,21 +184,12 @@
 <script>
 import router from "@/router"
 import Velocity from "velocity-animate"
+import { mapGetters } from "vuex"
 
 export default {
 	name: "CartView",
 	data() {
 		return {
-			snack: false,
-			snackText: "",
-			search: "",
-			pagination: {},
-			headers: [
-				{ text: "ACTION", value: "actions", sortable: false},
-				{ text: "CART ITEM", value: "name", },
-				{ text: "QUANTITY", value: "quantity" },
-				{ text: "SUB TOTAL (Rs)", value: "totalPrice" },
-			],
 			desserts: [
 				{
 					name: "Frozen Yogurt",
@@ -220,11 +212,23 @@ export default {
 					price: 50,
 				},
 			],
+			cartItemsList: []
 		}
 	},
 	computed: {
 		getCartSummary() {
-			return [
+			const today = new Date()
+			let totalPrice = 0
+			let totalItems = 0
+			let loyaltyDiscount = 0
+			this.cartItemsList.forEach(item => {
+				totalPrice += item.quantity * item.item.price
+				totalItems += item.quantity
+			})
+			if (totalPrice > 2000) loyaltyDiscount = 5
+			const deliveryCharge = (today.getHours() > 16 || today.getHours() <= 4) ? 100 : 0
+			const grandTotal = totalPrice - (loyaltyDiscount/100)*totalPrice - deliveryCharge
+			if (this.currentOrder) return [
 				{
 					icon: "location_on",
 					field: "Delivery Location",
@@ -232,29 +236,50 @@ export default {
 				},
 				{
 					icon: "shopping_cart",
-					field: "Total items in cart.",
-					value: this.desserts.length
+					field: "Total items in cart",
+					value: totalItems,
 				},
 				{
 					icon: "title",
-					field: "Sub-Total (Rs)",
-					value: 15000
+					field: "Sub-Total (NRs)",
+					value: totalPrice
+				},
+				{
+					icon: "two_wheeler",
+					field: "Delivery Charge (NRs)",
+					value: deliveryCharge
 				},
 				{
 					icon: "card_giftcard",
 					field: "Loyalty Discount Awarded",
-					value: "5%",
+					value: loyaltyDiscount + "%",
 				},
 				{
 					icon: "text_fields",
 					field: "Grand Total (Rs)",
-					value: 565656,
+					value: grandTotal,
 					divider: true
 				}
 			]
-		}
+			else return []
+		},
+		...mapGetters({
+			currentOrder: "order/detailOrder"
+		})
+	},
+	created() {
+		this.initialize()
 	},
 	methods: {
+		async initialize() {
+			const cookingOrder = localStorage.getItem("cookingOrder")
+			if (cookingOrder) {
+				await this.$store.dispatch("order/withCartItems", {
+					id: cookingOrder
+				})
+			}
+			this.cartItemsList = this.currentOrder.cart_items
+		},
 		beforeEnter(el) {
 			el.style.opacity = 0
 			el.style.width = "0em"
@@ -279,20 +304,34 @@ export default {
 
 		addQuantity(item) {
 			item.quantity += 1
+			this.$store.dispatch("cart/patch", {
+				id: item.id,
+				body: {
+					quantity: item.quantity
+				}
+			})
 		},
 		subtractQuantity(item) {
 			if (item.quantity === 1) return
 			item.quantity -=1
+			this.$store.dispatch("cart/patch", {
+				id: item.id,
+				body: {
+					quantity: item.quantity
+				}
+			})
 		},
 		openSnack(text, color) {
 			this.$store.dispatch("snack/setSnackState", true)
 			this.$store.dispatch("snack/setSnackColor", color)
 			this.$store.dispatch("snack/setSnackText", text)
 		},
-		removeItemFromCart(item) {
-			const indexOfItemToRemove = this.desserts.indexOf(item)
-			this.desserts.splice(indexOfItemToRemove, 1)
-			this.openSnack(item.name + " removed from cart.", "error")
+		async removeItemFromCart(item) {
+			await this.$store.dispatch("cart/removeFromCart", {
+				id: item.id
+			})
+			this.openSnack(item.item.name + " removed from cart.", "error")
+			await this.initialize()
 		},
 		routeToOrderConfirmation() {
 			router.push({name: "Confirm Order"})

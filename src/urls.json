@@ -31,5 +31,15 @@
     "list": "menu-item-group/",
     "detail": "menu-item-group/%s/",
     "withItems": "item-group-with-items"
+  },
+  "cart": {
+    "list": "cart-item/",
+    "detail": "cart-item/%s/"
+  },
+  "order": {
+    "list": "order/",
+    "detail": "order/%s/",
+    "initializeOrder": "init-order",
+    "withCartItems": "order/%s/cart"
   }
 }

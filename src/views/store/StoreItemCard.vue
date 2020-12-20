@@ -20,41 +20,42 @@
 			@click="routeToItemDetail()"
 		>
 			<v-row class="fill-height text-center ma-0 pa-0"
-				no-gutters justify="center"
+				no-gutters justify="end"
 				align="start"
 			>
-				<v-card class="mx-auto pa-2"
+				<v-card class="pa-4"
 					width="100%"
 					color="transparent"
 					flat
 				>
-					<div class="py-0 pb-12 d-flex justify-space-between item-type-row">
-						<span
-							v-for="(type, index) in item.type"
-							:key="index"
-							class="px-1"
-						>
-							<v-tooltip bottom>
-								<template #activator="{on, attrs}">
-									<v-avatar
-										class="elevation-1"
-										size="20"
-										v-bind="attrs"
-										v-on="on"
-									>
-										<v-img
-											:src="type.image"
-										/>
-									</v-avatar>
-								</template>
-								<span>{{ type.name }}</span>
-							</v-tooltip>
-						</span>
-					</div>
-
-					<div class="item-name py-0">
+					<v-card-title class="item-name py-0 d-flex justify-end">
 						{{ item.name }}
-					</div>
+					</v-card-title>
+					<v-card-text class="px-2">
+						<div class="d-flex justify-end item-type-row">
+							<span
+								v-for="(type, index) in item.item_type"
+								:key="index"
+								class="pl-1"
+							>
+								<v-tooltip bottom>
+									<template #activator="{on, attrs}">
+										<v-avatar
+											class="elevation-1"
+											size="20"
+											v-bind="attrs"
+											v-on="on"
+										>
+											<v-img
+												:src="type.badge"
+											/>
+										</v-avatar>
+									</template>
+									<span>{{ type.name }}</span>
+								</v-tooltip>
+							</span>
+						</div>
+					</v-card-text>
 				</v-card>
 			</v-row>
 		</v-img>
@@ -86,6 +87,7 @@
 									icon
 									v-bind="attrs"
 									v-on="on"
+									@click.prevent="addItemToCart(item)"
 								>
 									<v-icon>
 										add_shopping_cart
@@ -98,10 +100,71 @@
 				</v-col>
 			</v-row>
 		</v-card-text>
+		<v-dialog v-model="startOrder"
+			persistent
+			max-width="400"
+			transition="fab-transition"
+		>
+			<v-card>
+				<v-card-title class="d-flex align-center">
+					Start your order right now!
+				</v-card-title>
+				<v-card-subtitle>
+					Please register and login to the system so that we can track your orders and serve you more effectively.
+				</v-card-subtitle>
+				<v-card-text>
+					<v-row class="ma-0 pa-0">
+						<v-col cols="12">
+							<v-text-field
+								id="custom-location"
+								v-model="order.custom_location"
+								filled
+								prepend-inner-icon="room"
+								hide-details="auto"
+								label="Your exact location"
+								clearable
+								:error-messages="startOrderFormErrors.custom_location"
+							/>
+						</v-col>
+						<v-col cols="12">
+							<v-text-field
+								id="custom-contact"
+								v-model="order.custom_contact"
+								filled
+								type="number"
+								prepend-inner-icon="call"
+								hide-details="auto"
+								label="Contact number"
+								clearable
+								:error-messages="startOrderFormErrors.custom_contact"
+							/>
+						</v-col>
+					</v-row>
+				</v-card-text>
+				<v-card-actions>
+					<v-spacer />
+					<v-btn
+						color="red darken-1"
+						text
+						@click="startOrder = false"
+					>
+						Discard
+					</v-btn>
+					<v-btn
+						color="green darken-1"
+						text
+						@click="makeOrder()"
+					>
+						Proceed
+					</v-btn>
+				</v-card-actions>
+			</v-card>
+		</v-dialog>
 	</v-card>
 </template>
 <script>
 import router from "@/router"
+import { mapGetters } from "vuex"
 
 export default {
 	name: "StoreItemCard",
@@ -112,26 +175,70 @@ export default {
 		}
 	},
 	data: () => ({
+		startOrder: false,
+		rememberFirstItem: null,
 		loading: false,
 		selection: 1,
+		order: {
+			custom_location: "",
+			custom_contact: ""
+		}
 	}),
-
+	computed: {
+		...mapGetters({
+			startOrderFormErrors: "order/orderFormFieldErrors"
+		})
+	},
 	methods: {
-		reserve() {
-			this.loading = true
-
-			setTimeout(() => (this.loading = false), 2000)
+		async openSnack(text, color="error") {
+			await this.$store.dispatch("snack/setSnackState", true)
+			await this.$store.dispatch("snack/setSnackColor", color)
+			await this.$store.dispatch("snack/setSnackText", text)
+		},
+		// making a brand new order and pushing item to that order
+		async makeOrder() {
+			const started = await this.$store.dispatch("order/startOrder", this.order)
+			if (started === true) {
+				await this.$store.dispatch("cart/addToCart", {
+					order: localStorage.getItem("cookingOrder"),
+					item: this.rememberFirstItem.id
+				})
+				await this.openSnack(`Cheers! ${this.rememberFirstItem.name} added to cart.`, "success")
+				this.startOrder = false
+			} else if (started === 500) {
+				await this.openSnack("Internal Server Error.")
+			} else {
+				await this.openSnack("Please load a valid form.")
+			}
 		},
 		routeToItemDetail() {
 			router.push({name: "Product"})
-		}
+		},
+		async addItemToCart(item) {
+			if (localStorage.getItem("cookingOrder")) {
+				const addedToCart = await this.$store.dispatch("cart/addToCart", {
+					order: parseInt(localStorage.getItem("cookingOrder")),
+					item: item.id
+				})
+				if (addedToCart === true) {
+					await this.openSnack(`Cheers! ${item.name} added to cart.`, "success")
+				} else {
+					console.log(addedToCart)
+					await this.openSnack(addedToCart.non_field_errors[0])
+				}
+			} else {
+				await this.$store.dispatch("order/clearFormErrors")
+				this.startOrder = true
+				this.rememberFirstItem = item
+			}
+		},
 	},
 }
 </script>
 <style scoped lang="scss">
 .item-name {
-	font-size: 1rem;
-	line-height: 1.2rem;
+	font-size: 1.2rem;
+	line-height: 1.4rem;
 	font-weight: 500;
 	padding: 0 5px;
 }

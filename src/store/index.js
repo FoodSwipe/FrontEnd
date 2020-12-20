@@ -8,6 +8,8 @@ import itemType from "@/store/modules/itemType"
 import menuItem from "@/store/modules/menuItem"
 import menuItemGroup from "@/store/modules/menuItemGroup"
 import menuItemType from "@/store/modules/menuItemType"
+import cart from "@/store/modules/cart"
+import order from "@/store/modules/order"
 
 Vue.use(Vuex)
 
@@ -20,6 +22,8 @@ export default new Vuex.Store({
 		itemType,
 		menuItem,
 		menuItemGroup,
-		menuItemType
+		menuItemType,
+		order,
+		cart
 	}
 })
