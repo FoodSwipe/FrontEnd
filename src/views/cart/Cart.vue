@@ -3,18 +3,47 @@
 		class="rounded-0 mt-4 mx-auto" width="1200"
 	>
 		<v-row class="ma-0 pa-0">
-			<v-col cols="12"
+			<v-col v-if="cartItemsList.length === 0"
+				cols="12"
+			>
+				<v-card
+					color="#f9f2ed"
+				>
+					<v-card-title class="d-flex justify-center align-center">
+						<v-icon>shopping_cart</v-icon><span class="ml-3">Your cart is empty!</span>
+					</v-card-title>
+					<v-card-subtitle class="text-center">
+						Add our fantastic menu items to your cart and start shopping.
+					</v-card-subtitle>
+					<v-divider />
+
+					<v-img
+						height="200"
+						contain
+						src="https://cdn.dribbble.com/users/218750/screenshots/2781808/_food.gif "
+					/>
+					<v-card-actions class="d-flex justify-center">
+						<v-btn color="blue-gradient"
+							dark
+							to="/store"
+						>
+							<v-icon size="24">
+								store
+							</v-icon>
+							<span v-if="$vuetify.breakpoint.width > 165"
+								class="ml-2"
+							>Visit Store</span>
+						</v-btn>
+					</v-card-actions>
+				</v-card>
+			</v-col>
+			<v-col v-else
+				cols="12"
 				xl="8"
 				lg="8"
 				md="8"
 			>
-				<v-card v-if="cartItemsList.length === 0"
-					color="error" dark
-				>
-					<v-card-title>No items added yet</v-card-title>
-				</v-card>
 				<transition-group
-					v-else
 					appear
 					:css="false"
 					@before-enter="beforeEnter"
@@ -36,7 +65,7 @@
 								sm="3"
 							>
 								<v-img
-									:src="item.item.image"
+									:src="(item.item !== undefined) ? item.item.image : ''"
 									max-width="200"
 									min-width="50"
 									height="100"
@@ -122,17 +151,21 @@
 					</v-card>
 				</transition-group>
 			</v-col>
-			<v-scale-transition mode="out-in">
+			<v-scale-transition
+				v-if="cartItemsList.length !== 0"
+				mode="out-in"
+			>
 				<v-col
 					cols="12"
 					xl="4"
 					lg="4"
 					md="4"
 				>
-					<v-card class="mx-auto"
+					<v-card id="cart-summary"
+						class="mx-auto"
 						max-width="960"
 					>
-						<v-toolbar class="px-4 orange-gradient"
+						<v-toolbar class="px-4 light-orange-gradient"
 							dark
 						>
 							<v-app-bar-nav-icon>
@@ -147,25 +180,52 @@
 							<v-toolbar-title class="font-weight-bold">
 								Cart Summary
 							</v-toolbar-title>
-						</v-toolbar>
-						<v-list two-line>
-							<v-list-item
-								v-for="(summaryItem, summaryIndex) of getCartSummary"
-								:key="summaryIndex"
+							<v-spacer />
+							<v-btn fab
+								elevation="1"
+								color="transparent"
+								small @click="showSummary = !showSummary"
 							>
-								<v-list-item-icon>
-									<v-icon>{{ summaryItem.icon }}</v-icon>
-								</v-list-item-icon>
-								<v-list-item-content>
-									<v-list-item-title class="summary-item-value">
+								<v-fade-transition>
+									<v-icon
+										v-if="!showSummary"
+										color="grey lighten-4"
+									>
+										keyboard_arrow_down
+									</v-icon>
+									<v-icon
+										v-if="showSummary"
+										color="grey lighten-4"
+									>
+										keyboard_arrow_up
+									</v-icon>
+								</v-fade-transition>
+							</v-btn>
+						</v-toolbar>
+						<v-expand-transition mode="ease">
+							<v-list v-if="showSummary"
+								two-line
+							>
+								<v-list-item
+									v-for="(summaryItem, summaryIndex) of getCartSummary"
+									:key="summaryIndex"
+								>
+									<v-list-item-icon class="fill-height my-auto">
+										<v-icon>{{ summaryItem.icon }}</v-icon>
+									</v-list-item-icon>
+									<v-list-item-content>
+										<v-list-item-title style="font-size: .875rem; line-height: .84rem;">
+											{{ summaryItem.field }}
+										</v-list-item-title>
+									</v-list-item-content>
+									<v-list-item-action-text class="summary-item-value">
 										{{ summaryItem.value }}
-									</v-list-item-title>
-									<v-list-item-subtitle>{{ summaryItem.field }}</v-list-item-subtitle>
-								</v-list-item-content>
-							</v-list-item>
-						</v-list>
+									</v-list-item-action-text>
+								</v-list-item>
+							</v-list>
+						</v-expand-transition>
 						<v-card-actions>
-							<v-btn class="brown-gradient"
+							<v-btn class="light-orange-gradient-x"
 								block
 								large
 								dark
@@ -190,28 +250,10 @@ export default {
 	name: "CartView",
 	data() {
 		return {
-			desserts: [
-				{
-					name: "Frozen Yogurt",
-					quantity: 5,
-					price: 200,
-				},
-				{
-					name: "Ice cream sandwich",
-					quantity: 3,
-					price: 300,
-				},
-				{
-					name: "Eclair",
-					quantity: 2,
-					price: 20,
-				},
-				{
-					name: "Cupcake",
-					quantity: 3,
-					price: 50,
-				},
-			],
+			LOYALTY_DISCOUNT: 50,
+			DELIVERY_START_PM: 17,
+			DELIVERY_START_AM: 4,
+			showSummary: false,
 			cartItemsList: []
 		}
 	},
@@ -225,24 +267,29 @@ export default {
 				totalPrice += item.quantity * item.item.price
 				totalItems += item.quantity
 			})
-			if (totalPrice > 2000) loyaltyDiscount = 5
-			const deliveryCharge = (today.getHours() > 16 || today.getHours() <= 4) ? 100 : 0
+			if (totalPrice > 2000) loyaltyDiscount = this.LOYALTY_DISCOUNT
+			const deliveryCharge = (today.getHours() >= this.DELIVERY_START_PM || today.getHours() <= this.DELIVERY_START_AM) ? 50 : 0
 			const grandTotal = totalPrice - (loyaltyDiscount/100)*totalPrice - deliveryCharge
 			if (this.currentOrder) return [
 				{
-					icon: "location_on",
-					field: "Delivery Location",
-					value: "Amarsingh-7, Pokhara"
+					icon: "call",
+					field: "Contact Number",
+					value: this.currentOrder.custom_contact
 				},
 				{
 					icon: "shopping_cart",
-					field: "Total items in cart",
+					field: "Total Items",
 					value: totalItems,
 				},
 				{
 					icon: "title",
 					field: "Sub-Total (NRs)",
 					value: totalPrice
+				},
+				{
+					icon: "location_on",
+					field: "Delivery To",
+					value: this.currentOrder.custom_location
 				},
 				{
 					icon: "two_wheeler",
@@ -255,8 +302,8 @@ export default {
 					value: loyaltyDiscount + "%",
 				},
 				{
-					icon: "text_fields",
-					field: "Grand Total (Rs)",
+					icon: "money",
+					field: "Grand Total (NRs)",
 					value: grandTotal,
 					divider: true
 				}
@@ -340,7 +387,8 @@ export default {
 			await this.$store.dispatch("cart/removeFromCart", {
 				id: item.id
 			})
-			this.openSnack(item.item.name + " removed from cart.", "error")
+			this.$bus.emit("subtract-cart-count", item.quantity)
+			this.openSnack(item.item.name + " removed from cart.", "success")
 			await this.initialize()
 		},
 		routeToOrderConfirmation() {
@@ -385,7 +433,7 @@ export default {
 }
 .cart-item-card {
 	background-color: #e5e5e5 !important;
-	:hover {
+	&:hover {
 		background-color: #fff7e3 !important;
 	}
 }

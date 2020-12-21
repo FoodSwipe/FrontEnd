@@ -70,8 +70,18 @@ const actions = {
 			return true
 		} catch (e) {
 			if (e.response.status === 400) {
-				commit("SET_ORDER_FORM_ERRORS", e.response.data)
-				return false
+				if (e.response.data) {
+					if (Array.isArray(e.response.data)) {
+						localStorage.setItem(
+							"cookingOrder",
+							e.response.data[0].replace(/\D/g, "")
+						)
+						return e.response.data
+					} else {
+						commit("SET_ORDER_FORM_ERRORS", e.response.data)
+						return false
+					}
+				}
 			}
 			return 500
 		}

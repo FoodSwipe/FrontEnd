@@ -44,6 +44,12 @@ export default {
 .orange-gradient {
 	background: linear-gradient(45deg, #582104, #c66c3c)
 }
+.light-orange-gradient {
+	background: linear-gradient(45deg, #c85c09, #eac290)
+}
+.light-orange-gradient-x {
+	background: linear-gradient(90deg, #ecb063, #c85c09, #ea9d72)
+}
 .teal-gradient {
 	background: linear-gradient(45deg, #505804, #a2ac56)
 }

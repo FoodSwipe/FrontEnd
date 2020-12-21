@@ -149,7 +149,8 @@ export default {
 	computed: {
 		...mapGetters({
 			orderNowList: "menuItem/allMenuItems",
-			startOrderFormErrors: "order/orderFormFieldErrors"
+			startOrderFormErrors: "order/orderFormFieldErrors",
+			pendingOrder: "order/detailOrder"
 		}),
 	},
 	async created() {
@@ -190,8 +191,15 @@ export default {
 				await this.openSnack("Cheers! Selected items has been added to cart.", "success")
 			} else if (started === 500) {
 				await this.openSnack("Internal Server Error.")
-			} else {
+			} else if (started === false) {
 				await this.openSnack("Please load a valid form.")
+			} else {
+				await this.$store.dispatch("order/clearFormErrors")
+				await this.openSnack(started[0])
+				await this.$store.dispatch("order/withCartItems", {
+					id: localStorage.getItem("cookingOrder")
+				})
+				this.$bus.emit("set-cart-count", this.pendingOrder.total_items)
 			}
 		}
 	},

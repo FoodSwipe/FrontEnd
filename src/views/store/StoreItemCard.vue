@@ -203,6 +203,7 @@ export default {
 					order: localStorage.getItem("cookingOrder"),
 					item: this.rememberFirstItem.id
 				})
+				this.$bus.emit("add-cart-count")
 				await this.openSnack(`Cheers! ${this.rememberFirstItem.name} added to cart.`, "success")
 				this.startOrder = false
 			} else if (started === 500) {
