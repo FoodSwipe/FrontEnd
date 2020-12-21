@@ -289,6 +289,7 @@
 							<v-btn text
 								color="error"
 								v-bind="attrs"
+								x-small
 								v-on="on"
 							>
 								Forget password?
@@ -340,6 +341,7 @@
 							<v-btn text
 								color="primary"
 								v-bind="attrs"
+								x-small
 								v-on="on"
 							>
 								Register
@@ -615,16 +617,28 @@ export default {
 		async submitLogin() {
 			const loggedIn = await this.$store.dispatch("auth/login", this.login)
 			if (loggedIn === true) {
+				// logged in with zero pending order
 				this.openSnack("Logged in successfully.")
 				this.currentUser = JSON.parse(localStorage.getItem("currentUser"))
+				this.$bus.emit("set-cart-count", 0)
+				this.$bus.emit("refresh-order-now")
 				this.drawer = false
 				this.showAdminButton = this.$helper.isAdminUser()
-			} else if(loggedIn === 500) {
+			} else if(loggedIn === "serverError") {
 				this.openSnack("Internal Server Error.", "error")
-			} else if(loggedIn === 400) {
+			} else if(loggedIn === "formError") {
 				this.openSnack("Login failed.", "error")
 			} else if (loggedIn.message) {
 				this.openSnack(loggedIn.message, "error")
+			} else if (typeof loggedIn === "number") {
+				// logged in with a pending order
+				this.openSnack("Logged in successfully.")
+				this.currentUser = JSON.parse(localStorage.getItem("currentUser"))
+				this.$bus.emit("set-cart-count", loggedIn)
+				this.$bus.emit("refresh-cart")
+				this.$bus.emit("refresh-order-now")
+				this.drawer = false
+				this.showAdminButton = this.$helper.isAdminUser()
 			}
 		},
 		async logOut() {
@@ -633,6 +647,7 @@ export default {
 				this.openSnack("Logged out successfully.")
 				this.currentUser = null
 				this.showAdminButton = false
+				this.$bus.emit("refresh-order-now")
 			} else {
 				this.openSnack(isLoggedOut, "error")
 			}

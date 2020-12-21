@@ -132,6 +132,7 @@
 <script>
 import { refineOrderNowList } from "@/Helper"
 import { mapGetters } from "vuex"
+import router from "@/router"
 
 export default {
 	name: "OrderNowComponent",
@@ -154,11 +155,37 @@ export default {
 		}),
 	},
 	async created() {
-		await this.$store.dispatch("menuItem/fetchOrderNowList")
-		this.isDisabled = (localStorage.getItem("cookingOrder") !== null)
-		this.orderNowRefinedList = refineOrderNowList(this.orderNowList)
+		this.$bus.on("refresh-order-now", this.preFillForm)
+
+		await this.initialize()
+		this.preFillForm()
+	},
+	async beforeUnmount() {
+		this.$bus.off("refresh-order-now", this.preFillForm)
 	},
 	methods: {
+		async initialize() {
+			await this.$store.dispatch("menuItem/fetchOrderNowList")
+			this.isDisabled = (localStorage.getItem("cookingOrder") !== null)
+			this.isUpdating = true
+			this.orderNowRefinedList = refineOrderNowList(this.orderNowList)
+			this.isUpdating = false
+		},
+		preFillForm() {
+			if(this.$helper.isAuthenticated()) {
+				const currentUser = JSON.parse(localStorage.getItem("currentUser"))
+				console.log(currentUser)
+				this.order = {
+					custom_location: currentUser.profile.address,
+					custom_contact: currentUser.profile.contact
+				}
+			} else {
+				this.order = {
+					custom_location: "",
+					custom_contact: ""
+				}
+			}
+		},
 		removeItemFromSelectedOrderInput(item) {
 			const index = this.selectedItems.indexOf(item.id)
 			if (index >= 0) this.selectedItems.splice(index, 1)
@@ -189,6 +216,7 @@ export default {
 				}
 				this.isDisabled = true
 				await this.openSnack("Cheers! Selected items has been added to cart.", "success")
+				await router.push({"name": "Cart"})
 			} else if (started === 500) {
 				await this.openSnack("Internal Server Error.")
 			} else if (started === false) {

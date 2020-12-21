@@ -62,7 +62,9 @@
 				justify="space-around"
 			>
 				<v-card-actions>
-					<v-btn filled>
+					<v-btn filled
+						to="/cart"
+					>
 						<v-icon>arrow_back</v-icon>
 						<span v-if="$vuetify.breakpoint.width > 320"
 							class="pl-2"

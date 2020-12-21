@@ -126,6 +126,7 @@
 										type="number"
 										hide-details="auto"
 										persistent-hint
+										disabled
 									/>
 									<v-btn icon
 										height="56"
@@ -250,10 +251,12 @@ export default {
 	name: "CartView",
 	data() {
 		return {
-			LOYALTY_DISCOUNT: 50,
+			LOYALTY_DISCOUNT: 10,
 			DELIVERY_START_PM: 17,
 			DELIVERY_START_AM: 4,
-			showSummary: false,
+			DELIVERY_CHARGE: 50,
+			LOYALTY_STARTS_AT: 10000,
+			showSummary: true,
 			cartItemsList: []
 		}
 	},
@@ -262,14 +265,22 @@ export default {
 			const today = new Date()
 			let totalPrice = 0
 			let totalItems = 0
+			let deliveryCharge = 0
 			let loyaltyDiscount = 0
+			let grandTotal = 0
+
 			this.cartItemsList.forEach(item => {
 				totalPrice += item.quantity * item.item.price
 				totalItems += item.quantity
 			})
-			if (totalPrice > 2000) loyaltyDiscount = this.LOYALTY_DISCOUNT
-			const deliveryCharge = (today.getHours() >= this.DELIVERY_START_PM || today.getHours() <= this.DELIVERY_START_AM) ? 50 : 0
-			const grandTotal = totalPrice - (loyaltyDiscount/100)*totalPrice - deliveryCharge
+			if (totalPrice > this.LOYALTY_STARTS_AT) {
+				loyaltyDiscount = this.LOYALTY_DISCOUNT
+				grandTotal -= (loyaltyDiscount / 100) * grandTotal
+			}
+			if (today.getHours() >= this.DELIVERY_START_PM || today.getHours() <= this.DELIVERY_START_AM) {
+				deliveryCharge = this.DELIVERY_CHARGE
+				grandTotal = totalPrice + deliveryCharge
+			}
 			if (this.currentOrder) return [
 				{
 					icon: "call",
@@ -315,7 +326,11 @@ export default {
 		})
 	},
 	created() {
+		this.$bus.on("refresh-cart", this.initialize)
 		this.initialize()
+	},
+	beforeUnmount() {
+		this.$bus.off("refresh-cart", this.initialize)
 	},
 	methods: {
 		async initialize() {
@@ -378,6 +393,16 @@ export default {
 			})
 			this.emitCartQuantityUpdate()
 		},
+		// updateQuantity(item) {
+		// 	if (item.quantity < 1) return
+		// 	this.$store.dispatch("cart/patch", {
+		// 		id: item.id,
+		// 		body: {
+		// 			quantity: item.quantity
+		// 		}
+		// 	})
+		// 	this.emitCartQuantityUpdate()
+		// },
 		openSnack(text, color) {
 			this.$store.dispatch("snack/setSnackState", true)
 			this.$store.dispatch("snack/setSnackColor", color)

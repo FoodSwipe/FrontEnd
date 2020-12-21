@@ -216,6 +216,14 @@ export default {
 			router.push({name: "Product"})
 		},
 		async addItemToCart(item) {
+			if (this.$helper.isAuthenticated()) {
+				const currentUser = JSON.parse(localStorage.getItem("currentUser"))
+				this.order = {
+					custom_location: currentUser.profile.address,
+					custom_contact: currentUser.profile.contact
+				}
+			}
+
 			if (localStorage.getItem("cookingOrder")) {
 				const addedToCart = await this.$store.dispatch("cart/addToCart", {
 					order: parseInt(localStorage.getItem("cookingOrder")),

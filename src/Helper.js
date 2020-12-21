@@ -63,7 +63,12 @@ module.exports = {
 	},
 	isAdminUser() {
 		const currentUser = this.getCurrentUser()
-		if (currentUser) return (currentUser.is_superuser === true)
+		if (currentUser) return (currentUser["admin"] === true)
+		else return false
+	},
+	isStaffUser() {
+		const currentUser = this.getCurrentUser()
+		if (currentUser) return (currentUser["staff"] === true)
 		else return false
 	},
 	isAuthenticated() {
