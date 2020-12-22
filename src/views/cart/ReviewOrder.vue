@@ -19,6 +19,7 @@
 				<v-expansion-panel
 					v-for="(item,i) in cartItemsList"
 					:key="i"
+					@click="clearFormErrors()"
 				>
 					<v-expansion-panel-header>
 						<template #default>
@@ -31,27 +32,49 @@
 						</template>
 					</v-expansion-panel-header>
 					<v-expansion-panel-content>
-						<v-divider class="py-2" />
-						<v-text-field
-							v-model="reviewItem[item.item.name]"
-							clearable
-							filled
-							:label="'Add review for ' + item.item.name"
-							prepend-inner-icon="chat"
-							hide-details
-						>
-							<template #append>
-								<v-btn icon
-									@click="writeReview(item.item)"
+						<v-row class="ma-0 pa-0">
+							<v-col cols="12">
+								<v-file-input
+									id="member-image-input"
+									v-model="reviewItem['imageForUpload']"
+									filled
+									small-chips
+									show-size
+									accept="image/*"
+									label="Add Image"
+									clearable
+									multiple
+									prepend-icon=""
+									prepend-inner-icon="camera"
+									hide-details="auto"
+									:error-messages="formErrors.image"
+								/>
+							</v-col>
+							<v-col cols="12">
+								<v-textarea
+									v-model="reviewItem['review']"
+									clearable
+									filled
+									label="Your review here"
+									prepend-inner-icon="chat"
+									hide-details="auto"
+									counter
+									:error-messages="formErrors.review"
 								>
-									<v-icon color="#774803"
-										class="tilt"
-									>
-										send
-									</v-icon>
-								</v-btn>
-							</template>
-						</v-text-field>
+									<template #append>
+										<v-btn icon
+											@click="writeReview(item.item)"
+										>
+											<v-icon color="#774803"
+												class="tilt"
+											>
+												send
+											</v-icon>
+										</v-btn>
+									</template>
+								</v-textarea>
+							</v-col>
+						</v-row>
 					</v-expansion-panel-content>
 				</v-expansion-panel>
 			</v-expansion-panels>
@@ -72,18 +95,23 @@
 </template>
 <script>
 import { mapGetters } from "vuex"
+import { getFormData } from "@/Helper"
 
 export default {
 	name: "ReviewOrderView",
 	data: () => ({
 		isLoading: false,
 		cartItemsList: [],
-		reviewItem: {}
+		reviewItem: {
+			imageForUpload: [],
+			review: ""
+		},
 	}),
 	computed: {
 		...mapGetters({
-			currentOrder: "order/detailOrder"
-		})
+			currentOrder: "order/detailOrder",
+			formErrors: "review/addReviewFormErrors"
+		}),
 	},
 	async created() {
 		await this.initialize()
@@ -97,8 +125,32 @@ export default {
 			this.cartItemsList = this.currentOrder.cart_items
 			this.isLoading = false
 		},
-		writeReview(item) {
-			console.log(item)
+		async clearFormErrors() {
+			await this.$store.dispatch("review/clearAddReviewFormErrorMessages")
+		},
+		async openSnack(text, color="success") {
+			await this.$store.dispatch("snack/setSnackState", true)
+			await this.$store.dispatch("snack/setSnackColor", color)
+			await this.$store.dispatch("snack/setSnackText", text)
+		},
+		async writeReview(item) {
+			let payload = {
+				review: this.reviewItem.review,
+				menu_item: item.id,
+				reviewer: this.currentOrder.created_by,
+				reviewer_contact: this.currentOrder.custom_contact,
+			}
+			if (this.reviewItem.imageForUpload.length > 0) {
+				payload["image"] = this.reviewItem.imageForUpload[0]
+			}
+			payload = await getFormData(payload)
+			const reviewed = await this.$store.dispatch("review/addReviewForMenuItem", payload)
+			if (reviewed === true) {
+				await this.$store.dispatch("review/clearAddReviewFormErrorMessages")
+				await this.openSnack("Review added successfully")
+				const indexOfItem = this.cartItemsList.indexOf(item)
+				this.cartItemsList.splice(indexOfItem, 1)
+			}
 		}
 	}
 }
@@ -121,5 +173,8 @@ export default {
 	border-radius: 20px !important;
 	margin-top: -30px;
 	padding-top: 45px;
+}
+::v-deep.v-expansion-panel-content > .v-expansion-panel-content__wrap {
+	padding: 0 10px;
 }
 </style>

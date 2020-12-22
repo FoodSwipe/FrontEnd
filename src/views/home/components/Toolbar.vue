@@ -171,6 +171,7 @@
 								small
 								class="mr-2"
 								v-bind="attrs"
+								:disabled="$route.name === 'Cart'"
 								@click="toCart()"
 								v-on="on"
 							>
@@ -579,7 +580,7 @@ export default {
 			this.$store.dispatch("snack/setSnackText", text)
 		},
 		toCart() {
-			router.push({name: "Cart"})
+			router.push({ name: "Cart" })
 		},
 		toProfile() {
 			router.push({name: "Profile"})

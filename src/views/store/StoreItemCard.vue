@@ -186,7 +186,8 @@ export default {
 	}),
 	computed: {
 		...mapGetters({
-			startOrderFormErrors: "order/orderFormFieldErrors"
+			startOrderFormErrors: "order/orderFormFieldErrors",
+			pendingOrder: "order/detailOrder"
 		})
 	},
 	methods: {
@@ -208,8 +209,14 @@ export default {
 				this.startOrder = false
 			} else if (started === 500) {
 				await this.openSnack("Internal Server Error.")
-			} else {
+			} else if (started === false) {
 				await this.openSnack("Please load a valid form.")
+			} else {
+				await this.openSnack("You have a pending order. Please check your cart.")
+				await this.$store.dispatch("order/withCartItems", {
+					id: this.$helper.getCookingOrderId()
+				})
+				await this.$bus.emit("set-cart-count", this.pendingOrder.total_items)
 			}
 		},
 		routeToItemDetail() {

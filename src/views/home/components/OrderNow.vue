@@ -174,10 +174,9 @@ export default {
 		preFillForm() {
 			if(this.$helper.isAuthenticated()) {
 				const currentUser = JSON.parse(localStorage.getItem("currentUser"))
-				console.log(currentUser)
 				this.order = {
 					custom_location: currentUser.profile.address,
-					custom_contact: currentUser.profile.contact
+					custom_contact: currentUser.profile.contact.replace(/\D/g, ""),
 				}
 			} else {
 				this.order = {

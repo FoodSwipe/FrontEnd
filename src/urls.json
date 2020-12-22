@@ -42,5 +42,9 @@
     "unAuthUpdateOrder": "update-order/%s",
     "initializeOrder": "init-order",
     "withCartItems": "order/%s/cart"
+  },
+  "review": {
+    "list": "review/",
+    "detail": "review/%s/"
   }
 }

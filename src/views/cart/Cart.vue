@@ -52,63 +52,91 @@
 				>
 					<v-card
 						v-for="(item, index) in cartItemsList"
+
 						:key="index"
-						class="mb-4 cart-item-card"
+						class="cart-item-card pa-0"
+						:class="
+							(index+1 === cartItemsList.length) ? '' : 'mb-4'
+						"
 					>
 						<v-row class="ma-0 pa-0"
 							align="center"
 						>
-							<v-col cols="6"
+							<!-- image column-->
+							<v-col cols="12"
 								xl="3"
 								lg="3"
 								md="3"
 								sm="3"
+								style="height: 100%; min-height: 100%;"
 							>
 								<v-img
 									:src="(item.item !== undefined) ? item.item.image : ''"
-									max-width="200"
-									min-width="50"
-									height="100"
+									width="100%"
+									height="100%"
+									max-height="150"
 								/>
 							</v-col>
-							<v-col cols="6"
+							<v-col cols="12"
 								xl="3"
 								lg="3"
 								md="3"
 								sm="3"
 							>
-								{{ item.item.name }}
-								<p class="subtitle-2">
-									<v-avatar v-for="(typeOfItem, indic) in item.item.item_type"
-										:key="typeOfItem.id +55 *37"
-										tile
-										size="20"
-										:class="
-											(indic +1 === item.item.item_type.length) ? '' : 'pr-2'
-										"
-									>
-										<v-img
-											:src="typeOfItem.badge"
-										/>
-									</v-avatar>
+								<p>
+									{{ item.item.name }}
+									<span class="subtitle-2">
+										<v-avatar v-for="(typeOfItem, indic) in item.item.item_type"
+											:key="typeOfItem.id +55 *37"
+											tile
+											size="20"
+											:class="
+												(indic +1 === item.item.item_type.length) ? '' : 'pr-2'
+											"
+											class="slight-up"
+										>
+											<v-img
+												:src="typeOfItem.badge"
+											/>
+										</v-avatar>
+									</span>
 								</p>
-								<p class="d-flex">
+								<div class="d-flex mb-0 align-center">
 									<v-btn icon
 										color="error"
+										:x-small="$vuetify.breakpoint.width < 280"
 										@click="removeItemFromCart(item)"
 									>
 										<v-icon>delete</v-icon>
 									</v-btn>
-									<v-icon class="pl-2">
-										favorite
-									</v-icon>
-								</p>
+									<v-btn v-if="$vuetify.breakpoint.width > 205"
+										icon
+										disabled
+										:x-small="$vuetify.breakpoint.width < 280"
+									>
+										<v-icon class="pl-2">
+											favorite
+										</v-icon>
+									</v-btn>
+									<v-spacer />
+									<div v-if="$vuetify.breakpoint.xsOnly"
+										class="py-2 d-flex align-center mb-0"
+									>
+										<v-icon v-if="$vuetify.breakpoint.width > 255"
+											size="18"
+											style="margin-top:-2px;"
+										>
+											today
+										</v-icon>
+										<span class="pl-2 cart-item-created-at">{{ item.created_at }}</span>
+									</div>
+								</div>
 							</v-col>
-							<v-col cols="8"
+							<v-col cols="7"
 								xl="4"
 								lg="4"
 								md="4"
-								sm="4"
+								sm="3"
 							>
 								<div class="d-flex align-center">
 									<v-btn
@@ -140,22 +168,23 @@
 									</v-btn>
 								</div>
 							</v-col>
-							<v-col cols="4"
+							<v-col cols="5"
 								xl="2"
 								lg="2"
 								md="2"
-								sm="2"
-								class="fill-height"
+								sm="3"
 							>
-								<div class="py-2 d-flex align-center"
-									style="font-size: .7rem; line-height: .7rem; letter-spacing: .01rem;"
+								<p
+									v-if="$vuetify.breakpoint.smAndUp"
+									class="py-2 d-flex align-center cart-item-created-at"
 								>
-									<v-icon small>
+									<span><v-icon size="18">
 										history
-									</v-icon><span class="pl-2">{{ item.created_at }}</span>
-								</div>
+									</v-icon></span>
+									<span class="pl-2">{{ item.created_at }}</span>
+								</p>
 								<div class="item-sub-total py-2">
-									Rs {{ item.quantity * item.item.price }}
+									NRs {{ item.quantity * item.item.price }}
 								</div>
 							</v-col>
 						</v-row>
@@ -267,7 +296,11 @@ export default {
 			DELIVERY_CHARGE: 50,
 			LOYALTY_STARTS_AT: 10000,
 			showSummary: true,
-			cartItemsList: []
+			cartItemsList: [{
+				item: {
+					name: ""
+				}
+			}] // do not show empty card while loading (just a workaround)
 		}
 	},
 	computed: {
@@ -352,6 +385,8 @@ export default {
 					})
 				}
 				this.cartItemsList = this.currentOrder.cart_items
+			} else {
+				this.cartItemsList = []
 			}
 		},
 		beforeEnter(el) {
@@ -459,10 +494,6 @@ export default {
 	color: green;
 	font-weight: bold;
 	font-family: Lato, serif;
-	@media only screen and (max-width: 640px) and (min-width: 600px) {
-		font-size: 1rem;
-		line-height: 1rem;
-	}
 	@media only screen and (max-width: 300px) {
 		font-size: 1.2rem;
 		line-height: 1.2rem;
@@ -482,5 +513,13 @@ export default {
 	font-weight: 500;
 	color: darkslategrey !important;
 	font-size: 1.2rem;
+}
+.slight-up {
+	margin-top: -4px;
+}
+.cart-item-created-at {
+	font-size: .8rem; line-height: .8rem; letter-spacing: .01rem;
+	color: #ea9c68;
+	font-weight: 450;
 }
 </style>
