@@ -19,12 +19,12 @@
 					cols="12"
 				>
 					<v-text-field
-						v-model="order.created_by.profile.name"
+						v-model="$helper.getCurrentUser().profile.full_name"
 						filled
 						dense
 						readonly
 						prepend-inner-icon="account_circle" label="Full name"
-						clearable hide-details="auto"
+						hide-details
 					/>
 				</v-col>
 				<v-col cols="12">
@@ -53,7 +53,7 @@
 					cols="12"
 				>
 					<v-text-field
-						v-model="order.email"
+						v-model="order.custom_email"
 						filled
 						dense type="email"
 						prepend-inner-icon="email" label="Email address"
@@ -102,7 +102,6 @@ export default {
 	name: "OrderConfirmation",
 	data: () =>  ({
 		full_name: null,
-		email: null,
 		order: {
 			custom_location: null,
 			custom_contact: null,
