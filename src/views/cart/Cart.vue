@@ -122,11 +122,13 @@
 										<v-icon>remove</v-icon>
 									</v-btn>
 									<v-text-field v-model="item.quantity"
+										class="cart-item-quantity"
 										filled
 										type="number"
 										hide-details="auto"
 										persistent-hint
-										disabled
+										readonly
+										style="max-width: 100px"
 									/>
 									<v-btn icon
 										height="56"
@@ -143,8 +145,16 @@
 								lg="2"
 								md="2"
 								sm="2"
+								class="fill-height"
 							>
-								<div class="item-sub-total">
+								<div class="py-2 d-flex align-center"
+									style="font-size: .7rem; line-height: .7rem; letter-spacing: .01rem;"
+								>
+									<v-icon small>
+										history
+									</v-icon><span class="pl-2">{{ item.created_at }}</span>
+								</div>
+								<div class="item-sub-total py-2">
 									Rs {{ item.quantity * item.item.price }}
 								</div>
 							</v-col>
@@ -336,11 +346,13 @@ export default {
 		async initialize() {
 			const cookingOrder = localStorage.getItem("cookingOrder")
 			if (cookingOrder) {
-				await this.$store.dispatch("order/withCartItems", {
-					id: cookingOrder
-				})
+				if (cookingOrder) {
+					await this.$store.dispatch("order/withCartItems", {
+						id: cookingOrder
+					})
+				}
+				this.cartItemsList = this.currentOrder.cart_items
 			}
-			this.cartItemsList = this.currentOrder.cart_items
 		},
 		beforeEnter(el) {
 			el.style.opacity = 0
@@ -464,5 +476,11 @@ export default {
 }
 .summary-item-value {
 	font-size: 1rem; font-weight: 500;
+}
+.cart-item-quantity input {
+	text-align: center;
+	font-weight: 500;
+	color: darkslategrey !important;
+	font-size: 1.2rem;
 }
 </style>

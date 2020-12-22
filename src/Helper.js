@@ -71,6 +71,9 @@ module.exports = {
 		if (currentUser) return (currentUser["staff"] === true)
 		else return false
 	},
+	getCookingOrderId() {
+		return localStorage.getItem("cookingOrder")
+	},
 	isAuthenticated() {
 		const currentUser = this.getCurrentUser()
 		return (currentUser !== null)

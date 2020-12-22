@@ -30,6 +30,11 @@ export default {
 	cursor: pointer;
 }
 
+.order-card-header {
+	background-color: #ffc107a8;
+	border-radius: 20px !important;
+}
+
 // gradient backgrounds
 
 .green-gradient-rgba {

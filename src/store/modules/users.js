@@ -10,8 +10,7 @@ export const SET_REGISTER_ERROR_MESSAGES = "SET_REGISTER_ERROR_MESSAGES"
 export const SET_ADD_USER_ERROR_MESSAGES = "SET_ADD_USER_ERROR_MESSAGES"
 
 const defaultSet = {
-	first_name: null,
-	last_name: null,
+	full_name: null,
 	username: null,
 	email: null,
 	contact: null,
@@ -141,6 +140,10 @@ const actions = {
 			...defaultSet,
 			birth_date: null
 		})
+	},
+	clearRegisterErrorMessages({commit}) {
+		commit("SET_REGISTER_ERROR_MESSAGES", {
+			...defaultSet})
 	},
 	async addUser({commit}, payload) {
 		try {

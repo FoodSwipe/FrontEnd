@@ -325,12 +325,7 @@ export default {
 		}
 	}),
 	computed: {
-		people() {
-			return helper.returnMockMenuItems()
-		},
-		srcs() {
-			return helper.returnMockSrcs()
-		}
+		//
 	},
 	methods: {
 		generatePDF() {

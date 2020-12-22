@@ -65,13 +65,13 @@
 						radio_button_checked
 					</v-icon>
 				</v-row>
-				<span class="top-text cursor"
+				<span class="top-text"
 					@click="routeToOrderShipping()"
 				>Shipping</span>
-				<span class="mid-padding top-text cursor"
+				<span class="mid-padding top-text"
 					@click="routeToOrderPayment()"
 				>Payment</span>
-				<span class="top-text cursor"
+				<span class="top-text"
 					@click="routeToOrderReview()"
 				>Review</span>
 			</div>
@@ -105,13 +105,13 @@ export default {
 	}),
 	methods: {
 		routeToOrderShipping() {
-			router.push({name: "Confirm Order"})
+			// router.push({name: "Confirm Order"})
 		},
 		routeToOrderPayment() {
-			router.push({name: "Confirm Payment"})
+			// router.push({name: "Confirm Payment"})
 		},
 		routeToOrderReview() {
-			router.push({name: "Review Order"})
+			// router.push({name: "Review Order"})
 		}
 	}
 }
@@ -170,7 +170,7 @@ export default {
 		font-size: .875rem;
 	}
 	&:hover {
-		color: #1c3e81;
+		color: #3479e2;
 	}
 }
 .custom-shape-divider-bottom-1607775812 {

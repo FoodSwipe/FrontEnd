@@ -10,7 +10,8 @@ export const SET_ORDER_FORM_ERRORS = "SET_ORDER_FORM_ERRORS"
 
 const defaultOrderErrors = {
 	custom_location: null,
-	custom_contact: null
+	custom_contact: null,
+	custom_email: null,
 }
 
 const state = {
@@ -118,13 +119,26 @@ const actions = {
 			return false
 		}
 	},
+	async unauthorizedUpdateOrder({commit}, payload) {
+		try {
+			await $api.patch(util.format(orderUrls.unAuthUpdateOrder, payload.id), payload.body)
+			return true
+		} catch (e) {
+			if (parseInt(e.response.status.toString()) === 400) {
+				commit("SET_ORDER_FORM_ERRORS", e.response.data)
+				return false
+			}
+			return 500
+		}
+	},
 	async patch({commit}, payload) {
 		try {
 			await $api.patch(util.format(orderUrls.detail, payload.id), payload.body)
 			return true
 		} catch (e) {
 			if (e.response.status === 400) {
-				return e.response.data
+				commit("SET_ORDER_FORM_ERRORS", e.response.data)
+				return false
 			}
 			return 500
 		}

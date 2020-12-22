@@ -50,7 +50,7 @@ const routes = [
 					},
 					{
 						name: "Review Order",
-						path: "review-order",
+						path: "review-order/:id",
 						component: () => import("@/views/cart/ReviewOrder")
 					}
 				]

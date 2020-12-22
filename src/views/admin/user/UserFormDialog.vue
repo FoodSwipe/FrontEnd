@@ -82,7 +82,7 @@
 										class="headline cursor"
 										@click="routeToUserDetailPage(editedItem.id)"
 									>
-										{{ editedItem.user.first_name }} {{ editedItem.user.last_name }}
+										{{ editedItem.full_name }}
 										<v-tooltip bottom>
 											<template #activator="{ on, attrs }">
 												<v-icon
@@ -233,40 +233,16 @@
 							</p>
 							<v-divider />
 						</v-col>
-						<v-col
-							cols="12"
-							xl="6"
-							lg="6"
-							md="6"
-							sm="6"
-						>
+						<v-col cols="12">
 							<v-text-field
-								id="first-name"
-								v-model="editedItem.user.first_name"
+								id="full-name"
+								v-model="editedItem.full_name"
 								filled
 								hide-details="auto"
 								clearable
 								label="First name"
 								prepend-inner-icon="title"
-								:error-messages="addUserErrorMessages.first_name"
-							/>
-						</v-col>
-						<v-col
-							cols="12"
-							xl="6"
-							lg="6"
-							md="6"
-							sm="6"
-						>
-							<v-text-field
-								id="last-name"
-								v-model="editedItem.user.last_name"
-								filled
-								hide-details="auto"
-								clearable
-								label="Last name"
-								prepend-inner-icon="title"
-								:error-messages="addUserErrorMessages.last_name"
+								:error-messages="addUserErrorMessages.full_name"
 							/>
 						</v-col>
 						<v-col
@@ -379,8 +355,7 @@ export default {
 		editedIndex: -1,
 		editedItem: {
 			user: {
-				first_name: "",
-				last_name: "",
+				full_name: "",
 				email: "",
 				username: "",
 				is_superuser: null,
@@ -439,14 +414,13 @@ export default {
 			this.$nextTick(() => {
 				this.editedItem = {
 					user: {
-						first_name: "",
-						last_name: "",
 						email: "",
 						username: "",
 						is_superuser: null,
 						is_staff: null,
 						date_joined: null,
 					},
+					full_name: "",
 					image: "",
 					contact: null,
 					birth_date: null,
@@ -466,8 +440,7 @@ export default {
 
 		async save() {
 			const payload = {
-				first_name: this.editedItem.user.first_name,
-				last_name: this.editedItem.user.last_name,
+				full_name: this.editedItem.full_name,
 				email: this.editedItem.user.email,
 				username: this.editedItem.user.username,
 				password: this.editedItem.user.password,

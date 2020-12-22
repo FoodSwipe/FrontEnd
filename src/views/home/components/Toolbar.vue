@@ -64,8 +64,6 @@
 			<v-tooltip bottom>
 				<template #activator="{on, attrs}">
 					<v-scale-transition>
-						<!-- v-if not authenticated -->
-
 						<v-btn
 							v-if="currentUser === null"
 							v-bind="attrs"
@@ -103,7 +101,8 @@
 						</v-btn>
 					</v-scale-transition>
 				</template>
-				<span>Profile</span>
+				<span v-if="currentUser === null">Login</span>
+				<span v-else>Profile</span>
 			</v-tooltip>
 			<v-tooltip bottom>
 				<template #activator="{on, attrs}">
@@ -332,22 +331,18 @@
 				<v-col cols="6"
 					class="text-right"
 				>
+					<v-btn text
+						color="primary"
+						x-small
+						@click="openRegisterDialog()"
+					>
+						Register
+					</v-btn>
 					<v-dialog
 						id="register-dialog"
 						v-model="registerDialog"
 						max-width="500"
 					>
-						<template #activator="{ on, attrs }">
-							<v-btn text
-								color="primary"
-								v-bind="attrs"
-								x-small
-								v-on="on"
-							>
-								Register
-							</v-btn>
-						</template>
-
 						<v-card>
 							<v-card-title class="grey lighten-2">
 								<v-icon size="30">
@@ -359,36 +354,17 @@
 								<v-row class="ma-0 pa-0"
 									align="center"
 								>
-									<v-col cols="12"
-										xl="6" lg="6"
-										md="6" sm="6"
-									>
+									<v-col cols="12">
 										<v-text-field
-											id="first-name"
-											v-model="register.first_name"
+											id="full-name"
+											v-model="register.full_name"
 											dense
 											filled
 											clearable
 											prepend-inner-icon="face"
 											hide-details="auto"
-											label="First name"
-											:error-messages="registrationErrors.first_name"
-										/>
-									</v-col>
-									<v-col cols="12"
-										xl="6" lg="6"
-										md="6" sm="6"
-									>
-										<v-text-field
-											id="last-name"
-											v-model="register.last_name"
-											dense
-											filled
-											clearable
-											prepend-inner-icon="face"
-											hide-details="auto"
-											label="Last name"
-											:error-messages="registrationErrors.last_name"
+											label="Full name"
+											:error-messages="registrationErrors.full_name"
 										/>
 									</v-col>
 									<v-col cols="12"
@@ -540,8 +516,7 @@ export default {
 			password: ""
 		},
 		register: {
-			first_name: "",
-			last_name: "",
+			full_name: "",
 			username: "",
 			email: "",
 			contact: null,
@@ -578,6 +553,10 @@ export default {
 		this.$bus.off("subtract-cart-count", this.subtractCartCount)
 	},
 	methods: {
+		openRegisterDialog() {
+			this.$store.dispatch("user/clearRegisterErrorMessages")
+			this.registerDialog = true
+		},
 		subtractCartCount(value) {
 			this.cartCount = (parseInt(this.cartCount) - parseInt(value)).toString()
 		},
@@ -658,6 +637,7 @@ export default {
 			if (registered === true) {
 				this.openSnack("User registered successfully.")
 				this.registerDialog = false
+				this.drawer = true
 			} else {
 				if (registered === 500) this.openSnack("Internal server error.", "error")
 				else this.openSnack("User registered failed.", "error")
