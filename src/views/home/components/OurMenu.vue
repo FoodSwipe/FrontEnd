@@ -11,15 +11,13 @@
 			</p>
 		</div>
 		<v-card max-width="800"
-			class="mx-auto my-2 py-4"
+			class="mx-auto my-2 py-4 our-menu-wrapper-card"
 			dark
-			style="background: rgb(223 133 0);"
 		>
 			<v-card-text class="py-0">
 				<v-list
-					class="py-0"
+					class="py-0 menu-list"
 					dense
-					style="background: #362000;"
 				>
 					<v-list-item-group
 						v-for="(menuItemGroup, index) of menuItemGroups"
@@ -34,7 +32,7 @@
 							{{ menuItemGroup.name }}
 						</v-subheader>
 						<v-divider
-							style="margin: 2px 0;"
+							class="divider-menu"
 						/>
 						<v-row class="ma-0 pa-0"
 							no-gutters
@@ -51,7 +49,7 @@
 									<v-list-item-icon>
 										<v-avatar size="30"
 											color="grey darken-3"
-											style="margin-top: -3px;"
+											class="slight-up"
 										>
 											{{ menuItem.name[0] }}
 										</v-avatar>
@@ -59,7 +57,7 @@
 									<v-list-item-content>
 										<v-list-item-title>{{ menuItem.name }}</v-list-item-title>
 									</v-list-item-content>
-									<v-list-item-action-text style="font-size: 1.2rem; color: greenyellow">
+									<v-list-item-action-text class="menu-item-price">
 										{{ menuItem.price }}
 									</v-list-item-action-text>
 								</v-list-item>
@@ -501,5 +499,20 @@ export default {
 .menu-item-group-name {
 	font-size: 1.2rem;
 	font-family: "Crete Round", serif;
+}
+.our-menu-wrapper-card {
+	background: rgb(223 133 0);
+}
+.menu-item-price {
+	font-size: 1.2rem; color: greenyellow
+}
+.slight-up {
+	margin-top: -3px;
+}
+.menu-list {
+	background: #362000;
+}
+.divider-menu {
+	margin: 2px 0;
 }
 </style>

@@ -153,7 +153,7 @@
 				@save="updateName(props.item)"
 				@cancel="cancelNameUpdate"
 			>
-				<span style="font-size: 1.1rem; line-height: 1.3rem;">{{ props.item.name }}</span>
+				<span class="item-group-name">{{ props.item.name }}</span>
 				<template #input>
 					<v-text-field
 						v-model="props.item.name"
@@ -429,5 +429,8 @@ export default {
 <style lang="scss" scoped>
 ::v-deep.v-autocomplete:not(.v-input--is-focused).v-select--chips input {
 	max-height: 25px;
+}
+.item-group-name {
+	font-size: 1.1rem; line-height: 1.3rem;
 }
 </style>

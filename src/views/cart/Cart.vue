@@ -48,7 +48,6 @@
 					:css="false"
 					@before-enter="beforeEnter"
 					@enter="enter"
-					@leave="leave"
 				>
 					<v-card
 						v-for="(item, index) in cartItemsList"
@@ -68,7 +67,6 @@
 								lg="3"
 								md="3"
 								sm="3"
-								style="height: 100%; min-height: 100%;"
 							>
 								<v-img
 									:src="(item.item !== undefined) ? item.item.image : ''"
@@ -124,7 +122,7 @@
 									>
 										<v-icon v-if="$vuetify.breakpoint.width > 255"
 											size="18"
-											style="margin-top:-2px;"
+											class="today-icon"
 										>
 											today
 										</v-icon>
@@ -156,7 +154,6 @@
 										hide-details="auto"
 										persistent-hint
 										readonly
-										style="max-width: 100px"
 									/>
 									<v-btn icon
 										height="56"
@@ -254,7 +251,7 @@
 										<v-icon>{{ summaryItem.icon }}</v-icon>
 									</v-list-item-icon>
 									<v-list-item-content>
-										<v-list-item-title style="font-size: .875rem; line-height: .84rem;">
+										<v-list-item-title class="summary-title">
 											{{ summaryItem.field }}
 										</v-list-item-title>
 									</v-list-item-content>
@@ -521,5 +518,14 @@ export default {
 	font-size: .8rem; line-height: .8rem; letter-spacing: .01rem;
 	color: #ea9c68;
 	font-weight: 450;
+}
+.today-icon {
+	margin-top:-2px;
+}
+.cart-item-quantity {
+	max-width: 100px;
+}
+.summary-title {
+	font-size: .875rem; line-height: .84rem;
 }
 </style>
