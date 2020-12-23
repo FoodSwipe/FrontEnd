@@ -100,6 +100,13 @@
 			/>
 		</template>
 		<!-- eslint-disable-next-line vue/valid-v-slot-->
+		<template #item.is_bar_item="{ item }">
+			<v-checkbox v-model="item.is_bar_item"
+				color="orange"
+				@change="updateIsBarItem(item)"
+			/>
+		</template>
+		<!-- eslint-disable-next-line vue/valid-v-slot-->
 		<template #item.type="{ item }">
 			<v-row class="ma-0 pa-0 fill-height"
 				align="center"
@@ -160,6 +167,7 @@ export default {
 			{ text: "SCALE (QTY)", value: "scale", align: "center"},
 			{ text: "PRICE (NRs)", value: "price" },
 			{ text: "VEGETARIAN?", value: "is_veg", align: "center" },
+			{ text: "IS BAR ITEM?", value: "is_bar_item", align: "center" },
 			{ text: "AVAILABLE?", value: "is_available", align: "center" },
 			{ text: "TYPE", value: "type"},
 		],
@@ -243,6 +251,21 @@ export default {
 			})
 			if (patched === true) {
 				await this.openSnack("Menu item availability updated successfully.", "success")
+			} else if (patched === 500) {
+				await this.openSnack("Internal Server Error.")
+			} else {
+				await this.openSnack(patched.is_available[0])
+			}
+		},
+		async updateIsBarItem(item) {
+			const patched = await this.$store.dispatch("menuItem/patch", {
+				id: item.id,
+				body: {
+					is_bar_item: item.is_bar_item
+				}
+			})
+			if (patched === true) {
+				await this.openSnack("Menu item assigned as a bar item.", "success")
 			} else if (patched === 500) {
 				await this.openSnack("Internal Server Error.")
 			} else {

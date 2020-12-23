@@ -254,6 +254,45 @@
 							:error-messages="menuItemFormErrors.ingredients"
 						/>
 					</v-col>
+					<v-col cols="6"
+						xl="6"
+						lg="6"
+						md="6"
+						sm="6"
+						class="checkbox-input-column"
+					>
+						<v-checkbox
+							id="is-bar-item"
+							v-model="editedItem.is_bar_item"
+							label="Is Bar Item?"
+							append-icon="local_bar"
+							hide-details="auto"
+							:error-messages="menuItemFormErrors.is_bar_item"
+						/>
+					</v-col>
+					<v-scale-transition>
+						<v-col v-if="editedItem.is_bar_item"
+							cols="6"
+							xl="6"
+							lg="6"
+							md="6"
+							sm="6"
+						>
+							<v-select
+								id="bar-weight"
+								v-model="editedItem.bar_size"
+								dark
+								:items="BAR_SIZE_ARRAY"
+								label="Bar item size"
+								hide-details="auto"
+								clearable
+								filled
+								attach=""
+								prepend-inner-icon="format_color_fill"
+								:error-messages="menuItemFormErrors.bar_size"
+							/>
+						</v-col>
+					</v-scale-transition>
 					<v-col cols="12"
 						class="form-group-heading"
 					>
@@ -287,7 +326,7 @@
 							id="scale"
 							v-model="editedItem.scale"
 							label="Scale"
-							hint="Scale for price i.e. how much (quantity / weight(ml)) on this price?"
+							hint="How much (quantity(pcs) / weight(ml)) at this price?"
 							filled
 							type="number"
 							clearable
@@ -387,8 +426,10 @@ export default {
 			calorie: null,
 			scale: 1,
 			price: null,
-			is_veg: true,
+			is_veg: false,
 			is_available: true,
+			is_bar_item: false,
+			bar_size: "",
 			menu_item_group: null,
 			item_type: null,
 			image: null,
@@ -398,6 +439,7 @@ export default {
 			updated_by: null,
 		},
 		defaultItem: {},
+		BAR_SIZE_ARRAY: ["Quarter", "Half", "Full"]
 	}),
 	computed: {
 		...mapGetters({
@@ -417,8 +459,8 @@ export default {
 				{field: "Created by", value: this.editedItem.created_by.username},
 				{field: "Updated at", value: this.editedItem.updated_at},
 				{field: "Updated by", value: (this.editedItem.updated_by) ? this.editedItem.updated_by.username : "None"},
-				{field: "Price (NRs)", value: this.editedItem.price},
-				{field: "Scale", value: this.editedItem.scale},
+				{field: "Bar Item", value: this.editedItem.is_bar_item},
+				{field: "Price (NRs)", value: this.editedItem.price + " / " + this.editedItem.scale + (this.editedItem.is_bar_item) ? "ml": "g"},
 			]
 		}
 	},
@@ -456,6 +498,8 @@ export default {
 					calorie: null,
 					price: null,
 					is_veg: null,
+					is_bar_item: null,
+					bar_size: null,
 					is_available: null,
 					menu_item_group: null,
 					item_type: [],

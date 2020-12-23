@@ -21,6 +21,8 @@ const defaultErrors = {
 	weight: null,
 	calorie: null,
 	is_veg: null,
+	is_bar_item: null,
+	bar_size: null,
 	created_at: null,
 	created_by: null,
 	updated_at: null,
