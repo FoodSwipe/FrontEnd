@@ -1,7 +1,7 @@
 <template>
 	<v-card
 		:loading="loading"
-		class="mx-auto ma-1"
+		class="mx-auto ma-1 store-item-card"
 	>
 		<template #progress>
 			<v-progress-linear
@@ -16,7 +16,7 @@
 			height="200"
 			:src="item.image"
 			gradient="to top, rgba(0,0,0, .3), rgba(0,0,0, .7)"
-			class="cursor"
+			class="cursor store-item-image"
 			@click="routeToItemDetail()"
 		>
 			<v-row class="fill-height text-center ma-0 pa-0"
@@ -86,6 +86,7 @@
 									color="deep-purple lighten-2"
 									icon
 									v-bind="attrs"
+									:disabled="isAddedInCart(item)"
 									v-on="on"
 									@click.prevent="addItemToCart(item)"
 								>
@@ -188,9 +189,19 @@ export default {
 		...mapGetters({
 			startOrderFormErrors: "order/orderFormFieldErrors",
 			pendingOrder: "order/detailOrder"
-		})
+		}),
 	},
 	methods: {
+		isAddedInCart(item) {
+			if (item && this.pendingOrder) {
+				let found = false
+				this.pendingOrder.cart_items.forEach(cart_item => {
+					if (cart_item.item.name === item.name) found = true
+				})
+				return found
+			}
+			return false
+		},
 		async openSnack(text, color="error") {
 			await this.$store.dispatch("snack/setSnackState", true)
 			await this.$store.dispatch("snack/setSnackColor", color)
@@ -204,7 +215,7 @@ export default {
 					order: localStorage.getItem("cookingOrder"),
 					item: this.rememberFirstItem.id
 				})
-				this.$bus.emit("add-cart-count")
+				this.$bus.emit("add-cart-count-by-one")
 				await this.openSnack(`Cheers! ${this.rememberFirstItem.name} added to cart.`, "success")
 				this.startOrder = false
 			} else if (started === 500) {
@@ -238,11 +249,17 @@ export default {
 				})
 				if (addedToCart === true) {
 					await this.openSnack(`Cheers! ${item.name} added to cart.`, "success")
-					this.$bus.emit("add-cart-count")
+					this.$bus.emit("add-cart-count-by-one")
+					await this.$store.dispatch("order/withCartItems", {
+						id: this.$helper.getCookingOrderId()
+					})
+					this.isAddedInCart()
 				} else {
 					if (addedToCart.non_field_errors !== undefined) {
 						if (Array.isArray(addedToCart.non_field_errors)) {
-							await this.openSnack(addedToCart.non_field_errors[0])
+							if (addedToCart.non_field_errors[0] === "The fields order, item must make a unique set.") {
+								await this.openSnack("Item already added to cart.")
+							}
 						}
 					}
 				}
@@ -283,5 +300,14 @@ export default {
 }
 .item-type-row {
 	width: 100%;
+}
+.store-item-card {
+	transition: all .2s ease-in-out;
+	&:hover {
+		border: 4px solid goldenrod;
+		.store-item-image {
+			border-radius: 0
+		}
+	}
 }
 </style>
