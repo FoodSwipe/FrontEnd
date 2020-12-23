@@ -381,7 +381,7 @@ export default {
 			})
 		},
 		async initialize() {
-			const cookingOrder = localStorage.getItem("cookingOrder")
+			const cookingOrder = this.$helper.getCookingOrderId()
 			if (cookingOrder) {
 				if (cookingOrder) {
 					await this.$store.dispatch("order/withCartItems", {

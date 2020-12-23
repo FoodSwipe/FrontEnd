@@ -164,8 +164,8 @@ export default {
 		headers: [
 			{ text: "ACTIONS", value: "actions", align: "start", sortable: false},
 			{ text: "MENU ITEM", value: "name", },
-			{ text: "SCALE (QTY)", value: "scale", align: "center"},
 			{ text: "PRICE (NRs)", value: "price" },
+			{ text: "SCALE (pcs/ml)", value: "scale", align: "center"},
 			{ text: "VEGETARIAN?", value: "is_veg", align: "center" },
 			{ text: "IS BAR ITEM?", value: "is_bar_item", align: "center" },
 			{ text: "AVAILABLE?", value: "is_available", align: "center" },

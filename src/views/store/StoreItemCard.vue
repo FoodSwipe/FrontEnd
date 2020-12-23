@@ -17,7 +17,7 @@
 			:src="item.image"
 			gradient="to top, rgba(0,0,0, .3), rgba(0,0,0, .7)"
 			class="cursor store-item-image"
-			@click="routeToItemDetail()"
+			@click="routeToItemDetail(item)"
 		>
 			<v-row class="fill-height text-center ma-0 pa-0"
 				no-gutters justify="end"
@@ -101,66 +101,6 @@
 				</v-col>
 			</v-row>
 		</v-card-text>
-		<v-dialog v-model="startOrder"
-			persistent
-			max-width="400"
-			transition="fab-transition"
-		>
-			<v-card>
-				<v-card-title class="d-flex align-center">
-					Start your order right now!
-				</v-card-title>
-				<v-card-subtitle>
-					Please register and login to the system so that we can track your orders and serve you more effectively.
-				</v-card-subtitle>
-				<v-card-text>
-					<v-row class="ma-0 pa-0">
-						<v-col cols="12">
-							<v-text-field
-								id="custom-location"
-								v-model="order.custom_location"
-								filled
-								prepend-inner-icon="room"
-								hide-details="auto"
-								label="Your exact location"
-								clearable
-								:error-messages="startOrderFormErrors.custom_location"
-							/>
-						</v-col>
-						<v-col cols="12">
-							<v-text-field
-								id="custom-contact"
-								v-model="order.custom_contact"
-								filled
-								type="number"
-								prepend-inner-icon="call"
-								hide-details="auto"
-								label="Contact number"
-								clearable
-								:error-messages="startOrderFormErrors.custom_contact"
-							/>
-						</v-col>
-					</v-row>
-				</v-card-text>
-				<v-card-actions>
-					<v-spacer />
-					<v-btn
-						color="red darken-1"
-						text
-						@click="startOrder = false"
-					>
-						Discard
-					</v-btn>
-					<v-btn
-						color="green darken-1"
-						text
-						@click="makeOrder()"
-					>
-						Proceed
-					</v-btn>
-				</v-card-actions>
-			</v-card>
-		</v-dialog>
 	</v-card>
 </template>
 <script>
@@ -176,18 +116,12 @@ export default {
 		}
 	},
 	data: () => ({
-		startOrder: false,
 		rememberFirstItem: null,
 		loading: false,
-		selection: 1,
-		order: {
-			custom_location: "",
-			custom_contact: ""
-		}
+		selection: 1
 	}),
 	computed: {
 		...mapGetters({
-			startOrderFormErrors: "order/orderFormFieldErrors",
 			pendingOrder: "order/detailOrder"
 		}),
 	},
@@ -207,48 +141,27 @@ export default {
 			await this.$store.dispatch("snack/setSnackColor", color)
 			await this.$store.dispatch("snack/setSnackText", text)
 		},
-		// making a brand new order and pushing item to that order
-		async makeOrder() {
-			const started = await this.$store.dispatch("order/startOrder", this.order)
-			if (started === true) {
-				await this.$store.dispatch("cart/addToCart", {
-					order: localStorage.getItem("cookingOrder"),
-					item: this.rememberFirstItem.id
-				})
-				this.$bus.emit("add-cart-count-by-one")
-				await this.openSnack(`Cheers! ${this.rememberFirstItem.name} added to cart.`, "success")
-				this.startOrder = false
-			} else if (started === 500) {
-				await this.openSnack("Internal Server Error.")
-			} else if (started === false) {
-				await this.openSnack("Please load a valid form.")
-			} else {
-				await this.openSnack("You have a pending order. Please check your cart.")
-				await this.$store.dispatch("order/withCartItems", {
-					id: this.$helper.getCookingOrderId()
-				})
-				await this.$bus.emit("set-cart-count", this.pendingOrder.total_items)
-			}
-		},
-		routeToItemDetail() {
-			router.push({name: "Product"})
+		routeToItemDetail(item) {
+			router.push(`product/${item.id}`)
 		},
 		async addItemToCart(item) {
 			if (this.$helper.isAuthenticated()) {
-				const currentUser = JSON.parse(localStorage.getItem("currentUser"))
-				this.order = {
-					custom_location: currentUser.profile.address,
-					custom_contact: currentUser.profile.contact
-				}
+				const currentUser = this.$helper.getCurrentUser()
+				this.$bus.emit("start-order-prefill", {
+					order: {
+						custom_location: currentUser.profile.address,
+						custom_contact: currentUser.profile.contact.replace(/\D/g, "")
+					}
+				})
 			}
 
-			if (localStorage.getItem("cookingOrder")) {
+			if (this.$helper.getCookingOrderId) {
 				const addedToCart = await this.$store.dispatch("cart/addToCart", {
-					order: parseInt(localStorage.getItem("cookingOrder")),
+					order: parseInt(this.$helper.getCookingOrderId()),
 					item: item.id
 				})
 				if (addedToCart === true) {
-					await this.openSnack(`Cheers! ${item.name} added to cart.`, "success")
+					await this.openSnack(`Cheers! ${item.name} is added to cart.`, "success")
 					this.$bus.emit("add-cart-count-by-one")
 					await this.$store.dispatch("order/withCartItems", {
 						id: this.$helper.getCookingOrderId()
@@ -264,9 +177,9 @@ export default {
 					}
 				}
 			} else {
-				await this.$store.dispatch("order/clearFormErrors")
-				this.startOrder = true
-				this.rememberFirstItem = item
+				this.$bus.emit("start-order", {
+					withItem: item
+				})
 			}
 		},
 	},

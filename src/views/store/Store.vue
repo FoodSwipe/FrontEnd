@@ -24,13 +24,15 @@
 				<store-item-group />
 			</v-col>
 		</v-col>
+		<start-order-dialog />
 	</v-row>
 </template>
 <script>
 export default {
 	name: "ItemStoreView",
 	components: {
-		StoreItemGroup: () => import("./StoreItemGroup")
+		StoreItemGroup: () => import("./StoreItemGroup"),
+		StartOrderDialog: () => import("@/components/StartOrder")
 	}
 }
 </script>

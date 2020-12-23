@@ -70,4 +70,7 @@ export default {
 .deep-blue-gradient {
 	background: linear-gradient(45deg, #2c1079, #7c60cd)
 }
+.tilt {
+	transform: rotate(305deg);
+}
 </style>

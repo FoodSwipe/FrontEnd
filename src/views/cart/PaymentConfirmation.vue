@@ -156,7 +156,7 @@ export default {
 				await this.openSnack("Order placement completed successfully.")
 				this.$bus.emit("set-cart-count", 0)
 				await router.push(`review-order/${this.$helper.getCookingOrderId()}`)
-				localStorage.removeItem("cookingOrder")
+				this.$helper.removeCookingOrderIdFromLocalStorage()
 			} else {
 				await this.openSnack("Internal server error. Try again.", "error")
 			}

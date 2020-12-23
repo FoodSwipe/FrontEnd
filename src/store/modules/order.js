@@ -67,16 +67,13 @@ const actions = {
 	async startOrder({commit}, payload) {
 		try {
 			const res = await $api.post(orderUrls.initializeOrder, payload)
-			localStorage.setItem("cookingOrder", res.id)
+			this.$helper.setCookingOrderOnLocalStorage(res.id)
 			return true
 		} catch (e) {
 			if (e.response.status === 400) {
 				if (e.response.data) {
 					if (Array.isArray(e.response.data)) {
-						localStorage.setItem(
-							"cookingOrder",
-							e.response.data[0].replace(/\D/g, "")
-						)
+						this.$helper.setCookingOrderOnLocalStorage(e.response.data[0].replace(/\D/g, ""))
 						return e.response.data
 					} else {
 						commit("SET_ORDER_FORM_ERRORS", e.response.data)

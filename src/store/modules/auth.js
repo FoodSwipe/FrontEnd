@@ -28,20 +28,20 @@ const actions = {
 	async login({commit}, payload) {
 		try {
 			const res = await $api.post(authUrls.login, payload)
-			localStorage.setItem("token", res.token)
-			localStorage.setItem("currentUser", JSON.stringify(res.user))
+			this.$helper.setTokenOnLocalStorage(res.token)
+			this.$helper.setCurrentUserOnLocalStorage(JSON.stringify(res.user))
 			if (res["cooking_order"] !== undefined) {
-				localStorage.setItem("cookingOrder", res["cooking_order"].id)
+				this.$helper.setCookingOrderOnLocalStorage(res["cooking_order"].id)
 				return res["cooking_order"].total_items
 			} else {
-				localStorage.removeItem("cookingOrder")
+				this.$helper.removeCookingOrderIdFromLocalStorage()
 				return true
 			}
 		} catch (e) {
-			if (e.response.status === 400) {
+			if (parseInt(e.response.status.toString()) === 400) {
 				commit("SET_LOGIN_ERROR_MESSAGES", e.response.data)
 				return "formError"
-			} else if (e.response.status !== 500) {
+			} else if (parseInt(e.response.status.toString()) !== 500) {
 				return {message: e.response.data.detail}
 			} else {
 				return "serverError"

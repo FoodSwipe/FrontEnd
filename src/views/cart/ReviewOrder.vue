@@ -165,9 +165,6 @@ export default {
 		background-color: transparent;
 	}
 }
-.tilt {
-	transform: rotate(305deg);
-}
 .card-text {
 	background-color: rgba(255, 193, 7, 0.17);
 	border-radius: 20px !important;

@@ -75,6 +75,10 @@ const actions = {
 		const res = await $api.get(menuItemUrls.list)
 		commit("SET_MENU_ITEMS", res)
 	},
+	async getDetail({commit}, payload) {
+		const res = await $api.get(util.format(menuItemUrls.detail, payload.id))
+		commit("SET_MENU_ITEM", res)
+	},
 	async create({commit}, payload) {
 		try {
 			await $api.post(menuItemUrls.list, payload)

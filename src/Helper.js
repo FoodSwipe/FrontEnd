@@ -77,5 +77,20 @@ module.exports = {
 	isAuthenticated() {
 		const currentUser = this.getCurrentUser()
 		return (currentUser !== null)
+	},
+	removeCookingOrderIdFromLocalStorage() {
+		localStorage.removeItem("cookingOrder")
+	},
+	setTokenOnLocalStorage(token) {
+		localStorage.setItem("token", token)
+	},
+	setCurrentUserOnLocalStorage(value) {
+		localStorage.setItem("currentUser", value)
+	},
+	setCookingOrderOnLocalStorage(value) {
+		localStorage.setItem("cookingOrder", value)
+	},
+	getAccessToken() {
+		return localStorage.getItem("token")
 	}
 }

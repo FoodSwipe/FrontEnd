@@ -120,7 +120,7 @@ export default {
 	methods: {
 		async initialize() {
 			await this.$store.dispatch("order/withCartItems", {
-				id: localStorage.getItem("cookingOrder")
+				id: this.$helper.getCookingOrderId()
 			})
 			this.order = {
 				custom_location: this.cookingOrder.custom_location,
@@ -135,7 +135,7 @@ export default {
 		},
 		async proceedToPayment() {
 			const patched = await this.$store.dispatch("order/unauthorizedUpdateOrder", {
-				id: localStorage.getItem("cookingOrder"),
+				id: this.$helper.getCookingOrderId(),
 				body: {
 					...this.order
 				}

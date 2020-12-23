@@ -540,9 +540,9 @@ export default {
 		this.$bus.on("add-cart-count-by-one", this.addCartCountByOne)
 		this.$bus.on("subtract-cart-count", this.subtractCartCount)
 
-		this.currentUser = JSON.parse(localStorage.getItem("currentUser"))
+		this.currentUser = this.$helper.getCurrentUser()
 		this.showAdminButton = this.$helper.isAdminUser()
-		const cookingOrder = localStorage.getItem("cookingOrder")
+		const cookingOrder = this.$helper.getCookingOrderId()
 		if (cookingOrder) {
 			await this.$store.dispatch("order/withCartItems", {
 				id: cookingOrder
@@ -601,7 +601,7 @@ export default {
 			if (loggedIn === true) {
 				// logged in with zero pending order
 				this.openSnack("Logged in successfully.")
-				this.currentUser = JSON.parse(localStorage.getItem("currentUser"))
+				this.currentUser = this.$helper.getCurrentUser()
 				this.$bus.emit("set-cart-count", 0)
 				this.$bus.emit("refresh-order-now")
 				this.drawer = false
@@ -615,7 +615,7 @@ export default {
 			} else if (typeof loggedIn === "number") {
 				// logged in with a pending order
 				this.openSnack("Logged in successfully.")
-				this.currentUser = JSON.parse(localStorage.getItem("currentUser"))
+				this.currentUser = this.$helper.getCurrentUser()
 				this.$bus.emit("set-cart-count", loggedIn)
 				this.$bus.emit("refresh-cart")
 				this.$bus.emit("refresh-order-now")

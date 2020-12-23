@@ -166,14 +166,14 @@ export default {
 	methods: {
 		async initialize() {
 			await this.$store.dispatch("menuItem/fetchOrderNowList")
-			this.isDisabled = (localStorage.getItem("cookingOrder") !== null)
+			this.isDisabled = (this.$helper.getCookingOrderId() !== null)
 			this.isUpdating = true
 			this.orderNowRefinedList = refineOrderNowList(this.orderNowList)
 			this.isUpdating = false
 		},
 		preFillForm() {
 			if(this.$helper.isAuthenticated()) {
-				const currentUser = JSON.parse(localStorage.getItem("currentUser"))
+				const currentUser = this.$helper.getCurrentUser()
 				this.order = {
 					custom_location: currentUser.profile.address,
 					custom_contact: currentUser.profile.contact.replace(/\D/g, ""),
@@ -203,7 +203,7 @@ export default {
 			if (started === true) {
 				for (const itemId of this.selectedItems) {
 					await this.$store.dispatch("cart/addToCart", {
-						order: localStorage.getItem("cookingOrder"),
+						order: this.$helper.getCookingOrderId(),
 						item: itemId
 					})
 				}
@@ -224,7 +224,7 @@ export default {
 				await this.$store.dispatch("order/clearFormErrors")
 				await this.openSnack(started[0])
 				await this.$store.dispatch("order/withCartItems", {
-					id: localStorage.getItem("cookingOrder")
+					id: this.$helper.getCookingOrderId()
 				})
 				this.$bus.emit("set-cart-count", this.pendingOrder.total_items)
 			}
