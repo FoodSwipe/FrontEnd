@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div id="menuColumn">
 		<div class="text-center pa-2">
 			<v-avatar size="120"
 				tile
@@ -13,59 +13,55 @@
 		<v-card max-width="800"
 			class="mx-auto my-2 py-4 our-menu-wrapper-card"
 			dark
+			flat
 		>
-			<v-card-text class="py-0">
-				<v-list
-					class="py-0 menu-list"
-					dense
+			<v-row class="ma-0 pa-0"
+				align="center" justify="center"
+			>
+				<v-expansion-panels focusable
+					popout
 				>
-					<v-list-item-group
-						v-for="(menuItemGroup, index) of menuItemGroups"
+					<v-expansion-panel v-for="(menuItemGroup, index) of menuItemGroups"
 						:key="index"
+						class="menu-list"
 					>
-						<v-subheader
-							class="pt-2 menu-item-group-name"
-							:class="
-								index !== 0 ? 'mt-6' : ''
-							"
-						>
+						<v-expansion-panel-header class="menu-item-group-name">
 							{{ menuItemGroup.name }}
-						</v-subheader>
-						<v-divider
-							class="divider-menu"
-						/>
-						<v-row class="ma-0 pa-0"
-							no-gutters
-						>
-							<v-col v-for="(menuItem, i) of menuItemGroup.items"
-								:key="(i + 1) * 21"
-								cols="12"
-								xl="6"
-								lg="6"
-								md="6"
-								sm="6"
+						</v-expansion-panel-header>
+						<v-expansion-panel-content>
+							<v-row class="ma-0 pa-0"
+								no-gutters
 							>
-								<v-list-item>
-									<v-list-item-icon>
-										<v-avatar size="30"
-											color="grey darken-3"
-											class="slight-up"
-										>
-											{{ menuItem.name[0] }}
-										</v-avatar>
-									</v-list-item-icon>
-									<v-list-item-content>
-										<v-list-item-title>{{ menuItem.name }}</v-list-item-title>
-									</v-list-item-content>
-									<v-list-item-action-text class="menu-item-price">
-										{{ menuItem.price }}
-									</v-list-item-action-text>
-								</v-list-item>
-							</v-col>
-						</v-row>
-					</v-list-item-group>
-				</v-list>
-			</v-card-text>
+								<v-col v-for="(menuItem, i) of menuItemGroup.items"
+									:key="(i + 1) * 21"
+									cols="12"
+									xl="6"
+									lg="6"
+									md="6"
+									sm="12"
+								>
+									<v-list-item>
+										<v-list-item-icon>
+											<v-avatar size="30"
+												color="grey darken-3"
+												class="slight-up"
+											>
+												{{ menuItem.name[0] }}
+											</v-avatar>
+										</v-list-item-icon>
+										<v-list-item-content>
+											<v-list-item-title>{{ menuItem.name }}</v-list-item-title>
+										</v-list-item-content>
+										<v-list-item-action-text class="menu-item-price">
+											{{ menuItem.price }}
+										</v-list-item-action-text>
+									</v-list-item>
+								</v-col>
+							</v-row>
+						</v-expansion-panel-content>
+					</v-expansion-panel>
+				</v-expansion-panels>
+			</v-row>
 		</v-card>
 	</div>
 </template>
@@ -457,7 +453,11 @@ export default {
 				]
 			},
 		]
-	})
+	}),
+	created() {
+		// const el = this.$refs.menuColumn.clientHeight;
+		// console.log(el)
+	}
 }
 </script>
 <style lang="scss" scoped>
@@ -501,16 +501,16 @@ export default {
 	font-family: "Crete Round", serif;
 }
 .our-menu-wrapper-card {
-	background: rgb(223 133 0);
+	background: transparent;
 }
 .menu-item-price {
-	font-size: 1.2rem; color: greenyellow
+	font-size: 1.2rem; color: greenyellow !important;
 }
 .slight-up {
 	margin-top: -3px;
 }
 .menu-list {
-	background: #362000;
+	background: #0e3e54 !important;
 }
 .divider-menu {
 	margin: 2px 0;
