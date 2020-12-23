@@ -1,0 +1,1 @@
+{"version":3,"sources":["webpack:///../../../src/components/VGrid/VSpacer.ts"],"names":[],"mappings":"2IAAA,0BAGe,sBAAuB,SAAU,MAAhD,a","file":"js/chunk-3484d6c5.5a054289.js","sourcesContent":["import './_grid.sass'\nimport { createSimpleFunctional } from '../../util/helpers'\n\nexport default createSimpleFunctional('spacer', 'div', 'v-spacer')\n"],"sourceRoot":""}
