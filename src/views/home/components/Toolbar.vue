@@ -157,6 +157,7 @@
 
 			<v-fade-transition>
 				<v-badge
+					v-if="$route.name !== 'Cart'"
 					dark
 					color="black"
 					:content="cartCount"
@@ -166,12 +167,12 @@
 					<v-tooltip bottom>
 						<template #activator="{on, attrs}">
 							<v-btn
+								v-if="$route.name !== 'Cart'"
 								light
 								icon
 								small
 								class="mr-2"
 								v-bind="attrs"
-								:disabled="$route.name === 'Cart'"
 								@click="toCart()"
 								v-on="on"
 							>
@@ -182,7 +183,7 @@
 											: '16'
 									"
 								>
-									add_shopping_cart
+									shopping_cart
 								</v-icon>
 							</v-btn>
 						</template>
@@ -536,8 +537,9 @@ export default {
 	},
 	async created() {
 		this.$bus.on("set-cart-count", this.setCartCount)
-		this.$bus.on("add-cart-count", this.addCartCount)
+		this.$bus.on("add-cart-count-by-one", this.addCartCountByOne)
 		this.$bus.on("subtract-cart-count", this.subtractCartCount)
+
 		this.currentUser = JSON.parse(localStorage.getItem("currentUser"))
 		this.showAdminButton = this.$helper.isAdminUser()
 		const cookingOrder = localStorage.getItem("cookingOrder")
@@ -550,7 +552,7 @@ export default {
 	},
 	beforeUnmount() {
 		this.$bus.off("set-cart-count", this.setCartCount)
-		this.$bus.off("add-cart-count", this.addCartCount)
+		this.$bus.off("add-cart-count-by-one", this.addCartCountByOne)
 		this.$bus.off("subtract-cart-count", this.subtractCartCount)
 	},
 	methods: {
@@ -561,7 +563,7 @@ export default {
 		subtractCartCount(value) {
 			this.cartCount = (parseInt(this.cartCount) - parseInt(value)).toString()
 		},
-		addCartCount() {
+		addCartCountByOne() {
 			this.cartCount = (parseInt(this.cartCount) + 1).toString()
 		},
 		setCartCount(count) {

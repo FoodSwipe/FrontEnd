@@ -9,12 +9,10 @@ import "material-design-icons-iconfont/dist/material-design-icons.css"
 import "swiper/swiper-bundle.css"
 import api from "@/handler/axios"
 import helper from "@/./Helper"
-import $ from "jquery"
 
 Vue.config.productionTip = false
 Vue.prototype.$api = api
 Vue.prototype.$helper = helper
-Vue.prototype.$jq = $
 
 Vue.use(VueBus)
 

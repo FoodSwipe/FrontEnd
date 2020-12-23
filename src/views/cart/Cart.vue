@@ -51,8 +51,7 @@
 				>
 					<v-card
 						v-for="(item, index) in cartItemsList"
-
-						:key="index"
+						:key="index + 1 * 17"
 						class="cart-item-card pa-0"
 						:class="
 							(index+1 === cartItemsList.length) ? '' : 'mb-4'
@@ -153,7 +152,7 @@
 										type="number"
 										hide-details="auto"
 										persistent-hint
-										readonly
+										@change="quantityChanged(item)"
 									/>
 									<v-btn icon
 										height="56"
@@ -373,6 +372,14 @@ export default {
 		this.$bus.off("refresh-cart", this.initialize)
 	},
 	methods: {
+		quantityChanged(item) {
+			this.$store.dispatch("cart/patch", {
+				id: item.id,
+				body: {
+					quantity: item.quantity
+				}
+			})
+		},
 		async initialize() {
 			const cookingOrder = localStorage.getItem("cookingOrder")
 			if (cookingOrder) {
@@ -437,16 +444,6 @@ export default {
 			})
 			this.emitCartQuantityUpdate()
 		},
-		// updateQuantity(item) {
-		// 	if (item.quantity < 1) return
-		// 	this.$store.dispatch("cart/patch", {
-		// 		id: item.id,
-		// 		body: {
-		// 			quantity: item.quantity
-		// 		}
-		// 	})
-		// 	this.emitCartQuantityUpdate()
-		// },
 		openSnack(text, color) {
 			this.$store.dispatch("snack/setSnackState", true)
 			this.$store.dispatch("snack/setSnackColor", color)

@@ -1,7 +1,7 @@
 <template>
-	<div>
+	<div v-if="$vuetify.breakpoint.smAndUp">
 		<v-card flat>
-			<v-card-title class="px-0">
+			<v-card-title class="px-0 recommend">
 				Recommendations:
 			</v-card-title>
 		</v-card>
@@ -33,10 +33,16 @@
 					<v-btn dark depressed
 						small
 						color="indigo"
+						@click="addedToCart = !addedToCart"
 					>
-						<v-icon size="18">
-							add_shopping_cart
-						</v-icon>
+						<v-scale-transition>
+							<v-icon v-if="!addedToCart"
+								size="18"
+							>
+								add_shopping_cart
+							</v-icon>
+							<span v-else><v-icon>shopping_cart</v-icon>Added to cart</span>
+						</v-scale-transition>
 					</v-btn>
 				</v-card-text>
 			</v-card>
@@ -44,10 +50,10 @@
 	</div>
 </template>
 <script>
-import $ from "jquery"
 export default {
 	name: "RecommendationsList",
 	data: () => ({
+		addedToCart: false,
 		foodItems: [
 			{
 				src: "https://www.listchallenges.com/f/lists/3d06c742-15cc-49b2-8845-7ef42d0c9f97.jpg",
@@ -79,23 +85,34 @@ export default {
 </script>
 <style lang="sass" scoped>
 .overflow-y
-	width: 100%
-	height: 800px
+	max-width: 300px
+	height: 810px
 	overflow-y: auto
 	-ms-overflow-style: none
 	scrollbar-width: none
+	padding: 10px
+	border: 6px solid goldenrod
+	border-radius: 10px
 .overflow-y::-webkit-scrollbar
 	display: none
 .recommendation-item-name
-	font-size: 1rem
+	font-size: .9rem
 	padding-left: .5rem
 .nrs
 	color: darkgoldenrod
-	font-size: 1rem
+	font-size: .8rem
 .recommendation-item-price
-	font-size: 1.4rem
-	line-height: 1.4rem
+	font-size: 1.2rem
+	line-height: 1.2rem
 	color: green
 	font-weight: 500
 	padding: 0 0 0 .5rem
+.recommend
+	background: linear-gradient(to right, green, transparent)
+	max-width: 300px
+	padding-left: 10px !important
+	color: #153b3b
+	margin-bottom: 10px
+	font-family: 'Sacramento', cursive
+	font-size: 2.4rem
 </style>
