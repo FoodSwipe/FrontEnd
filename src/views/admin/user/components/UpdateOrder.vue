@@ -1,5 +1,7 @@
 <template>
-	<v-card dark>
+	<v-card v-if="order"
+		dark
+	>
 		<v-overlay :value="overlay">
 			<v-progress-circular
 				indeterminate
@@ -16,8 +18,38 @@
 				#{{ order.id }}
 			</v-toolbar-title>
 			<v-spacer />
+			<v-tooltip bottom>
+				<template #activator="{on, attrs}">
+					<v-btn icon
+						color="orange"
+						v-bind="attrs"
+						:disabled="order.delivery_started"
+						@click="startDelivery()"
+						v-on="on"
+					>
+						<v-icon size="35">
+							two_wheeler
+						</v-icon>
+					</v-btn>
+				</template>
+				<span>Start Delivery</span>
+			</v-tooltip>
+			<v-tooltip bottom>
+				<template #activator="{on, attrs}">
+					<v-btn icon
+						color="green"
+						:disabled="order.is_delivered"
+						v-bind="attrs"
+						@click.prevent="completeDelivery()"
+						v-on="on"
+					>
+						<v-icon>check</v-icon>
+					</v-btn>
+				</template>
+				<span>Complete Order</span>
+			</v-tooltip>
 			<v-btn icon
-				color="green"
+				color="purple lighten-2"
 				@click="generatePDF()"
 			>
 				<v-icon>print</v-icon>
@@ -27,6 +59,22 @@
 			>
 				<v-icon>delete</v-icon>
 			</v-btn>
+			<template #extension>
+				<v-row class="ma-0"
+					no-gutters
+				>
+					<div class="subtitle-2">
+						<v-icon small>
+							account_circle
+						</v-icon>
+						<span class="pl-2">{{ order.created_by.username }}</span>
+						<span class="px-1"><v-icon small>today</v-icon></span>
+						<span class="px-1">{{ onlyDate(order.created_at) }}</span>
+						<span class="px-1"><v-icon small>history</v-icon></span>
+						<span class="px-1">{{ onlyTime(order.created_at) }}</span>
+					</div>
+				</v-row>
+			</template>
 		</v-toolbar>
 		<v-row class="ma-0 pa-0"
 			no-gutters
@@ -35,7 +83,7 @@
 				<v-data-table
 					:headers="headers"
 					:search="searchOrderItems"
-					:items="order.items"
+					:items="order.cart_items"
 					sort-by="calories"
 					class="elevation-1"
 					hide-default-footer
@@ -82,30 +130,33 @@
 										sm="7"
 									>
 										<v-autocomplete
-											v-model="friends"
-											dark
+											v-model="selectedItems"
 											:disabled="isUpdating"
-											:items="people"
+											:readonly="order.is_delivered"
+											:items="orderNowRefinedList"
 											filled
 											chips
-											color="blue darken-2"
-											placeholder="Select menu item"
+											deletable-chips
+											color="orange darken-4"
+											placeholder="Select menu items (*)"
 											item-text="name"
-											item-value="name"
+											item-value="id"
+											item-color="orange darken-2"
 											multiple
 											prepend-inner-icon="emoji_food_beverage"
 											hide-details="auto"
-											attach=""
 											clearable
 										>
+											<template #no-data>
+												No <code>menu items</code> available
+											</template>
 											<template #selection="data">
 												<v-chip
-													dark
 													v-bind="data.attrs"
 													:input-value="data.selected"
 													close
 													@click="data.select"
-													@click:close="removeItemFromAutoComplete(data.item)"
+													@click:close="removeItemFromSelectedOrderInput(data.item)"
 												>
 													<v-avatar left>
 														<v-img :src="data.item.avatar" />
@@ -122,10 +173,24 @@
 														<v-img :src="data.item.avatar" />
 													</v-list-item-avatar>
 													<v-list-item-content>
-														<v-list-item-title>{{ data.item.name }}</v-list-item-title>
-														<v-list-item-subtitle>{{ data.item.group }}</v-list-item-subtitle>
+														<v-list-item-title>{{ data.item.name }}"</v-list-item-title>
+														<v-list-item-subtitle>{{ data.item.group }}"</v-list-item-subtitle>
 													</v-list-item-content>
+													<v-list-item-action-text>{{ data.item.price }}</v-list-item-action-text>
 												</template>
+											</template>
+											<template #append-outer>
+												<v-avatar v-ripple
+													size="22"
+													color="orange"
+													class="golden-rod-border-2 elevation-4"
+													disabled
+													@click="addSelectedItemsToOrderCart()"
+												>
+													<v-icon>
+														add_circle
+													</v-icon>
+												</v-avatar>
 											</template>
 										</v-autocomplete>
 									</v-col>
@@ -135,11 +200,11 @@
 					</template>
 					<!-- eslint-disable-next-line vue/valid-v-slot-->
 					<template #item.name="{ item }">
-						{{ item.name }}
+						{{ item.item.name }}
 					</template>
 					<!-- eslint-disable-next-line vue/valid-v-slot-->
 					<template #item.subTotal="{ item }">
-						{{ getPriceOfItem(item.name) * item. quantity }}
+						{{ item.item.price * item.quantity }}
 					</template>
 					<!-- eslint-disable-next-line vue/valid-v-slot-->
 					<template #item.actions="{ item }">
@@ -165,10 +230,8 @@
 						<v-edit-dialog
 							v-model:return-value="props.item.quantity"
 							dark
-							@save="updateQuantity"
+							@save="updateQuantity(props.item)"
 							@cancel="cancelQuantityUpdate"
-							@open="openUpdateQuantityEditDialog"
-							@close="closeUpdateQuantityEditDialog"
 						>
 							{{ props.item.quantity }}
 							<template #input>
@@ -190,10 +253,57 @@
 						no-gutters
 					>
 						<v-col cols="12"
+							xl="6"
+							lg="6"
+							md="6"
+							sm="6"
+							class="pa-2"
+						>
+							<v-list-item>
+								<v-list-item-avatar>
+									<v-avatar color="black"
+										class="elevation-12"
+									>
+										<v-icon size="20">
+											two_wheeler
+										</v-icon>
+									</v-avatar>
+								</v-list-item-avatar>
+								<v-list-item-content>
+									<v-list-item-title>{{ (order.delivery_started_at === null) ? 'Not started yet': order.delivery_started_at }}</v-list-item-title>
+									<v-list-item-subtitle>Delivery started at</v-list-item-subtitle>
+								</v-list-item-content>
+							</v-list-item>
+						</v-col>
+						<v-col cols="12"
+							xl="6"
+							lg="6"
+							md="6"
+							sm="6"
+							class="pa-2"
+						>
+							<v-list-item>
+								<v-list-item-avatar>
+									<v-avatar color="black"
+										class="elevation-12"
+									>
+										<v-icon size="20">
+											done
+										</v-icon>
+									</v-avatar>
+								</v-list-item-avatar>
+								<v-list-item-content>
+									<v-list-item-title>{{ (order.delivered_at === null) ? 'Not completed yet' : order.delivered_at }}</v-list-item-title>
+									<v-list-item-subtitle>Order completed at</v-list-item-subtitle>
+								</v-list-item-content>
+							</v-list-item>
+						</v-col>
+						<v-col cols="12"
 							class="pa-2"
 						>
 							<v-text-field
-								v-model="order.location"
+								v-model="order.custom_location"
+								readonly
 								filled
 								label="Delivery Location"
 								clearable
@@ -210,6 +320,7 @@
 						>
 							<v-text-field
 								v-model="order.delivery_charge"
+								readonly
 								filled
 								label="Delivery Charge"
 								type="number"
@@ -226,6 +337,7 @@
 						>
 							<v-text-field
 								v-model="order.loyalty_discount"
+								readonly
 								filled
 								label="Loyalty Discount (%)"
 								type="number"
@@ -264,9 +376,12 @@
 					</v-row>
 				</v-list>
 			</v-col>
-			<v-col cols="12">
+			<v-col cols="12"
+				class="pb-4"
+			>
 				<v-btn block
 					large
+					disabled
 				>
 					<v-icon>save</v-icon><span class="pl-2">Update Order</span>
 				</v-btn>
@@ -275,34 +390,25 @@
 	</v-card>
 </template>
 <script>
-import helper from "@/Helper"
 import jsPDF from "jspdf"
 import "jspdf-autotable"
+import { mapGetters } from "vuex"
 
 export default {
 	name: "UpdateUserOrderByAdminComponent",
 	data: () => ({
 		overlay: false,
+		isLoading: false,
 		searchOrderItems: "",
 		isUpdating: false,
+		selectedItems: [],
+		orderNowRefinedList: [],
 		headers: [
 			{ text: "Actions", value: "actions", sortable: false, align: "center" },
 			{ text: "Menu Item", value: "name", align: "start"},
 			{ text: "Quantity", value: "quantity" },
 			{ text: "Sub Total (NRs)", value: "subTotal" },
 		],
-		order: {
-			id: 55896,
-			items: [
-				{id: 5, name: "Veg Momo", quantity: 1},
-				{id: 6, name: "Buff Momo", quantity: 2},
-				{id: 7, name: "Chicken Chowmein", quantity: 3},
-			],
-			delivery_charge: 150,
-			loyalty_discount: 15,
-			location: "Lorem, ipsum - 16 Sed"
-		},
-		friends: [],
 		doc: null,
 		document: {
 			heading: "Food Swipe and Online Market Company Pvt. Ltd.",
@@ -322,12 +428,78 @@ export default {
 			tel: "9843530425/9856000000/9874000000",
 			counter: "TELLER 1 (05:30:19 PM)",
 			cashier: "Kiran Parajuli"
-		}
+		},
+		LOYALTY_DISCOUNT: 10,
+		DELIVERY_START_PM: 17,
+		DELIVERY_START_AM: 4,
+		DELIVERY_CHARGE: 50,
+		LOYALTY_STARTS_AT: 10000,
 	}),
 	computed: {
-		//
+		...mapGetters({
+			order: "order/detailOrder",
+			orderNowList: "menuItem/allMenuItems",
+		}),
+	},
+	async created() {
+		await this.initialize()
 	},
 	methods: {
+		onlyDate(value) {
+			if (!value) return null
+			return value.substr(0, value.indexOf(" "))
+		},
+		onlyTime(value) {
+			if (!value) return null
+			return value.substr(value.indexOf(" ")+1, value.length)
+		},
+		async initialize() {
+			this.isLoading = true
+			await this.$store.dispatch("order/withCartItems", {
+				id: this.$route.params.id
+			})
+			this.loading = false
+			this.isUpdating = true
+			await this.$store.dispatch("menuItem/fetchOrderNowList")
+			const cartVsOrderDiff = this.$helper.removeCartedItemsDuplicationFromOrderNowList(
+				this.orderNowList,
+				this.order.cart_items
+			)
+			this.orderNowRefinedList = this.$helper.refineOrderNowList(cartVsOrderDiff)
+			this.isUpdating = false
+		},
+		async completeDelivery() {
+			this.order.order_completed = false
+			const reaction = confirm("Are you the order is delivered? You will not be able to modify" +
+				" this order further after setting it to done.");
+			if (reaction === true) {
+				const patched = await this.$store.dispatch("order/patch", {
+					id: this.order.id,
+					body: {
+						is_delivered: true
+					}
+				})
+				if (patched === true) {
+					await this.openSnack("Order completed successfully.", "success")
+					await this.initialize()
+				} else await this.openSnack("Internal server error. Please try again.")
+			}
+		},
+		async startDelivery() {
+			const reaction = confirm(`Are you sure to start delivery for order #${this.order.id}?`);
+			if (reaction === true) {
+				const patched = await this.$store.dispatch("order/patch", {
+					id: this.order.id,
+					body: {
+						delivery_started: true
+					}
+				})
+				if (patched === true) {
+					await this.openSnack("Order updated successfully.", "success")
+					await this.initialize()
+				} else await this.openSnack("Internal server error. Please try again.")
+			}
+		},
 		generatePDF() {
 			this.overlay = true
 			const columns = [
@@ -402,9 +574,6 @@ export default {
 				)
 			this.doc.autoTable({
 				columns,
-				// headStyles: {
-				// 	fillColor: [],
-				// },
 				styles: {
 					fillColor: [128, 128, 128],
 					cellPadding: 2.1,
@@ -494,50 +663,74 @@ export default {
 			this.$store.dispatch("snack/setSnackText", "Vat bill for #" + this.order.id + " downloaded successfully.")
 			this.overlay = false
 		},
-		getPriceOfItem(item) {
-			const priceMenu = {
-				"Veg Momo": 100,
-				"Buff Momo": 200,
-				"Chicken Chowmein": 150,
-			}
-			return priceMenu[item]
-		},
 		orderSummaryItems() {
+			const order = this.order
+			const summary = this.$helper.getCartSummary(order, this.order.cart_items)
+
 			return [
-				{class: "total-items", field: "Total Items", value: 6, icon: "casino"},
-				{class: "sub-total", field: "Sub Total (NRs)", value: 1500, icon: "shopping_cart"},
-				{class: "loyalty-discount", field: "Loyalty Discount (%)", value: this.order.loyalty_discount, icon: "redeem"},
-				{class: "delivery-charge", field: "Delivery Charge (NRs)", value: this.order.delivery_charge, icon: "local_shipping"},
-				{class: "grand-total", field: "Grand Total (NRs)", value: 1400, icon: "text_fields"}
+				{class: "total-items", field: "Total Items", value: summary.totalItems, icon: "casino"},
+				{class: "sub-total", field: "Sub Total (NRs)", value: summary.totalPrice, icon: "shopping_cart"},
+				{class: "loyalty-discount", field: "Loyalty Discount (%)", value: summary.loyaltyDiscount, icon: "redeem"},
+				{class: "delivery-charge", field: "Delivery Charge (NRs)", value: summary.deliveryCharge, icon: "local_shipping"},
+				{class: "grand-total", field: "Grand Total (NRs)", value: summary.grandTotal, icon: "text_fields"}
 			]
 		},
-		removeItemFromOrderCart(orderMenuItem) {
-			const index = this.order.items.indexOf(orderMenuItem)
-			this.order.items.splice(index, 1)
-			this.$store.dispatch("snack/setSnackState", true)
-			this.$store.dispatch("snack/setSnackColor", "error")
-			this.$store.dispatch("snack/setSnackText", orderMenuItem.name + " removed from cart.")
+		async removeItemFromOrderCart(orderMenuItem) {
+			const reaction = confirm(`Are you sure you want to remove "${orderMenuItem.item.name}" from this order cart?`);
+			if (reaction === true) {
+				const removed = await this.$store.dispatch("cart/removeFromCart", {
+					id: orderMenuItem.id
+				})
+				if (removed) {
+					await this.openSnack(orderMenuItem.item.name + " removed from cart.", "success")
+					await this.initialize()
+				} else await this.openSnack("Internal server error. Try again.")
+			}
 		},
-		removeItemFromAutoComplete(item) {
-			const index = this.friends.indexOf(item.name)
-			if (index >= 0) this.friends.splice(index, 1)
+		removeItemFromSelectedOrderInput(item) {
+			const index = this.selectedItems.indexOf(item.id)
+			if (index >= 0) this.selectedItems.splice(index, 1)
 		},
-		updateQuantity() {
-			this.snack = true
-			this.snackColor = "success"
-			this.snackText = "Quantity updated successfully."
+		async updateQuantity(item) {
+			const patched = await this.$store.dispatch("cart/patch", {
+				id: item.id,
+				body: {
+					quantity: item.quantity
+				}
+			})
+			if (patched === true) {
+				await this.openSnack("Cart item quantity updated successfully.", "success")
+			} else if (patched === 500) {
+				await this.openSnack("Internal Server Error.")
+			} else {
+				await this.openSnack(patched.quantity[0])
+			}
+			await this.initialize()
+		},
+		async openSnack(text, color="error") {
+			await this.$store.dispatch("snack/setSnackState", true)
+			await this.$store.dispatch("snack/setSnackColor", color)
+			await this.$store.dispatch("snack/setSnackText", text)
 		},
 		cancelQuantityUpdate() {
-			this.snack = true
-			this.snackColor = "error"
-			this.snackText = "Quantity update aborted."
+			// do nothing
 		},
-		openUpdateQuantityEditDialog() {
-
-		},
-		closeUpdateQuantityEditDialog() {
-
-		},
+		async addSelectedItemsToOrderCart() {
+			let addedToCart = false
+			if (this.selectedItems.length === 0) return
+			for (const itemID of this.selectedItems) {
+				addedToCart = await this.$store.dispatch("cart/addToCart", {
+					order: this.order.id,
+					item: itemID
+				})
+				if (addedToCart!==true) await this.openSnack(addedToCart)
+			}
+			if (addedToCart) {
+				await this.openSnack("Selected items added to cart.", "success")
+				await this.initialize()
+				this.selectedItems = []
+			}
+		}
 	}
 }
 </script>

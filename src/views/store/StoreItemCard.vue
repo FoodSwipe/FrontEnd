@@ -150,12 +150,13 @@ export default {
 				this.$bus.emit("start-order-prefill", {
 					order: {
 						custom_location: currentUser.profile.address,
-						custom_contact: currentUser.profile.contact.replace(/\D/g, "")
+						custom_contact: (currentUser.profile.contact)
+							? currentUser.profile.contact.replace(/\D/g, "")
+							: null
 					}
 				})
 			}
-
-			if (this.$helper.getCookingOrderId) {
+			if (this.$helper.getCookingOrderId()) {
 				const addedToCart = await this.$store.dispatch("cart/addToCart", {
 					order: parseInt(this.$helper.getCookingOrderId()),
 					item: item.id
@@ -166,7 +167,7 @@ export default {
 					await this.$store.dispatch("order/withCartItems", {
 						id: this.$helper.getCookingOrderId()
 					})
-					this.isAddedInCart()
+					this.isAddedInCart(item)
 				} else {
 					if (addedToCart.non_field_errors !== undefined) {
 						if (Array.isArray(addedToCart.non_field_errors)) {

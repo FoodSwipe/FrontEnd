@@ -69,7 +69,7 @@ const actions = {
 			await $api.post(menuItemGroupUrls.list, payload)
 			return true
 		} catch (e) {
-			if (e.response.status === 400) {
+			if (parseInt(e.response.status.toString()) === 400) {
 				commit("SET_MENU_ITEM_GROUP_FORM_ERRORS", e.response.data)
 				return false
 			}
@@ -81,7 +81,7 @@ const actions = {
 			await $api.put(util.format(menuItemGroupUrls.detail, payload.id), payload.body)
 			return true
 		} catch (e) {
-			if (e.response.status === 400) {
+			if (parseInt(e.response.status.toString()) === 400) {
 				commit("SET_MENU_ITEM_GROUP_FORM_ERRORS", e.response.data)
 				return false
 			}
@@ -101,7 +101,7 @@ const actions = {
 			await $api.patch(util.format(menuItemGroupUrls.detail, payload.id), payload.body)
 			return true
 		} catch (e) {
-			if (e.response.status === 400) {
+			if (parseInt(e.response.status.toString()) === 400) {
 				return e.response.data
 			}
 			return 500

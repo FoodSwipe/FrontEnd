@@ -1,5 +1,6 @@
 import $api from "@/handler/axios"
 import urls from "@/urls.json"
+import { setCookingOrderOnLocalStorage } from "@/Helper"
 
 const util = require("util")
 const orderUrls = urls.order
@@ -56,6 +57,10 @@ const actions = {
 			...defaultOrderErrors
 		})
 	},
+	async fetchAllWithAuthenticated({commit}) {
+		const res = await $api.get(orderUrls.listAuthenticated)
+		commit("SET_ORDERS", res)
+	},
 	async withCartItems({commit}, payload) {
 		const res = await $api.get(util.format(orderUrls.withCartItems, payload.id))
 		commit("SET_ORDER", res)
@@ -67,13 +72,13 @@ const actions = {
 	async startOrder({commit}, payload) {
 		try {
 			const res = await $api.post(orderUrls.initializeOrder, payload)
-			this.$helper.setCookingOrderOnLocalStorage(res.id)
+			setCookingOrderOnLocalStorage(res.id)
 			return true
 		} catch (e) {
-			if (e.response.status === 400) {
+			if (parseInt(e.response.status.toString()) === 400) {
 				if (e.response.data) {
 					if (Array.isArray(e.response.data)) {
-						this.$helper.setCookingOrderOnLocalStorage(e.response.data[0].replace(/\D/g, ""))
+						setCookingOrderOnLocalStorage(e.response.data[0].replace(/\D/g, ""))
 						return e.response.data
 					} else {
 						commit("SET_ORDER_FORM_ERRORS", e.response.data)
@@ -89,7 +94,7 @@ const actions = {
 			await $api.post(orderUrls.list, payload)
 			return true
 		} catch (e) {
-			if (e.response.status === 400) {
+			if (parseInt(e.response.status.toString()) === 400) {
 				commit("SET_ORDER_FORM_ERRORS", e.response.data)
 				return false
 			}
@@ -101,7 +106,7 @@ const actions = {
 			await $api.put(util.format(orderUrls.detail, payload.id), payload.body)
 			return true
 		} catch (e) {
-			if (e.response.status === 400) {
+			if (parseInt(e.response.status.toString()) === 400) {
 				commit("SET_ORDER_FORM_ERRORS", e.response.data)
 				return false
 			}
@@ -133,12 +138,15 @@ const actions = {
 			await $api.patch(util.format(orderUrls.detail, payload.id), payload.body)
 			return true
 		} catch (e) {
-			if (e.response.status === 400) {
+			if (parseInt(e.response.status.toString()) === 400) {
 				commit("SET_ORDER_FORM_ERRORS", e.response.data)
 				return false
 			}
 			return 500
 		}
+	},
+	clearOrderDetail({commit}){
+		commit("SET_ORDER", {})
 	}
 }
 

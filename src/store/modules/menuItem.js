@@ -84,7 +84,7 @@ const actions = {
 			await $api.post(menuItemUrls.list, payload)
 			return true
 		} catch (e) {
-			if (e.response.status === 400) {
+			if (parseInt(e.response.status.toString()) === 400) {
 				commit("SET_MENU_ITEM_FORM_ERRORS", e.response.data)
 				return false
 			}
@@ -96,7 +96,7 @@ const actions = {
 			await $api.put(util.format(menuItemUrls.detail, payload.id), payload.body)
 			return true
 		} catch (e) {
-			if (e.response.status === 400) {
+			if (parseInt(e.response.status.toString()) === 400) {
 				commit("SET_MENU_ITEM_FORM_ERRORS", e.response.data)
 				return false
 			}
@@ -116,7 +116,7 @@ const actions = {
 			await $api.patch(util.format(menuItemUrls.detail, payload.id), payload.body)
 			return true
 		} catch (e) {
-			if (e.response.status === 400) {
+			if (parseInt(e.response.status.toString()) === 400) {
 				commit("SET_MENU_ITEM_FORM_ERRORS", e.response.data)
 				return e.response.data
 			}

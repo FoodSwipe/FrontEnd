@@ -236,18 +236,12 @@
 						/>
 					</v-col>
 					<v-col cols="12">
-						<v-combobox
+						<v-text-field
 							id="item-ingredients"
 							v-model="editedItem.ingredients"
-							:items="[]"
-							hide-selected
-							hint="Add ingredient and hit Enter to add a new one."
+							hint="Comma separated values will be very useful for item presentation"
 							label="Ingredients"
-							multiple
-							small-chips
-							deletable-chips
 							filled
-							attach=""
 							clearable
 							prepend-inner-icon="casino"
 							hide-details="auto"

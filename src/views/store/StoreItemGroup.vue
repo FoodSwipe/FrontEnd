@@ -69,10 +69,16 @@ export default {
 		})
 	},
 	async created(){
-		await this.$store.dispatch("menuItemGroup/withItems")
-		this.storeItemGroups.forEach((item, index) => {
-			if (item["menu_items"].length !== 0) this.panel.push(index)
-		})
+		await this.initialize()
+	},
+	methods: {
+		async initialize() {
+			await this.$store.dispatch("menuItemGroup/withItems")
+			this.storeItemGroups.forEach((item, index) => {
+				if (item["menu_items"].length !== 0) this.panel.push(index)
+			})
+			console.log(this.$store.state.order.order)
+		}
 	}
 }
 </script>

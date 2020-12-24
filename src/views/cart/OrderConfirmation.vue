@@ -119,6 +119,7 @@ export default {
 	},
 	methods: {
 		async initialize() {
+			await this.$store.dispatch("order/clearFormErrors")
 			await this.$store.dispatch("order/withCartItems", {
 				id: this.$helper.getCookingOrderId()
 			})

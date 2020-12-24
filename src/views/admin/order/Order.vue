@@ -1,5 +1,7 @@
 <template>
-	<v-card dark>
+	<v-card dark
+		:loading="isLoading"
+	>
 		<v-toolbar height="auto">
 			<template #default>
 				<v-row class="ma-0 pa-0">
@@ -82,9 +84,7 @@
 					dark
 					class="rounded-t"
 					:class="
-						index+1 === orders.length
-							? colors[index]
-							: colors[index]
+						colors[(index +1) % colors.length]
 					"
 				>
 					<div class="delivered-card"
@@ -94,22 +94,106 @@
 								: 'background-color: transparent'
 						"
 					/>
-					<v-card-title class="cursor"
-						@click="routeToOrderDetail(order.id)"
-					>
-						#{{ order.id }} - {{ order.created_by }}
+					<v-card-title class="d-flex justify-space-between">
+						<span
+							class="cursor"
+							@click="routeToOrderDetail(order)"
+						>#{{ order.id }} - {{ order.custom_contact.replace(/\D/g, "") }}</span>
+						<span v-if="order.done_from_customer">
+							<v-tooltip
+								bottom
+							>
+								<template #activator="{attr, on}">
+									<v-avatar size="35"
+										color="white"
+										v-bind="attr"
+										v-on="on"
+									><v-img
+										:src="require('@/assets/done_from_customer.jpg')"
+									/></v-avatar>
+								</template>
+								<span>Done from customer</span>
+							</v-tooltip>
+						</span>
 					</v-card-title>
-					<v-card-subtitle class="d-flex align-center pb-0">
+					<v-card-subtitle
+						class="d-flex align-center pb-0"
+					>
 						<v-icon small>
 							today
-						</v-icon><span class="px-1">Dec 20, 2020</span><v-icon small>
-							schedule
-						</v-icon><span class="px-1">5:15 PM</span>
-					</v-card-subtitle>
-					<v-card-text class="py-0 text-right">
+						</v-icon>
+						<span class="px-1">{{
+							onlyDate(order.created_at)
+						}}</span>
 						<v-icon small>
-							room
-						</v-icon><span class="ml-1">Newroad-7</span>
+							schedule
+						</v-icon>
+						<span class="px-1">{{
+							onlyTime(order.created_at)
+						}}</span>
+					</v-card-subtitle>
+					<v-card-text class="py-0 d-flex justify-space-between">
+						<div class="delivery-status d-flex">
+							<v-tooltip v-if="!order.is_delivered"
+								bottom
+							>
+								<template #activator="{attr, on}">
+									<v-icon
+										v-bind="attr"
+										v-on="on"
+									>
+										outdoor_grill
+									</v-icon>
+								</template>
+								<span>Delivery not started</span>
+							</v-tooltip>
+							<v-tooltip v-else
+								bottom
+							>
+								<template #activator="{attr, on}">
+									<v-icon
+										v-bind="attr"
+										v-on="on"
+									>
+										two_wheeler
+									</v-icon>
+								</template>
+								<span>Delivery started</span>
+							</v-tooltip>
+
+							<v-tooltip v-if="order.is_delivered"
+								bottom
+							>
+								<template #activator="{attr, on}">
+									<v-icon
+										v-bind="attr"
+										v-on="on"
+									>
+										check
+									</v-icon>
+								</template>
+								<span>Delivered</span>
+							</v-tooltip>
+
+							<v-tooltip v-else
+								bottom
+							>
+								<template #activator="{attr, on}">
+									<v-icon
+										v-bind="attr"
+										v-on="on"
+									>
+										close
+									</v-icon>
+								</template>
+								<span>Not Delivered</span>
+							</v-tooltip>
+						</div>
+						<div class="location">
+							<v-icon small>
+								room
+							</v-icon><span class="ml-1">{{ order.custom_location }}</span>
+						</div>
 					</v-card-text>
 					<v-divider />
 					<v-card-text class="pa-2">
@@ -120,18 +204,16 @@
 							<v-subheader>
 								<v-icon size="20">
 									shopping_cart
-								</v-icon><b class="pl-2">Cart Items</b>
+								</v-icon><b class="pl-2">Cart Details</b>
 							</v-subheader>
 							<v-divider inset />
 							<v-list-item
-								v-for="cartItem in order.items"
-								:key="order.id * cartItem.id"
 								class="order-cart-list-item"
 								@click="1"
 							>
 								<v-list-item-content class="py-0">
 									<v-list-item-title class="cart-item-name">
-										{{ cartItem.name }}
+										Total Items
 									</v-list-item-title>
 								</v-list-item-content>
 								<v-list-item-action>
@@ -139,7 +221,43 @@
 										color="grey darken-2"
 										class="elevation-4"
 									>
-										{{ cartItem.quality }}
+										{{ order.total_items }}
+									</v-avatar>
+								</v-list-item-action>
+							</v-list-item>
+							<v-list-item
+								class="order-cart-list-item"
+								@click="1"
+							>
+								<v-list-item-content class="py-0">
+									<v-list-item-title class="cart-item-name">
+										Delivery Charge
+									</v-list-item-title>
+								</v-list-item-content>
+								<v-list-item-action>
+									<v-avatar size="24"
+										color="grey darken-2"
+										class="elevation-4"
+									>
+										{{ order.delivery_charge }}
+									</v-avatar>
+								</v-list-item-action>
+							</v-list-item>
+							<v-list-item
+								class="order-cart-list-item"
+								@click="1"
+							>
+								<v-list-item-content class="py-0">
+									<v-list-item-title class="cart-item-name">
+										Loyalty Discount
+									</v-list-item-title>
+								</v-list-item-content>
+								<v-list-item-action>
+									<v-avatar size="24"
+										color="grey darken-2"
+										class="elevation-4"
+									>
+										{{ order.loyalty_discount }}
 									</v-avatar>
 								</v-list-item-action>
 							</v-list-item>
@@ -150,7 +268,7 @@
 								<b>Total:</b>
 							</div>
 							<v-spacer />
-							<div><span>NRS</span><span class="pl-2 headline">1500</span></div>
+							<div><span>NRS</span><span class="pl-2 headline">{{ order.grand_total }}</span></div>
 						</div>
 					</v-card-text>
 				</v-card>
@@ -160,6 +278,7 @@
 </template>
 <script>
 import router from "@/router"
+import { mapGetters } from "vuex"
 
 export default {
 	name: "OrderAdministration",
@@ -168,6 +287,7 @@ export default {
 		DateFilter: () => import("@/components/DateFilter"),
 	},
 	data: () => ({
+		isLoading: false,
 		searchOrders: "",
 		colors: [
 			"our-blue-gradient",
@@ -185,97 +305,31 @@ export default {
 			{title: "Pending", icon: "hdr_strong"},
 			{title: "Delivered", icon: "check"},
 		],
-		orders: [
-			{
-				id: 55896,
-				created_by: "John Doe",
-				created_at: "Dec 26, 2020 T 5:45 PM",
-				updated_by: "Mark Williams",
-				updated_at: "Dec 30, 2020 T 5:45 PM",
-				delivery_location: "Lorem ipsum -16, Sed",
-				delivery_charge: 150,
-				is_delivered: false,
-				total_items: 18,
-				loyalty_discount: 10,
-				items: [
-					{id: 5, name: "Veg Momo", quality: 1},
-					{id: 6, name: "Buff Momo", quality: 2},
-					{id: 7, name: "Chicken Chowmein", quality: 3},
-				]
-			},
-			{
-				id: 55897,
-				created_by: "John Doe",
-				created_at: "Dec 25, 2020 T 5:45 PM",
-				updated_by: "Mark Williams",
-				updated_at: "Dec 26, 2020 T 5:45 PM",
-				delivery_location: "Lorem ipsum -16, Sed",
-				delivery_charge: 150,
-				is_delivered: false,
-				total_items: 18,
-				loyalty_discount: 10,
-				items: [
-					{id: 8, name: "Ham Burger", quality: 3},
-					{id: 9, name: "Chicken Tikka", quality: 3},
-					{id: 10, name: "Buff Chowmein", quality: 3},
-				]
-			},
-			{
-				id: 55898,
-				created_by: "Donald Trump",
-				created_at: "Dec 26, 2020 T 5:45 PM",
-				updated_by: "Adam Smith",
-				updated_at: "Dec 30, 2020 T 5:45 PM",
-				delivery_location: "Lorem ipsum -16, Sed",
-				delivery_charge: 150,
-				is_delivered: true,
-				total_items: 18,
-				loyalty_discount: 10,
-				items: [
-					{id: 11, name: "Chicken Popcorn", quality: 2},
-					{id: 12, name: "Crispy Chicken", quality: 2},
-					{id: 13, name: "Pork Tawa", quality: 2},
-				]
-			},
-			{
-				id: 55899,
-				created_by: "Donald Trump",
-				created_at: "Dec 26, 2020 T 5:45 PM",
-				updated_by: "Mark Williams",
-				updated_at: "Dec 30, 2020 T 5:45 PM",
-				delivery_location: "Lorem ipsum -16, Sed",
-				delivery_charge: 150,
-				is_delivered: true,
-				total_items: 18,
-				loyalty_discount: 10,
-				items: [
-					{id: 14, name: "Steam MoMo (Chicken)", quality: 6},
-					{id: 15, name: "Buff Chilly", quality: 7},
-					{id: 16, name: "Crispy Chicken Burger", quality: 1},
-				]
-			},
-			{
-				id: 55900,
-				created_by: "Mic Tyson",
-				created_at: "Dec 26, 2020 T 5:45 PM",
-				updated_by: "Eddy Fudge",
-				updated_at: "Dec 30, 2020 T 5:45 PM",
-				delivery_location: "Lorem ipsum -16, Sed",
-				delivery_charge: 150,
-				is_delivered: true,
-				total_items: 18,
-				loyalty_discount: 10,
-				items: [
-					{id: 17, name: "Food swipe combo (Veg)", quality: 1},
-					{id: 18, name: "Biryani", quality: 3},
-					{id: 19, name: "Fried Rice Chowmein", quality: 2},
-				]
-			}
-		],
 	}),
+	computed: {
+		...mapGetters({
+			orders: "order/allOrders"
+		})
+	},
+	async created() {
+		await this.initialize()
+	},
 	methods: {
-		routeToOrderDetail(id) {
-			router.push({name: "Order Detail", params: { id: id }})
+		onlyDate(value) {
+			if (!value) return null
+			return value.substr(0, value.indexOf(" "))
+		},
+		onlyTime(value) {
+			if (!value) return null
+			return value.substr(value.indexOf(" ")+1, value.length)
+		},
+		async initialize() {
+			this.isLoading = true
+			await this.$store.dispatch("order/fetchAllWithAuthenticated")
+			this.isLoading = false
+		},
+		routeToOrderDetail(order) {
+			router.push(`/admin/order/${order.id}`)
 		}
 	}
 }

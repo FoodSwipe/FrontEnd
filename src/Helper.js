@@ -58,6 +58,18 @@ module.exports = {
 		}
 		return orderNowRefinedList
 	},
+	removeCartedItemsDuplicationFromOrderNowList(orderList, cartList) {
+		let magic = []
+		if (cartList.length === 0) return orderList
+		orderList.forEach((orderItem) => {
+			cartList.forEach(cartItem => {
+				if (cartItem.item.id !== orderItem.id) {
+					magic.push(orderItem)
+				}
+			})
+		})
+		return magic
+	},
 	getCurrentUser() {
 		return JSON.parse(localStorage.getItem("currentUser"));
 	},
@@ -92,5 +104,42 @@ module.exports = {
 	},
 	getAccessToken() {
 		return localStorage.getItem("token")
+	},
+	getCartSummary(order, cartItems) {
+		const today = new Date()
+		if (!order) return []
+
+		const LOYALTY_DISCOUNT = 10
+		const DELIVERY_START_PM = 17
+		const DELIVER_START_AM = 4
+		const DELIVERY_CHARGE = 50
+		const LOYALTY_STARTS_AT = 10000
+
+		let totalPrice = 0
+		let totalItems = 0
+		let deliveryCharge = 0
+		let loyaltyDiscount = 0
+		let grandTotal = 0
+
+		cartItems.forEach(item => {
+			totalPrice += item.quantity * item.item.price
+			totalItems += item.quantity
+		})
+		grandTotal = totalPrice
+		if (totalPrice > LOYALTY_STARTS_AT) {
+			loyaltyDiscount = LOYALTY_DISCOUNT
+			grandTotal -= (loyaltyDiscount / 100) * totalPrice
+		} else grandTotal = totalPrice
+		if (today.getHours() >= DELIVERY_START_PM || today.getHours() <= DELIVER_START_AM) {
+			deliveryCharge = DELIVERY_CHARGE
+			grandTotal += deliveryCharge
+		}
+		return {
+			totalItems: totalItems,
+			totalPrice: totalPrice,
+			loyaltyDiscount: loyaltyDiscount,
+			grandTotal: grandTotal,
+			deliveryCharge: deliveryCharge
+		}
 	}
 }

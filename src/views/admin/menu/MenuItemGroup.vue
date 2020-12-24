@@ -388,7 +388,7 @@ export default {
 		async save() {
 			if (this.editedIndex > -1) {
 				if (this.imageForUpload.length > 0) {
-					this.editedItem = this.imageForUpload[0]
+					this.editedItem.image = this.imageForUpload[0]
 				} else {
 					delete this.editedItem.image
 				}
@@ -410,6 +410,11 @@ export default {
 					await this.openSnack("Please load a valid form.")
 				}
 			} else {
+				if (this.imageForUpload.length > 0) {
+					this.editedItem.image = this.imageForUpload[0]
+				} else {
+					delete this.editedItem.image
+				}
 				const payload = getFormData(this.editedItem)
 				const created = await this.$store.dispatch("menuItemGroup/create", payload)
 				if (created === true) {

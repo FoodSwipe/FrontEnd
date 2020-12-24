@@ -176,7 +176,7 @@ export default {
 				const currentUser = this.$helper.getCurrentUser()
 				this.order = {
 					custom_location: currentUser.profile.address,
-					custom_contact: currentUser.profile.contact.replace(/\D/g, ""),
+					custom_contact: (currentUser.profile.contact) ? currentUser.profile.contact.replace(/\D/g, "") : null,
 				}
 			} else {
 				this.order = {
@@ -202,10 +202,11 @@ export default {
 			const started = await this.$store.dispatch("order/startOrder", this.order)
 			if (started === true) {
 				for (const itemId of this.selectedItems) {
-					await this.$store.dispatch("cart/addToCart", {
+					const addedToCart = await this.$store.dispatch("cart/addToCart", {
 						order: this.$helper.getCookingOrderId(),
 						item: itemId
 					})
+					if(addedToCart !== true) await this.openSnack(addedToCart)
 				}
 				this.$bus.emit("set-cart-count", this.selectedItems.length)
 				this.selectedItems = []

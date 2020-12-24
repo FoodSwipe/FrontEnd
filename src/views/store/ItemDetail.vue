@@ -339,7 +339,9 @@ export default {
 				this.$bus.emit("start-order-prefill", {
 					order: {
 						custom_location: currentUser.profile.address,
-						custom_contact: currentUser.profile.contact.replace(/\D/g, "")
+						custom_contact: (currentUser.profile.contact)
+							? currentUser.profile.contact.replace(/\D/g, "")
+							: null
 					}
 				})
 			}

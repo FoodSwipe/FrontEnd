@@ -286,11 +286,6 @@ export default {
 	name: "CartView",
 	data() {
 		return {
-			LOYALTY_DISCOUNT: 10,
-			DELIVERY_START_PM: 17,
-			DELIVERY_START_AM: 4,
-			DELIVERY_CHARGE: 50,
-			LOYALTY_STARTS_AT: 10000,
 			showSummary: true,
 			cartItemsList: [{
 				item: {
@@ -301,26 +296,9 @@ export default {
 	},
 	computed: {
 		getCartSummary() {
-			const today = new Date()
-			let totalPrice = 0
-			let totalItems = 0
-			let deliveryCharge = 0
-			let loyaltyDiscount = 0
-			let grandTotal = 0
+			const summary = this.$helper.getCartSummary(this.currentOrder, this.cartItemsList)
 
-			this.cartItemsList.forEach(item => {
-				totalPrice += item.quantity * item.item.price
-				totalItems += item.quantity
-			})
-			if (totalPrice > this.LOYALTY_STARTS_AT) {
-				loyaltyDiscount = this.LOYALTY_DISCOUNT
-				grandTotal -= (loyaltyDiscount / 100) * grandTotal
-			}
-			if (today.getHours() >= this.DELIVERY_START_PM || today.getHours() <= this.DELIVERY_START_AM) {
-				deliveryCharge = this.DELIVERY_CHARGE
-				grandTotal = totalPrice + deliveryCharge
-			}
-			if (this.currentOrder) return [
+			return [
 				{
 					icon: "call",
 					field: "Contact Number",
@@ -329,12 +307,12 @@ export default {
 				{
 					icon: "shopping_cart",
 					field: "Total Items",
-					value: totalItems,
+					value: summary.totalItems,
 				},
 				{
 					icon: "title",
 					field: "Sub-Total (NRs)",
-					value: totalPrice
+					value: summary.totalPrice
 				},
 				{
 					icon: "location_on",
@@ -344,21 +322,20 @@ export default {
 				{
 					icon: "two_wheeler",
 					field: "Delivery Charge (NRs)",
-					value: deliveryCharge
+					value: summary.deliveryCharge
 				},
 				{
 					icon: "card_giftcard",
 					field: "Loyalty Discount Awarded",
-					value: loyaltyDiscount + "%",
+					value: summary.loyaltyDiscount + "%",
 				},
 				{
 					icon: "money",
 					field: "Grand Total (NRs)",
-					value: grandTotal,
+					value: summary.grandTotal,
 					divider: true
 				}
 			]
-			else return []
 		},
 		...mapGetters({
 			currentOrder: "order/detailOrder"

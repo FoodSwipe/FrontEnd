@@ -157,6 +157,7 @@ export default {
 				this.$bus.emit("set-cart-count", 0)
 				await router.push(`review-order/${this.$helper.getCookingOrderId()}`)
 				this.$helper.removeCookingOrderIdFromLocalStorage()
+				await this.$store.dispatch("order/clearOrderDetail")
 			} else {
 				await this.openSnack("Internal server error. Try again.", "error")
 			}

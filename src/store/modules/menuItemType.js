@@ -59,7 +59,7 @@ const actions = {
 			await $api.post(itemTypeUrls.list, payload)
 			return true
 		} catch (e) {
-			if (e.response.status === 400) {
+			if (parseInt(e.response.status.toString()) === 400) {
 				commit("SET_MENU_ITEM_TYPE_FORM_ERRORS", e.response.data)
 				return false
 			}
@@ -79,7 +79,7 @@ const actions = {
 			await $api.patch(util.format(itemTypeUrls.detail, payload.id), payload.body)
 			return true
 		} catch (e) {
-			if (e.response.status === 400) {
+			if (parseInt(e.response.status.toString()) === 400) {
 				commit("SET_MENU_ITEM_FORM_ERRORS", e.response.data)
 				return false
 			}
