@@ -1,6 +1,11 @@
 import $api from "@/handler/axios"
 import urls from "@/urls.json"
-import { removeCookingOrderIdFromLocalStorage, setCurrentUserOnLocalStorage, setTokenOnLocalStorage } from "@/Helper"
+import {
+	removeCookingOrderIdFromLocalStorage,
+	setCookingOrderOnLocalStorage,
+	setCurrentUserOnLocalStorage,
+	setTokenOnLocalStorage
+} from "@/Helper"
 
 const authUrls = urls.auth
 
@@ -32,12 +37,12 @@ const actions = {
 			setTokenOnLocalStorage(res.token)
 			setCurrentUserOnLocalStorage(JSON.stringify(res.user))
 			if (res["cooking_order"] !== undefined) {
-				console.log("Chcichcikiki")
-				this.$helper.setCookingOrderOnLocalStorage(res["cooking_order"].id)
-				return res["cooking_order"].total_items
+				console.log(res["cooking_order"])
+				setCookingOrderOnLocalStorage(res["cooking_order"].id)
+				return res["cooking_order"]["total_items"]
 			} else {
 				console.log("mememe")
-				// removeCookingOrderIdFromLocalStorage()
+				removeCookingOrderIdFromLocalStorage()
 				return true
 			}
 		} catch (e) {

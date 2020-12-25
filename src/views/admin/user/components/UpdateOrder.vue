@@ -1,14 +1,12 @@
 <template>
-	<v-card v-if="order"
-		dark
-	>
+	<v-card dark>
 		<v-overlay :value="overlay">
 			<v-progress-circular
 				indeterminate
 				size="64"
 			/>
 		</v-overlay>
-		<v-toolbar>
+		<v-toolbar v-if="order">
 			<v-app-bar-nav-icon>
 				<v-avatar tile>
 					<v-icon>receipt</v-icon>
@@ -69,14 +67,14 @@
 						</v-icon>
 						<span class="pl-2">{{ order.created_by.username }}</span>
 						<span class="px-1"><v-icon small>today</v-icon></span>
-						<span class="px-1">{{ onlyDate(order.created_at) }}</span>
+						<span class="px-1">{{ $helper.onlyDate(order.created_at) }}</span>
 						<span class="px-1"><v-icon small>history</v-icon></span>
-						<span class="px-1">{{ onlyTime(order.created_at) }}</span>
+						<span class="px-1">{{ $helper.onlyTime(order.created_at) }}</span>
 					</div>
 				</v-row>
 			</template>
 		</v-toolbar>
-		<v-row class="ma-0 pa-0"
+		<v-row v-if="order" class="ma-0 pa-0"
 			no-gutters
 		>
 			<v-col cols="12">
@@ -137,7 +135,7 @@
 											filled
 											chips
 											deletable-chips
-											color="orange darken-4"
+											color="grey darken-3"
 											placeholder="Select menu items (*)"
 											item-text="name"
 											item-value="id"
@@ -173,8 +171,8 @@
 														<v-img :src="data.item.avatar" />
 													</v-list-item-avatar>
 													<v-list-item-content>
-														<v-list-item-title>{{ data.item.name }}"</v-list-item-title>
-														<v-list-item-subtitle>{{ data.item.group }}"</v-list-item-subtitle>
+														<v-list-item-title>{{ data.item.name }}</v-list-item-title>
+														<v-list-item-subtitle>{{ data.item.group }}</v-list-item-subtitle>
 													</v-list-item-content>
 													<v-list-item-action-text>{{ data.item.price }}</v-list-item-action-text>
 												</template>
@@ -434,31 +432,34 @@ export default {
 		DELIVERY_START_AM: 4,
 		DELIVERY_CHARGE: 50,
 		LOYALTY_STARTS_AT: 10000,
+		order: null,
 	}),
 	computed: {
 		...mapGetters({
-			order: "order/detailOrder",
+			orderList: "order/detailOrder",
 			orderNowList: "menuItem/allMenuItems",
 		}),
 	},
 	async created() {
-		await this.initialize()
+		this.$bus.on("load-order", this.initialize)
+		if (this.$route.name === "Order Detail") {
+			const id = this.$route.params.id
+			await this.initialize({ id })
+		} else {
+			this.order = null
+		}
+	},
+	beforeUnmount() {
+		this.$bus.off("load-order", this.initialize)
 	},
 	methods: {
-		onlyDate(value) {
-			if (!value) return null
-			return value.substr(0, value.indexOf(" "))
-		},
-		onlyTime(value) {
-			if (!value) return null
-			return value.substr(value.indexOf(" ")+1, value.length)
-		},
-		async initialize() {
-			this.isLoading = true
+		async initialize({ id }) {
+			this.overlay = true
 			await this.$store.dispatch("order/withCartItems", {
-				id: this.$route.params.id
+				id: id
 			})
-			this.loading = false
+			this.order = this.orderList
+			this.overlay = false
 			this.isUpdating = true
 			await this.$store.dispatch("menuItem/fetchOrderNowList")
 			const cartVsOrderDiff = this.$helper.removeCartedItemsDuplicationFromOrderNowList(

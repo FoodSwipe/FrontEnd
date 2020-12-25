@@ -73,4 +73,7 @@ export default {
 .tilt {
 	transform: rotate(305deg);
 }
+.number-font {
+	font-family: 'Yeon Sung', cursive;
+}
 </style>

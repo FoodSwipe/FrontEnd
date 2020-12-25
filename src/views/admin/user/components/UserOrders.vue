@@ -1,5 +1,9 @@
 <template>
-	<v-card dark>
+	<v-card
+		v-if="userOrders"
+		:loading="isLoading"
+		dark
+	>
 		<v-toolbar height="50"
 			class="float-top pl-2"
 		>
@@ -8,27 +12,32 @@
 			</v-card-title>
 		</v-toolbar>
 		<v-divider />
-		<div class="user-order-list pa-4">
+
+		<div v-if="userOrders.length > 0"
+			class="user-order-list pa-4"
+		>
 			<v-card
-				v-for="(order, index) in orders"
+				v-for="(order, index) in userOrders"
 				:key="order.id"
 				dark
 				class="rounded-t"
 				:class="
-					index+1 === orders.length
+					index+1 === userOrders.length
 						? colors[index]
 						: colors[index] + ' mb-4'
 				"
 			>
 				<div class="delivered-card" />
 				<v-card-title class="py-0">
-					<span class="order-id">#{{ order.id }}</span> <span
+					<span class="order-id cursor"
+						@click="loadOrderForUpdate(order.id)"
+					>#{{ order.id }}</span> <span
 						class="pl-3 order-date"
 					><v-icon small>
 						today
-					</v-icon><span class="px-1">Dec 20, 2020</span><v-icon small>
+					</v-icon><span class="px-1">{{ $helper.onlyDate(order.created_at) }}</span><v-icon small>
 						schedule
-					</v-icon><span class="px-1">5:15 PM</span></span>
+					</v-icon><span class="px-1">{{ $helper.onlyTime(order.created_at) }}</span></span>
 				</v-card-title>
 				<v-divider />
 				<v-card-text class="pa-2">
@@ -44,7 +53,7 @@
 						<v-avatar size="28"
 							color="grey darken-3"
 						>
-							30
+							{{ order.total_items }}
 						</v-avatar>
 					</v-row>
 					<v-divider />
@@ -52,23 +61,31 @@
 						<div>
 							<v-icon small>
 								room
-							</v-icon><span class="pl-1">Amarsingh</span>
+							</v-icon><span class="pl-1">{{ order.custom_location }}</span>
 						</div>
 						<v-spacer />
 						<div>
 							<span class="nrs">NRS</span>
-							<span class="pl-1 g-total">1500</span>
+							<span class="pl-1 g-total">{{ order.grand_total }}</span>
 						</div>
 					</div>
 				</v-card-text>
 			</v-card>
 		</div>
+		<div v-else>
+			<v-card>
+				<v-card-title>⌛ No orders made yet.</v-card-title>
+			</v-card>
+		</div>
 	</v-card>
 </template>
 <script>
+import { mapGetters } from "vuex"
+
 export default {
 	name: "UserOrdersComponent",
 	data: () => ({
+		isLoading: false,
 		colors: [
 			"our-blue-gradient",
 			"red-gradient",
@@ -79,49 +96,40 @@ export default {
 			"dark-purple-gradient",
 			"brown-gradient",
 		],
-		orders: [
-			{
-				id: 55896,
-				items: [
-					{id: 5, name: "Veg Momo", quality: 1},
-					{id: 6, name: "Buff Momo", quality: 2},
-					{id: 7, name: "Chicken Chowmein", quality: 3},
-				]
-			},
-			{
-				id: 55897,
-				items: [
-					{id: 8, name: "Ham Burger", quality: 3},
-					{id: 9, name: "Chicken Tikka", quality: 3},
-					{id: 10, name: "Buff Chowmein", quality: 3},
-				]
-			},
-			{
-				id: 55898,
-				items: [
-					{id: 11, name: "Chicken Popcorn", quality: 2},
-					{id: 12, name: "Crispy Chicken", quality: 2},
-					{id: 13, name: "Pork Tawa", quality: 2},
-				]
-			},
-			{
-				id: 55899,
-				items: [
-					{id: 14, name: "Steam MoMo (Chicken)", quality: 6},
-					{id: 15, name: "Buff Chilly", quality: 7},
-					{id: 16, name: "Crispy Chicken Burger", quality: 1},
-				]
-			},
-			{
-				id: 55900,
-				items: [
-					{id: 17, name: "Food swipe combo (Veg)", quality: 1},
-					{id: 18, name: "Biryani", quality: 3},
-					{id: 19, name: "Fried Rice Chowmein", quality: 2},
-				]
+	}),
+	computed: {
+		...mapGetters({
+			userOrders: "order/allOrders"
+		})
+	},
+	async created() {
+		await this.initialize()
+	},
+	methods: {
+		async openSnack(text, color="error") {
+			await this.$store.dispatch("snack/setSnackState", true)
+			await this.$store.dispatch("snack/setSnackColor", color)
+			await this.$store.dispatch("snack/setSnackText", text)
+		},
+		async initialize() {
+			this.isLoading = true
+			const fetched = await this.$store.dispatch("order/fetchUserOrders", {
+				id: this.$route.params.id
+			})
+			if (!fetched) {
+				await this.openSnack("Internal server error. Please try again.")
 			}
-		]
-	})
+			this.isLoading = false
+			this.$bus.emit("load-order", {
+				id: this.userOrders[0].id
+			})
+		},
+		loadOrderForUpdate(id) {
+			this.$bus.emit("load-order", {
+				id: id
+			})
+		}
+	}
 }
 </script>
 <style scoped lang="scss">

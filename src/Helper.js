@@ -141,5 +141,13 @@ module.exports = {
 			grandTotal: grandTotal,
 			deliveryCharge: deliveryCharge
 		}
-	}
+	},
+	onlyDate(value) {
+		if (!value) return null
+		return value.substr(0, value.indexOf(" "))
+	},
+	onlyTime(value) {
+		if (!value) return null
+		return value.substr(value.indexOf(" ")+1, value.length)
+	},
 }

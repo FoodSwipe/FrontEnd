@@ -60,8 +60,8 @@
 									<v-img :src="data.item.avatar" />
 								</v-list-item-avatar>
 								<v-list-item-content>
-									<v-list-item-title>{{ data.item.name }}"</v-list-item-title>
-									<v-list-item-subtitle>{{ data.item.group }}"</v-list-item-subtitle>
+									<v-list-item-title>{{ data.item.name }}</v-list-item-title>
+									<v-list-item-subtitle>{{ data.item.group }}</v-list-item-subtitle>
 								</v-list-item-content>
 								<v-list-item-action-text>{{ data.item.price }}</v-list-item-action-text>
 							</template>

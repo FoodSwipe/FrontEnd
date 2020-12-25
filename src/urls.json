@@ -40,9 +40,11 @@
     "list": "order/",
     "listAuthenticated": "orders",
     "detail": "order/%s/",
+    "userOrders": "user/%s/orders",
     "unAuthUpdateOrder": "update-order/%s",
     "initializeOrder": "init-order",
-    "withCartItems": "order/%s/cart"
+    "withCartItems": "order/%s/cart",
+    "userStoreSummary": "user/%s/store-summary"
   },
   "review": {
     "list": "review/",

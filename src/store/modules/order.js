@@ -8,6 +8,7 @@ const orderUrls = urls.order
 export const SET_ORDERS = "SET_ORDERS"
 export const SET_ORDER = "SET_ORDER"
 export const SET_ORDER_FORM_ERRORS = "SET_ORDER_FORM_ERRORS"
+export const SET_STORE_SUMMARY = "SET_STORE_SUMMARY"
 
 const defaultOrderErrors = {
 	custom_location: null,
@@ -21,7 +22,8 @@ const state = {
 	order: {},
 	orderFormErrors: {
 		...defaultOrderErrors
-	}
+	},
+	storeSummary: {}
 }
 
 const mutations = {
@@ -34,6 +36,9 @@ const mutations = {
 	[SET_ORDER_FORM_ERRORS](state, value) {
 		state.orderFormErrors = value
 	},
+	[SET_STORE_SUMMARY](state, value) {
+		state.storeSummary = value
+	}
 }
 
 const getters = {
@@ -48,6 +53,9 @@ const getters = {
 	},
 	currentCartLength: state => {
 		return state.orders.results.length
+	},
+	userStoreSummary: state => {
+		return state.storeSummary
 	}
 }
 
@@ -147,6 +155,24 @@ const actions = {
 	},
 	clearOrderDetail({commit}){
 		commit("SET_ORDER", {})
+	},
+	async fetchUserOrders({commit}, payload) {
+		try {
+			const res = await $api.get(util.format(orderUrls.userOrders, payload.id))
+			commit("SET_ORDERS", res)
+			return true
+		} catch (e) {
+			return false
+		}
+	},
+	async fetchUserStoreSummary({commit}, payload) {
+		try {
+			const res = await $api.get(util.format(orderUrls.userStoreSummary, payload.id))
+			commit("SET_STORE_SUMMARY", res)
+			return true
+		} catch (e) {
+			return false
+		}
 	}
 }
 
