@@ -12,7 +12,6 @@
 		</div>
 		<v-card max-width="800"
 			class="mx-auto my-2 py-4 our-menu-wrapper-card"
-			dark
 			flat
 		>
 			<v-row class="ma-0 pa-0"
@@ -20,6 +19,7 @@
 			>
 				<v-expansion-panels focusable
 					popout
+					dark
 				>
 					<v-expansion-panel v-for="(menuItemGroup, index) of menuItemGroups"
 						:key="index"

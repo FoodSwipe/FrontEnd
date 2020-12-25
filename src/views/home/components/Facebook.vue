@@ -8,11 +8,10 @@
 				lg="5"
 				md="5"
 				sm="6"
-				class="d-flex justify-center"
 			>
 				<div class="fb-page"
 					data-href="https://www.facebook.com/foodswipeonline" data-tabs="timeline, events, messages"
-					data-width="400" data-height=""
+					data-width="500" data-height=""
 					data-small-header="false" data-adapt-container-width="true"
 					data-hide-cover="false" data-show-facepile="true"
 				>

@@ -3,6 +3,8 @@ module.exports = {
 		"vuetify"
 	],
 	publicPath: process.env.NODE_ENV === "production"
-		? "/FrontEnd/"
-		: "/"
+		? ""
+		: process.env.NODE_ENV === "github"
+			? "/FrontEnd/"
+			: ""
 }
