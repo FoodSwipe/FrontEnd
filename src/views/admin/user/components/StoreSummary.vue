@@ -76,6 +76,7 @@
 						<v-list-item
 							v-for="(recentLocation, index) in userStoreSummary['most_recent_locations']"
 							:key="index*37"
+							style="min-height: 20px;"
 							@click="1"
 						>
 							<v-list-item-content>
@@ -86,6 +87,7 @@
 							</v-list-item-action-text>
 						</v-list-item>
 					</v-list>
+					<v-list-item-subtitle>Recent delivery locations</v-list-item-subtitle>
 				</v-list-item-content>
 			</v-list-item>
 		</v-list>
@@ -106,6 +108,10 @@ export default {
 		miniList() {
 			if (!this.userStoreSummary) return []
 			return [
+				{
+					field: "Total Transaction (NRs)",
+					value: this.userStoreSummary["total_transaction"]
+				},
 				{
 					field: "Total Orders",
 					value: this.userStoreSummary["total_orders"]

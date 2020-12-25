@@ -17,16 +17,19 @@
 			</span>
 		</v-card-title>
 		<v-row class="ma-0 pa-0">
-			<v-col xl="3"
-				lg="3"
-				md="3"
-				sm="5"
+			<v-col
+				:xl="(!show) ? 9 : 3"
+				:lg="(!show) ? 9 : 3"
+				:md="(!show) ? 9 : 3"
+				:sm="(!show) ? 12 : 5"
 				cols="12"
-				class="overflow-y"
+				:class="(show) ? 'overflow-y' : ''"
 			>
 				<user-orders />
 			</v-col>
-			<v-col xl="6"
+			<v-col
+				v-if="show"
+				xl="6"
 				lg="6"
 				md="6"
 				sm="7"
@@ -55,16 +58,7 @@ export default {
 		UserStoreSummary: () => import("./components/StoreSummary"),
 	},
 	data: () => ({
-		colors: [
-			"red-gradient",
-			"blue-gradient",
-			"orange-gradient",
-			"deep-blue-gradient",
-			"teal-gradient",
-			"green-gradient",
-			"dark-purple-gradient",
-			"brown-gradient",
-		],
+		show: true,
 		isLoading: false
 	}),
 	computed: {
@@ -73,9 +67,16 @@ export default {
 		})
 	},
 	async created() {
+		this.$bus.on("hide-update-order-box", this.hideUpdateOrderBox)
 		await this.initialize()
 	},
+	beforeUnmount() {
+		this.$bus.off("hide-update-order-box", this.hideUpdateOrderBox)
+	},
 	methods: {
+		hideUpdateOrderBox() {
+			this.show = false
+		},
 		async initialize() {
 			this.isLoading = true
 			await this.$store.dispatch("user/getSingle", {

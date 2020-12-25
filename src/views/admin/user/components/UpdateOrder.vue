@@ -1,391 +1,395 @@
 <template>
-	<v-card dark>
-		<v-overlay :value="overlay">
-			<v-progress-circular
-				indeterminate
-				size="64"
-			/>
-		</v-overlay>
-		<v-toolbar v-if="order">
-			<v-app-bar-nav-icon>
-				<v-avatar tile>
-					<v-icon>receipt</v-icon>
-				</v-avatar>
-			</v-app-bar-nav-icon>
-			<v-toolbar-title>
-				#{{ order.id }}
-			</v-toolbar-title>
-			<v-spacer />
-			<v-tooltip bottom>
-				<template #activator="{on, attrs}">
-					<v-btn icon
-						color="orange"
-						v-bind="attrs"
-						:disabled="order.delivery_started"
-						@click="startDelivery()"
-						v-on="on"
-					>
-						<v-icon size="35">
-							two_wheeler
-						</v-icon>
-					</v-btn>
-				</template>
-				<span>Start Delivery</span>
-			</v-tooltip>
-			<v-tooltip bottom>
-				<template #activator="{on, attrs}">
-					<v-btn icon
-						color="green"
-						:disabled="order.is_delivered"
-						v-bind="attrs"
-						@click.prevent="completeDelivery()"
-						v-on="on"
-					>
-						<v-icon>check</v-icon>
-					</v-btn>
-				</template>
-				<span>Complete Order</span>
-			</v-tooltip>
-			<v-btn icon
-				color="purple lighten-2"
-				@click="generatePDF()"
-			>
-				<v-icon>print</v-icon>
-			</v-btn>
-			<v-btn icon
-				color="error"
-			>
-				<v-icon>delete</v-icon>
-			</v-btn>
-			<template #extension>
-				<v-row class="ma-0"
-					no-gutters
-				>
-					<div class="subtitle-2">
-						<v-icon small>
-							account_circle
-						</v-icon>
-						<span class="pl-2">{{ order.created_by.username }}</span>
-						<span class="px-1"><v-icon small>today</v-icon></span>
-						<span class="px-1">{{ $helper.onlyDate(order.created_at) }}</span>
-						<span class="px-1"><v-icon small>history</v-icon></span>
-						<span class="px-1">{{ $helper.onlyTime(order.created_at) }}</span>
-					</div>
-				</v-row>
-			</template>
-		</v-toolbar>
-		<v-row v-if="order" class="ma-0 pa-0"
-			no-gutters
+	<v-fade-transition>
+		<v-card
+			dark
 		>
-			<v-col cols="12">
-				<v-data-table
-					:headers="headers"
-					:search="searchOrderItems"
-					:items="order.cart_items"
-					sort-by="calories"
-					class="elevation-1"
-					hide-default-footer
-				>
-					<template #top>
-						<v-toolbar
-							flat
-							height="auto"
+			<v-overlay :value="overlay">
+				<v-progress-circular
+					indeterminate
+					size="64"
+				/>
+			</v-overlay>
+			<v-toolbar v-if="order">
+				<v-app-bar-nav-icon>
+					<v-avatar tile>
+						<v-icon>receipt</v-icon>
+					</v-avatar>
+				</v-app-bar-nav-icon>
+				<v-toolbar-title>
+					#{{ order.id }}
+				</v-toolbar-title>
+				<v-spacer />
+				<v-tooltip bottom>
+					<template #activator="{on, attrs}">
+						<v-btn icon
+							color="orange"
+							v-bind="attrs"
+							:disabled="order.delivery_started"
+							@click="startDelivery()"
+							v-on="on"
 						>
-							<template #default>
-								<v-row class="ma-0 pa-0"
-									align="center"
-									no-gutters
-								>
-									<v-col cols="12"
-										xl="4"
-										lg="4"
-										md="4"
-										sm="4"
-									>
-										<v-text-field
-											id="search-user"
-											v-model="searchOrderItems"
-											solo
-											clearable
-											hide-details
-											prepend-inner-icon="search"
-											placeholder="Search order items"
-										/>
-									</v-col>
-									<v-fade-transition>
-										<v-col
-											v-if="$vuetify.breakpoint.width > 600"
-											cols="1"
-											class="d-flex justify-center"
-										>
-											<div class="divider-search-inset" />
-										</v-col>
-									</v-fade-transition>
-									<v-col cols="12"
-										xl="7"
-										lg="7"
-										md="7"
-										sm="7"
-									>
-										<v-autocomplete
-											v-model="selectedItems"
-											:disabled="isUpdating"
-											:readonly="order.is_delivered"
-											:items="orderNowRefinedList"
-											filled
-											chips
-											deletable-chips
-											color="grey darken-3"
-											placeholder="Select menu items (*)"
-											item-text="name"
-											item-value="id"
-											item-color="orange darken-2"
-											multiple
-											prepend-inner-icon="emoji_food_beverage"
-											hide-details="auto"
-											clearable
-										>
-											<template #no-data>
-												No <code>menu items</code> available
-											</template>
-											<template #selection="data">
-												<v-chip
-													v-bind="data.attrs"
-													:input-value="data.selected"
-													close
-													@click="data.select"
-													@click:close="removeItemFromSelectedOrderInput(data.item)"
-												>
-													<v-avatar left>
-														<v-img :src="data.item.avatar" />
-													</v-avatar>
-													{{ data.item.name }}
-												</v-chip>
-											</template>
-											<template #item="data">
-												<template v-if="typeof data.item !== 'object'">
-													<v-list-item-content v-text="data.item" />
-												</template>
-												<template v-else>
-													<v-list-item-avatar>
-														<v-img :src="data.item.avatar" />
-													</v-list-item-avatar>
-													<v-list-item-content>
-														<v-list-item-title>{{ data.item.name }}</v-list-item-title>
-														<v-list-item-subtitle>{{ data.item.group }}</v-list-item-subtitle>
-													</v-list-item-content>
-													<v-list-item-action-text>{{ data.item.price }}</v-list-item-action-text>
-												</template>
-											</template>
-											<template #append-outer>
-												<v-avatar v-ripple
-													size="22"
-													color="orange"
-													class="golden-rod-border-2 elevation-4"
-													disabled
-													@click="addSelectedItemsToOrderCart()"
-												>
-													<v-icon>
-														add_circle
-													</v-icon>
-												</v-avatar>
-											</template>
-										</v-autocomplete>
-									</v-col>
-								</v-row>
-							</template>
-						</v-toolbar>
-					</template>
-					<!-- eslint-disable-next-line vue/valid-v-slot-->
-					<template #item.name="{ item }">
-						{{ item.item.name }}
-					</template>
-					<!-- eslint-disable-next-line vue/valid-v-slot-->
-					<template #item.subTotal="{ item }">
-						{{ item.item.price * item.quantity }}
-					</template>
-					<!-- eslint-disable-next-line vue/valid-v-slot-->
-					<template #item.actions="{ item }">
-						<v-icon
-							small
-							class="mr-2"
-							color="error"
-							@click="removeItemFromOrderCart(item)"
-						>
-							close
-						</v-icon>
-					</template>
-					<template #no-data>
-						<v-btn
-							color="primary"
-							@click="initialize"
-						>
-							Reset
+							<v-icon size="35">
+								two_wheeler
+							</v-icon>
 						</v-btn>
 					</template>
-					<!-- eslint-disable-next-line vue/valid-v-slot-->
-					<template #item.quantity="props">
-						<v-edit-dialog
-							v-model:return-value="props.item.quantity"
-							dark
-							@save="updateQuantity(props.item)"
-							@cancel="cancelQuantityUpdate"
+					<span>Start Delivery</span>
+				</v-tooltip>
+				<v-tooltip bottom>
+					<template #activator="{on, attrs}">
+						<v-btn icon
+							color="green"
+							:disabled="order.is_delivered"
+							v-bind="attrs"
+							@click.prevent="completeDelivery()"
+							v-on="on"
 						>
-							{{ props.item.quantity }}
-							<template #input>
-								<v-text-field
-									v-model="props.item.quantity"
-									single-line
-									type="number"
-								/>
-							</template>
-						</v-edit-dialog>
+							<v-icon>check</v-icon>
+						</v-btn>
 					</template>
-				</v-data-table>
-				<v-divider />
-			</v-col>
-			<v-col cols="12">
-				<v-list dark>
-					<v-subheader>Summary</v-subheader>
-					<v-row class="ma-0 pa-0"
+					<span>Complete Order</span>
+				</v-tooltip>
+				<v-btn icon
+					color="purple lighten-2"
+					@click="generatePDF()"
+				>
+					<v-icon>print</v-icon>
+				</v-btn>
+				<v-btn icon
+					color="error"
+				>
+					<v-icon>delete</v-icon>
+				</v-btn>
+				<template #extension>
+					<v-row class="ma-0"
 						no-gutters
 					>
-						<v-col cols="12"
-							xl="6"
-							lg="6"
-							md="6"
-							sm="6"
-							class="pa-2"
-						>
-							<v-list-item>
-								<v-list-item-avatar>
-									<v-avatar color="black"
-										class="elevation-12"
-									>
-										<v-icon size="20">
-											two_wheeler
-										</v-icon>
-									</v-avatar>
-								</v-list-item-avatar>
-								<v-list-item-content>
-									<v-list-item-title>{{ (order.delivery_started_at === null) ? 'Not started yet': order.delivery_started_at }}</v-list-item-title>
-									<v-list-item-subtitle>Delivery started at</v-list-item-subtitle>
-								</v-list-item-content>
-							</v-list-item>
-						</v-col>
-						<v-col cols="12"
-							xl="6"
-							lg="6"
-							md="6"
-							sm="6"
-							class="pa-2"
-						>
-							<v-list-item>
-								<v-list-item-avatar>
-									<v-avatar color="black"
-										class="elevation-12"
-									>
-										<v-icon size="20">
-											done
-										</v-icon>
-									</v-avatar>
-								</v-list-item-avatar>
-								<v-list-item-content>
-									<v-list-item-title>{{ (order.delivered_at === null) ? 'Not completed yet' : order.delivered_at }}</v-list-item-title>
-									<v-list-item-subtitle>Order completed at</v-list-item-subtitle>
-								</v-list-item-content>
-							</v-list-item>
-						</v-col>
-						<v-col cols="12"
-							class="pa-2"
-						>
-							<v-text-field
-								v-model="order.custom_location"
-								readonly
-								filled
-								label="Delivery Location"
-								clearable
-								prepend-inner-icon="explore"
-								hide-details="auto"
-							/>
-						</v-col>
-						<v-col cols="12"
-							xl="6"
-							lg="6"
-							md="6"
-							sm="6"
-							class="pa-2"
-						>
-							<v-text-field
-								v-model="order.delivery_charge"
-								readonly
-								filled
-								label="Delivery Charge"
-								type="number"
-								prepend-inner-icon="money"
-								hide-details="auto"
-							/>
-						</v-col>
-						<v-col cols="12"
-							xl="6"
-							lg="6"
-							md="6"
-							sm="6"
-							class="pa-2"
-						>
-							<v-text-field
-								v-model="order.loyalty_discount"
-								readonly
-								filled
-								label="Loyalty Discount (%)"
-								type="number"
-								prepend-inner-icon="emoji_symbols"
-								hide-details="auto"
-							/>
-						</v-col>
-						<v-col v-for="(orderSummaryItem, index) in orderSummaryItems()"
-							:key="index"
-							cols="12"
-							xl="4"
-							lg="4"
-							md="4"
-							sm="4"
-						>
-							<v-list-item :class="orderSummaryItem.class">
-								<v-list-item-avatar>
-									<v-avatar color="black"
-										class="elevation-12"
-									>
-										<v-icon size="20">
-											{{ orderSummaryItem.icon }}
-										</v-icon>
-									</v-avatar>
-								</v-list-item-avatar>
-								<v-list-item-content>
-									<v-list-item-title>
-										{{ orderSummaryItem.value }}
-									</v-list-item-title>
-									<v-list-item-subtitle>
-										{{ orderSummaryItem.field }}
-									</v-list-item-subtitle>
-								</v-list-item-content>
-							</v-list-item>
-						</v-col>
+						<div class="subtitle-2">
+							<v-icon small>
+								account_circle
+							</v-icon>
+							<span class="pl-2">{{ order.created_by.username }}</span>
+							<span class="px-1"><v-icon small>today</v-icon></span>
+							<span class="px-1">{{ $helper.onlyDate(order.created_at) }}</span>
+							<span class="px-1"><v-icon small>history</v-icon></span>
+							<span class="px-1">{{ $helper.onlyTime(order.created_at) }}</span>
+						</div>
 					</v-row>
-				</v-list>
-			</v-col>
-			<v-col cols="12"
-				class="pb-4"
+				</template>
+			</v-toolbar>
+			<v-row v-if="order" class="ma-0 pa-0"
+				no-gutters
 			>
-				<v-btn block
-					large
-					disabled
+				<v-col cols="12">
+					<v-data-table
+						:headers="headers"
+						:search="searchOrderItems"
+						:items="order.cart_items"
+						sort-by="calories"
+						class="elevation-1"
+						hide-default-footer
+					>
+						<template #top>
+							<v-toolbar
+								flat
+								height="auto"
+							>
+								<template #default>
+									<v-row class="ma-0 pa-0"
+										align="center"
+										no-gutters
+									>
+										<v-col cols="12"
+											xl="4"
+											lg="4"
+											md="4"
+											sm="4"
+										>
+											<v-text-field
+												id="search-user"
+												v-model="searchOrderItems"
+												solo
+												clearable
+												hide-details
+												prepend-inner-icon="search"
+												placeholder="Search order items"
+											/>
+										</v-col>
+										<v-fade-transition>
+											<v-col
+												v-if="$vuetify.breakpoint.width > 600"
+												cols="1"
+												class="d-flex justify-center"
+											>
+												<div class="divider-search-inset" />
+											</v-col>
+										</v-fade-transition>
+										<v-col cols="12"
+											xl="7"
+											lg="7"
+											md="7"
+											sm="7"
+										>
+											<v-autocomplete
+												v-model="selectedItems"
+												:disabled="isUpdating"
+												:readonly="order.is_delivered"
+												:items="orderNowRefinedList"
+												filled
+												chips
+												deletable-chips
+												color="grey darken-3"
+												placeholder="Select menu items (*)"
+												item-text="name"
+												item-value="id"
+												item-color="orange darken-2"
+												multiple
+												prepend-inner-icon="emoji_food_beverage"
+												hide-details="auto"
+												clearable
+											>
+												<template #no-data>
+													No <code>menu items</code> available
+												</template>
+												<template #selection="data">
+													<v-chip
+														v-bind="data.attrs"
+														:input-value="data.selected"
+														close
+														@click="data.select"
+														@click:close="removeItemFromSelectedOrderInput(data.item)"
+													>
+														<v-avatar left>
+															<v-img :src="data.item.avatar" />
+														</v-avatar>
+														{{ data.item.name }}
+													</v-chip>
+												</template>
+												<template #item="data">
+													<template v-if="typeof data.item !== 'object'">
+														<v-list-item-content v-text="data.item" />
+													</template>
+													<template v-else>
+														<v-list-item-avatar>
+															<v-img :src="data.item.avatar" />
+														</v-list-item-avatar>
+														<v-list-item-content>
+															<v-list-item-title>{{ data.item.name }}</v-list-item-title>
+															<v-list-item-subtitle>{{ data.item.group }}</v-list-item-subtitle>
+														</v-list-item-content>
+														<v-list-item-action-text>{{ data.item.price }}</v-list-item-action-text>
+													</template>
+												</template>
+												<template #append-outer>
+													<v-avatar v-ripple
+														size="22"
+														color="orange"
+														class="golden-rod-border-2 elevation-4"
+														disabled
+														@click="addSelectedItemsToOrderCart()"
+													>
+														<v-icon>
+															add_circle
+														</v-icon>
+													</v-avatar>
+												</template>
+											</v-autocomplete>
+										</v-col>
+									</v-row>
+								</template>
+							</v-toolbar>
+						</template>
+						<!-- eslint-disable-next-line vue/valid-v-slot-->
+						<template #item.name="{ item }">
+							{{ item.item.name }}
+						</template>
+						<!-- eslint-disable-next-line vue/valid-v-slot-->
+						<template #item.subTotal="{ item }">
+							{{ item.item.price * item.quantity }}
+						</template>
+						<!-- eslint-disable-next-line vue/valid-v-slot-->
+						<template #item.actions="{ item }">
+							<v-icon
+								small
+								class="mr-2"
+								color="error"
+								@click="removeItemFromOrderCart(item)"
+							>
+								close
+							</v-icon>
+						</template>
+						<template #no-data>
+							<v-btn
+								color="primary"
+								@click="initialize"
+							>
+								Reset
+							</v-btn>
+						</template>
+						<!-- eslint-disable-next-line vue/valid-v-slot-->
+						<template #item.quantity="props">
+							<v-edit-dialog
+								v-model:return-value="props.item.quantity"
+								dark
+								@save="updateQuantity(props.item)"
+								@cancel="cancelQuantityUpdate"
+							>
+								{{ props.item.quantity }}
+								<template #input>
+									<v-text-field
+										v-model="props.item.quantity"
+										single-line
+										type="number"
+									/>
+								</template>
+							</v-edit-dialog>
+						</template>
+					</v-data-table>
+					<v-divider />
+				</v-col>
+				<v-col cols="12">
+					<v-list dark>
+						<v-subheader>Summary</v-subheader>
+						<v-row class="ma-0 pa-0"
+							no-gutters
+						>
+							<v-col cols="12"
+								xl="6"
+								lg="6"
+								md="6"
+								sm="6"
+								class="pa-2"
+							>
+								<v-list-item>
+									<v-list-item-avatar>
+										<v-avatar color="black"
+											class="elevation-12"
+										>
+											<v-icon size="20">
+												two_wheeler
+											</v-icon>
+										</v-avatar>
+									</v-list-item-avatar>
+									<v-list-item-content>
+										<v-list-item-title>{{ (order.delivery_started_at === null) ? 'Not started yet': order.delivery_started_at }}</v-list-item-title>
+										<v-list-item-subtitle>Delivery started at</v-list-item-subtitle>
+									</v-list-item-content>
+								</v-list-item>
+							</v-col>
+							<v-col cols="12"
+								xl="6"
+								lg="6"
+								md="6"
+								sm="6"
+								class="pa-2"
+							>
+								<v-list-item>
+									<v-list-item-avatar>
+										<v-avatar color="black"
+											class="elevation-12"
+										>
+											<v-icon size="20">
+												done
+											</v-icon>
+										</v-avatar>
+									</v-list-item-avatar>
+									<v-list-item-content>
+										<v-list-item-title>{{ (order.delivered_at === null) ? 'Not completed yet' : order.delivered_at }}</v-list-item-title>
+										<v-list-item-subtitle>Order completed at</v-list-item-subtitle>
+									</v-list-item-content>
+								</v-list-item>
+							</v-col>
+							<v-col cols="12"
+								class="pa-2"
+							>
+								<v-text-field
+									v-model="order.custom_location"
+									readonly
+									filled
+									label="Delivery Location"
+									clearable
+									prepend-inner-icon="explore"
+									hide-details="auto"
+								/>
+							</v-col>
+							<v-col cols="12"
+								xl="6"
+								lg="6"
+								md="6"
+								sm="6"
+								class="pa-2"
+							>
+								<v-text-field
+									v-model="order.delivery_charge"
+									readonly
+									filled
+									label="Delivery Charge"
+									type="number"
+									prepend-inner-icon="money"
+									hide-details="auto"
+								/>
+							</v-col>
+							<v-col cols="12"
+								xl="6"
+								lg="6"
+								md="6"
+								sm="6"
+								class="pa-2"
+							>
+								<v-text-field
+									v-model="order.loyalty_discount"
+									readonly
+									filled
+									label="Loyalty Discount (%)"
+									type="number"
+									prepend-inner-icon="emoji_symbols"
+									hide-details="auto"
+								/>
+							</v-col>
+							<v-col v-for="(orderSummaryItem, index) in orderSummaryItems()"
+								:key="index"
+								cols="12"
+								xl="4"
+								lg="4"
+								md="4"
+								sm="4"
+							>
+								<v-list-item :class="orderSummaryItem.class">
+									<v-list-item-avatar>
+										<v-avatar color="black"
+											class="elevation-12"
+										>
+											<v-icon size="20">
+												{{ orderSummaryItem.icon }}
+											</v-icon>
+										</v-avatar>
+									</v-list-item-avatar>
+									<v-list-item-content>
+										<v-list-item-title>
+											{{ orderSummaryItem.value }}
+										</v-list-item-title>
+										<v-list-item-subtitle>
+											{{ orderSummaryItem.field }}
+										</v-list-item-subtitle>
+									</v-list-item-content>
+								</v-list-item>
+							</v-col>
+						</v-row>
+					</v-list>
+				</v-col>
+				<v-col cols="12"
+					class="pb-4"
 				>
-					<v-icon>save</v-icon><span class="pl-2">Update Order</span>
-				</v-btn>
-			</v-col>
-		</v-row>
-	</v-card>
+					<v-btn block
+						large
+						disabled
+					>
+						<v-icon>save</v-icon><span class="pl-2">Update Order</span>
+					</v-btn>
+				</v-col>
+			</v-row>
+		</v-card>
+	</v-fade-transition>
 </template>
 <script>
 import jsPDF from "jspdf"
@@ -460,6 +464,7 @@ export default {
 			})
 			this.order = this.orderList
 			this.overlay = false
+			this.show = true
 			this.isUpdating = true
 			await this.$store.dispatch("menuItem/fetchOrderNowList")
 			const cartVsOrderDiff = this.$helper.removeCartedItemsDuplicationFromOrderNowList(

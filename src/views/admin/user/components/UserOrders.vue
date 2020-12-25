@@ -120,9 +120,13 @@ export default {
 				await this.openSnack("Internal server error. Please try again.")
 			}
 			this.isLoading = false
-			this.$bus.emit("load-order", {
-				id: this.userOrders[0].id
-			})
+			if (this.userOrders.length > 0) {
+				this.$bus.emit("load-order", {
+					id: this.userOrders[0].id
+				})
+			} else {
+				this.$bus.emit("hide-update-order-box")
+			}
 		},
 		loadOrderForUpdate(id) {
 			this.$bus.emit("load-order", {
