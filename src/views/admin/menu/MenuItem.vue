@@ -1,153 +1,172 @@
 <template>
-	<v-data-table
-		dark
-		:loading="isLoading"
-		:headers="headers"
-		:items="menuItems"
-		:search="searchMenuItem"
-		class="elevation-1"
-	>
-		<template #top>
-			<v-toolbar
-				flat
+	<div>
+		<v-row class="ma-0 pa-0">
+			<v-breadcrumbs v-if="!isLoading"
+				dark
+				:items="menuItemBreadcrumbs"
+				class="px-1 pt-3"
 			>
-				<v-toolbar-title>Menu Items</v-toolbar-title>
-				<v-divider
-					class="mx-4"
-					inset
-					vertical
-				/>
-				<v-text-field
-					id="search-user"
-					v-model="searchMenuItem"
-					solo
-					dense
-					clearable
-					hide-details
-					prepend-inner-icon="search"
-					placeholder="Search menu items"
-				/>
-				<v-spacer />
-				<v-divider
-					class="mx-4"
-					inset
-					vertical
-				/>
-				<v-btn
-					dark
-					color="primary"
-					@click="openAddMenuItemFormDialog"
-				>
-					<v-icon
-						dark
-						:class="$vuetify.breakpoint.smAndUp ? 'mr-2' : ''"
+				<template #item="{ item }">
+					<v-breadcrumbs-item
+						class="admin-breadcrumb-item"
+						:href="item.href"
+						:disabled="item.disabled"
 					>
-						add_circle
-					</v-icon>
-					<span v-if="$vuetify.breakpoint.smAndUp">New Menu Item</span>
-				</v-btn>
-				<menu-item-form-dialog />
-			</v-toolbar>
-		</template>
-		<!-- eslint-disable-next-line vue/valid-v-slot-->
-		<template #item.name="props">
-			<v-edit-dialog
-				v-model:return-value="props.item.name"
-				dark
-				@save="updateName(props.item)"
-				@cancel="cancelNameUpdate"
-			>
-				<span class="menu-item-name">{{ props.item.name }}</span>
-				<template #input>
-					<v-text-field
-						v-model="props.item.name"
-						single-line
-						counter
-					/>
+						{{ item.text.toUpperCase() }}
+					</v-breadcrumbs-item>
 				</template>
-			</v-edit-dialog>
-		</template>
-		<!-- eslint-disable-next-line vue/valid-v-slot-->
-		<template #item.price="props">
-			<v-edit-dialog
-				v-model:return-value="props.item.price"
-				dark
-				@save="updatePrice(props.item)"
-				@cancel="cancelPriceUpdate"
-			>
-				<span class="menu-item-price">{{ props.item.price }}</span>
-				<template #input>
-					<v-text-field
-						v-model="props.item.price"
-						single-line
-						type="number"
-					/>
-				</template>
-			</v-edit-dialog>
-		</template>
-		<!-- eslint-disable-next-line vue/valid-v-slot-->
-		<template #item.is_veg="{ item }">
-			<v-checkbox v-model="item.is_veg"
-				color="green"
-				@change="updateIsVeg(item)"
-			/>
-		</template>
-		<!-- eslint-disable-next-line vue/valid-v-slot-->
-		<template #item.is_available="{ item }">
-			<v-checkbox v-model="item.is_available"
-				color="orange"
-				@change="updateIsAvailable(item)"
-			/>
-		</template>
-		<!-- eslint-disable-next-line vue/valid-v-slot-->
-		<template #item.is_bar_item="{ item }">
-			<v-checkbox v-model="item.is_bar_item"
-				color="orange"
-				@change="updateIsBarItem(item)"
-			/>
-		</template>
-		<!-- eslint-disable-next-line vue/valid-v-slot-->
-		<template #item.type="{ item }">
-			<v-row class="ma-0 pa-0 fill-height"
-				align="center"
-			>
-				<v-avatar v-for="itemType of item.item_type"
-					:key="itemType.id"
-					size="20"
-					class="mr-2"
+			</v-breadcrumbs>
+		</v-row>
+		<v-data-table
+			dark
+			:loading="isLoading"
+			:headers="headers"
+			:items="menuItems"
+			:search="searchMenuItem"
+			class="elevation-1"
+		>
+			<template #top>
+				<v-toolbar
+					flat
 				>
-					<v-img :src="itemType.badge" />
-				</v-avatar>
-			</v-row>
-		</template>
-		<!-- eslint-disable-next-line vue/valid-v-slot-->
-		<template #item.actions="{ item }">
-			<v-btn icon
-				color="primary"
-				@click="openEditMenuItemFormDialog(item)"
-			>
-				<v-icon size="20">
-					edit
-				</v-icon>
-			</v-btn>
-			<v-btn icon
-				color="error"
-				@click="deleteItem(item)"
-			>
-				<v-icon size="20">
-					delete
-				</v-icon>
-			</v-btn>
-		</template>
-		<template #no-data>
-			<v-btn
-				color="primary"
-				@click="initialize"
-			>
-				Reset
-			</v-btn>
-		</template>
-	</v-data-table>
+					<v-toolbar-title>Menu Items</v-toolbar-title>
+					<v-divider
+						class="mx-4"
+						inset
+						vertical
+					/>
+					<v-text-field
+						id="search-user"
+						v-model="searchMenuItem"
+						solo
+						dense
+						clearable
+						hide-details
+						prepend-inner-icon="search"
+						placeholder="Search menu items"
+					/>
+					<v-spacer />
+					<v-divider
+						class="mx-4"
+						inset
+						vertical
+					/>
+					<v-btn
+						dark
+						color="primary"
+						@click="openAddMenuItemFormDialog"
+					>
+						<v-icon
+							dark
+							:class="$vuetify.breakpoint.smAndUp ? 'mr-2' : ''"
+						>
+							add_circle
+						</v-icon>
+						<span v-if="$vuetify.breakpoint.smAndUp">New Menu Item</span>
+					</v-btn>
+					<menu-item-form-dialog />
+				</v-toolbar>
+			</template>
+			<!-- eslint-disable-next-line vue/valid-v-slot-->
+			<template #item.name="props">
+				<v-edit-dialog
+					v-model:return-value="props.item.name"
+					dark
+					@save="updateName(props.item)"
+					@cancel="cancelNameUpdate"
+				>
+					<span class="menu-item-name">{{ props.item.name }}</span>
+					<template #input>
+						<v-text-field
+							v-model="props.item.name"
+							single-line
+							counter
+						/>
+					</template>
+				</v-edit-dialog>
+			</template>
+			<!-- eslint-disable-next-line vue/valid-v-slot-->
+			<template #item.price="props">
+				<v-edit-dialog
+					v-model:return-value="props.item.price"
+					dark
+					@save="updatePrice(props.item)"
+					@cancel="cancelPriceUpdate"
+				>
+					<span class="menu-item-price">{{ props.item.price }}</span>
+					<template #input>
+						<v-text-field
+							v-model="props.item.price"
+							single-line
+							type="number"
+						/>
+					</template>
+				</v-edit-dialog>
+			</template>
+			<!-- eslint-disable-next-line vue/valid-v-slot-->
+			<template #item.is_veg="{ item }">
+				<v-checkbox v-model="item.is_veg"
+					color="green"
+					@change="updateIsVeg(item)"
+				/>
+			</template>
+			<!-- eslint-disable-next-line vue/valid-v-slot-->
+			<template #item.is_available="{ item }">
+				<v-checkbox v-model="item.is_available"
+					color="orange"
+					@change="updateIsAvailable(item)"
+				/>
+			</template>
+			<!-- eslint-disable-next-line vue/valid-v-slot-->
+			<template #item.is_bar_item="{ item }">
+				<v-checkbox v-model="item.is_bar_item"
+					color="orange"
+					@change="updateIsBarItem(item)"
+				/>
+			</template>
+			<!-- eslint-disable-next-line vue/valid-v-slot-->
+			<template #item.type="{ item }">
+				<v-row class="ma-0 pa-0 fill-height"
+					align="center"
+				>
+					<v-avatar v-for="itemType of item.item_type"
+						:key="itemType.id"
+						size="20"
+						class="mr-2"
+					>
+						<v-img :src="itemType.badge" />
+					</v-avatar>
+				</v-row>
+			</template>
+			<!-- eslint-disable-next-line vue/valid-v-slot-->
+			<template #item.actions="{ item }">
+				<v-btn icon
+					color="primary"
+					@click="openEditMenuItemFormDialog(item)"
+				>
+					<v-icon size="20">
+						edit
+					</v-icon>
+				</v-btn>
+				<v-btn icon
+					color="error"
+					@click="deleteItem(item)"
+				>
+					<v-icon size="20">
+						delete
+					</v-icon>
+				</v-btn>
+			</template>
+			<template #no-data>
+				<v-btn
+					color="primary"
+					@click="initialize"
+				>
+					Reset
+				</v-btn>
+			</template>
+		</v-data-table>
+	</div>
 </template>
 <script>
 import { mapGetters } from "vuex"
@@ -171,6 +190,17 @@ export default {
 			{ text: "AVAILABLE?", value: "is_available", align: "center" },
 			{ text: "TYPE", value: "type"},
 		],
+		menuItemBreadcrumbs: [
+			{
+				text: "> Home",
+				disabled: false,
+				href: "/admin/home",
+			},
+			{
+				text: "Menu Items",
+				disabled: true,
+			}
+		]
 	}),
 
 	computed: {

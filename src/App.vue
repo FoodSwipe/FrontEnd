@@ -76,4 +76,13 @@ export default {
 .number-font {
 	font-family: 'Yeon Sung', cursive;
 }
+.admin-breadcrumb-item {
+	font-family: 'Righteous', cursive;
+	a {
+		color: white !important;
+	}
+	.v-breadcrumbs__item--disabled {
+		color: grey !important;
+	}
+}
 </style>

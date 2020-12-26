@@ -1,147 +1,166 @@
 <template>
-	<v-data-table
-		:loading="loading"
-		dark
-		:search="searchUsers"
-		:headers="headers"
-		:items="users"
-		class="elevation-1"
-	>
-		<template #top>
-			<v-toolbar
-				flat
+	<div>
+		<v-row class="ma-0 pa-0">
+			<v-breadcrumbs v-if="!loading"
+				dark
+				:items="userPageBreadcrumbs"
+				class="px-1 pt-3"
 			>
-				<v-app-bar-nav-icon>
-					<v-icon>
-						group
-					</v-icon>
-				</v-app-bar-nav-icon>
-				<v-toolbar-title v-show="$vuetify.breakpoint.smAndUp">
-					Food Swipe Users
-				</v-toolbar-title>
-				<v-divider
-					inset
-					vertical
-					class="mx-4"
-				/>
-				<v-text-field
-					id="search-user"
-					v-model="searchUsers"
-					solo
-					dense
-					clearable
-					hide-details
-					prepend-inner-icon="search"
-					placeholder="Search Users"
-				/>
-				<v-spacer />
-				<v-divider
-					inset
-					vertical
-					class="mx-4"
-				/>
-				<v-btn
-					dark
-					color="primary"
-					@click="openAddUserFormDialog"
-				>
-					<v-icon
-						dark
-						:class="$vuetify.breakpoint.smAndUp ? 'mr-2' : ''"
+				<template #item="{ item }">
+					<v-breadcrumbs-item
+						class="admin-breadcrumb-item"
+						:href="item.href"
+						:disabled="item.disabled"
 					>
-						add_circle
-					</v-icon>
-					<span v-if="$vuetify.breakpoint.smAndUp">New User</span>
+						{{ item.text.toUpperCase() }}
+					</v-breadcrumbs-item>
+				</template>
+			</v-breadcrumbs>
+		</v-row>
+		<v-data-table
+			:loading="loading"
+			dark
+			:search="searchUsers"
+			:headers="headers"
+			:items="users"
+			class="elevation-1"
+		>
+			<template #top>
+				<v-toolbar
+					flat
+				>
+					<v-app-bar-nav-icon>
+						<v-icon>
+							group
+						</v-icon>
+					</v-app-bar-nav-icon>
+					<v-toolbar-title v-show="$vuetify.breakpoint.smAndUp">
+						Food Swipe Users
+					</v-toolbar-title>
+					<v-divider
+						inset
+						vertical
+						class="mx-4"
+					/>
+					<v-text-field
+						id="search-user"
+						v-model="searchUsers"
+						solo
+						dense
+						clearable
+						hide-details
+						prepend-inner-icon="search"
+						placeholder="Search Users"
+					/>
+					<v-spacer />
+					<v-divider
+						inset
+						vertical
+						class="mx-4"
+					/>
+					<v-btn
+						dark
+						color="primary"
+						@click="openAddUserFormDialog"
+					>
+						<v-icon
+							dark
+							:class="$vuetify.breakpoint.smAndUp ? 'mr-2' : ''"
+						>
+							add_circle
+						</v-icon>
+						<span v-if="$vuetify.breakpoint.smAndUp">New User</span>
+					</v-btn>
+					<user-form-dialog />
+				</v-toolbar>
+			</template>
+			<!-- eslint-disable-next-line vue/valid-v-slot-->
+			<template #item.username="{item}">
+				<div
+					class="cursor"
+					@click="routeToUserDetailPage(item.user.id)"
+				>
+					{{ item.user.username }}
+				</div>
+			</template>
+			<!-- eslint-disable-next-line vue/valid-v-slot-->
+			<template #item.contact="props">
+				<v-edit-dialog
+					v-model:return-value="props.item.contact"
+					dark
+					@save="updatePhone(props.item)"
+					@cancel="cancelPhoneUpdate"
+				>
+					<span class="user-phone">{{ props.item.contact }}</span>
+					<template #input>
+						<v-text-field
+							v-model="props.item.contact"
+							single-line
+							type="number"
+						/>
+					</template>
+				</v-edit-dialog>
+			</template>
+			<!-- eslint-disable-next-line vue/valid-v-slot-->
+			<template #item.address="props">
+				<v-edit-dialog
+					v-model:return-value="props.item.address"
+					dark
+					@save="updateAddress(props.item)"
+					@cancel="cancelAddressUpdate"
+				>
+					<span class="user-address">{{ props.item.address }}</span>
+					<template #input>
+						<v-text-field
+							v-model="props.item.address"
+							single-line
+							counter
+						/>
+					</template>
+				</v-edit-dialog>
+			</template>
+			<!-- eslint-disable-next-line vue/valid-v-slot-->
+			<template #item.actions="{ item }">
+				<v-icon
+					small
+					class="mr-2"
+					color="primary"
+					@click="openEditUserFormDialog(item)"
+				>
+					edit
+				</v-icon>
+				<v-icon
+					small
+					color="error"
+					@click="deleteUser(item)"
+				>
+					delete
+				</v-icon>
+			</template>
+			<template #no-data>
+				<v-btn
+					color="primary"
+					@click="initialize"
+				>
+					Reset
 				</v-btn>
-				<user-form-dialog />
-			</v-toolbar>
-		</template>
-		<!-- eslint-disable-next-line vue/valid-v-slot-->
-		<template #item.username="{item}">
-			<div
-				class="cursor"
-				@click="routeToUserDetailPage(item.user.id)"
-			>
-				{{ item.user.username }}
-			</div>
-		</template>
-		<!-- eslint-disable-next-line vue/valid-v-slot-->
-		<template #item.contact="props">
-			<v-edit-dialog
-				v-model:return-value="props.item.contact"
-				dark
-				@save="updatePhone(props.item)"
-				@cancel="cancelPhoneUpdate"
-			>
-				<span class="user-phone">{{ props.item.contact }}</span>
-				<template #input>
-					<v-text-field
-						v-model="props.item.contact"
-						single-line
-						type="number"
-					/>
-				</template>
-			</v-edit-dialog>
-		</template>
-		<!-- eslint-disable-next-line vue/valid-v-slot-->
-		<template #item.address="props">
-			<v-edit-dialog
-				v-model:return-value="props.item.address"
-				dark
-				@save="updateAddress(props.item)"
-				@cancel="cancelAddressUpdate"
-			>
-				<span class="user-address">{{ props.item.address }}</span>
-				<template #input>
-					<v-text-field
-						v-model="props.item.address"
-						single-line
-						counter
-					/>
-				</template>
-			</v-edit-dialog>
-		</template>
-		<!-- eslint-disable-next-line vue/valid-v-slot-->
-		<template #item.actions="{ item }">
-			<v-icon
-				small
-				class="mr-2"
-				color="primary"
-				@click="openEditUserFormDialog(item)"
-			>
-				edit
-			</v-icon>
-			<v-icon
-				small
-				color="error"
-				@click="deleteUser(item)"
-			>
-				delete
-			</v-icon>
-		</template>
-		<template #no-data>
-			<v-btn
-				color="primary"
-				@click="initialize"
-			>
-				Reset
-			</v-btn>
-		</template>
-		<!-- eslint-disable-next-line vue/valid-v-slot-->
-		<template #item.is_superuser="{item}">
-			<v-checkbox v-model="item.user.is_superuser"
-				color="orange darken-3"
-				@change="toggleSuperUserStatus(item)"
-			/>
-		</template>
-		<!-- eslint-disable-next-line vue/valid-v-slot-->
-		<template #item.is_staff="{item}">
-			<v-checkbox v-model="item.user.is_staff"
-				color="pink darken-3"
-				@change="toggleStaffUserStatus(item)"
-			/>
-		</template>
-	</v-data-table>
+			</template>
+			<!-- eslint-disable-next-line vue/valid-v-slot-->
+			<template #item.is_superuser="{item}">
+				<v-checkbox v-model="item.user.is_superuser"
+					color="orange darken-3"
+					@change="toggleSuperUserStatus(item)"
+				/>
+			</template>
+			<!-- eslint-disable-next-line vue/valid-v-slot-->
+			<template #item.is_staff="{item}">
+				<v-checkbox v-model="item.user.is_staff"
+					color="pink darken-3"
+					@change="toggleStaffUserStatus(item)"
+				/>
+			</template>
+		</v-data-table>
+	</div>
 </template>
 <script>
 import router from "@/router"
@@ -168,7 +187,21 @@ export default {
 	computed: {
 		...mapGetters({
 			users: "user/allUsers"
-		})
+		}),
+		userPageBreadcrumbs() {
+			return [
+				{
+					text: "> Home",
+					disabled: false,
+					href: "/admin/home",
+				},
+				{
+					text: "Users",
+					disabled: true,
+					href: "/admin/user",
+				}
+			]
+		}
 	},
 	async created() {
 		this.$bus.on("reload-users", this.initialize)

@@ -49,5 +49,17 @@
   "review": {
     "list": "review/",
     "detail": "review/%s/"
+  },
+  "homePageContent": {
+    "list": "homepage-content/",
+    "detail": "homepage-content/%s/"
+  },
+  "log": {
+    "list": "log/",
+    "detail": "log/%s/"
+  },
+  "transaction": {
+    "list": "transaction/",
+    "detail": "transaction/%s/"
   }
 }

@@ -5,6 +5,23 @@
 		class="rounded-0" width="100vw"
 		color="transparent"
 	>
+		<v-row class="ma-0 pa-0">
+			<v-breadcrumbs v-if="!isLoading"
+				dark
+				:items="userDetailBreadcrumbs"
+				class="px-1 pt-3"
+			>
+				<template #item="{ item }">
+					<v-breadcrumbs-item
+						class="admin-breadcrumb-item"
+						:href="item.href"
+						:disabled="item.disabled"
+					>
+						{{ item.text.toUpperCase() }}
+					</v-breadcrumbs-item>
+				</template>
+			</v-breadcrumbs>
+		</v-row>
 		<v-card-title v-if="user"
 			class="py-1 d-flex justify-center"
 		>
@@ -59,12 +76,31 @@ export default {
 	},
 	data: () => ({
 		show: true,
-		isLoading: false
+		isLoading: false,
 	}),
 	computed: {
 		...mapGetters({
 			user: "user/user"
-		})
+		}),
+		userDetailBreadcrumbs() {
+			return [
+				{
+					text: "> Home",
+					disabled: false,
+					href: "/admin/home",
+				},
+				{
+					text: "Users",
+					disabled: false,
+					href: "/admin/user",
+				},
+				{
+					text: this.user.username,
+					disabled: true,
+					href: "breadcrumbs_link_2",
+				},
+			]
+		}
 	},
 	async created() {
 		this.$bus.on("hide-update-order-box", this.hideUpdateOrderBox)

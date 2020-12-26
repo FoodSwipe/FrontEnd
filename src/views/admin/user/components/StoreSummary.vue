@@ -13,7 +13,7 @@
 			>
 				<v-list-item-avatar>
 					<v-avatar color="blue">
-						{{ item.field[0] }}
+						{{ item.field[6] }}
 					</v-avatar>
 				</v-list-item-avatar>
 				<v-list-item-content>

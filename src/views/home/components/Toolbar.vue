@@ -3,69 +3,29 @@
 		<v-app-bar
 			app
 			color="#FFC107"
-			height="58"
+			height="auto"
 			width="100vw"
 			class="ma-0 pr-4"
 		>
 			<div class="organization-title">
-				{{ $route.name }}
+				<v-card-title class="org-name cursor"
+					@click="toHome"
+				>
+					Food Swipe
+				</v-card-title>
+				<v-fade-transition>
+					<v-card-subtitle v-if="$route.name !== 'Food Swipe'">
+						{{ $route.name }}
+					</v-card-subtitle>
+				</v-fade-transition>
 			</div>
 			<v-spacer />
-			<v-tooltip bottom>
+			<v-tooltip v-if="currentUser === null"
+				bottom
+			>
 				<template #activator="{on, attrs}">
 					<v-scale-transition>
 						<v-btn
-							v-if="currentUser !== null"
-							icon
-							small
-							class="pr-0 mr-sm-6 mr-md-6 mr-lg-6 mr-xl-6"
-							v-bind="attrs"
-							@click="logOut()"
-							v-on="on"
-						>
-							<v-icon :size="
-								$vuetify.breakpoint.width > 300
-									? ''
-									: '16'
-							"
-							>
-								logout
-							</v-icon>
-						</v-btn>
-					</v-scale-transition>
-				</template>
-				<span>Logout</span>
-			</v-tooltip>
-			<v-tooltip bottom>
-				<template #activator="{on, attrs}">
-					<v-scale-transition>
-						<v-btn
-							v-show="$route.name !== 'Food Swipe'"
-							icon
-							small
-							class="pr-0 mr-sm-6 mr-md-6 mr-lg-6 mr-xl-6"
-							v-bind="attrs"
-							@click="toHome()"
-							v-on="on"
-						>
-							<v-icon :size="
-								$vuetify.breakpoint.width > 300
-									? ''
-									: '16'
-							"
-							>
-								home
-							</v-icon>
-						</v-btn>
-					</v-scale-transition>
-				</template>
-				<span>Home</span>
-			</v-tooltip>
-			<v-tooltip bottom>
-				<template #activator="{on, attrs}">
-					<v-scale-transition>
-						<v-btn
-							v-if="currentUser === null"
 							v-bind="attrs"
 							icon
 							small
@@ -80,30 +40,56 @@
 								input
 							</v-icon>
 						</v-btn>
-						<v-btn
-							v-else
-							v-show="$route.name !== 'Profile'"
-							icon
-							small
-							class="pr-0 mr-sm-6 mr-md-6 mr-lg-6 mr-xl-6 profile-avatar cursor"
-							v-bind="attrs"
-							@click="toProfile()"
-							v-on="on"
-						>
-							<v-icon :size="
-								$vuetify.breakpoint.width > 300
-									? ''
-									: '16'
-							"
-							>
-								account_circle
-							</v-icon>
-						</v-btn>
 					</v-scale-transition>
 				</template>
-				<span v-if="currentUser === null">Login</span>
-				<span v-else>Profile</span>
+				<span>Login</span>
 			</v-tooltip>
+			<v-menu
+				v-else
+				close-on-content-click
+				offset-y
+				transition="scale-transition"
+				nudge-left="45"
+				nudge-bottom="5"
+			>
+				<template #activator="{on, attrs}">
+					<v-btn
+						icon
+						small
+						class="pr-0 mr-sm-6 mr-md-6 mr-lg-6 mr-xl-6 profile-avatar cursor"
+						v-bind="attrs"
+						v-on="on"
+					>
+						<v-icon :size="
+							$vuetify.breakpoint.width > 300
+								? ''
+								: '16'
+						"
+						>
+							account_circle
+						</v-icon>
+					</v-btn>
+				</template>
+				<v-list color="orange lighten-4">
+					<v-list-item>
+						<v-list-item-icon class="mr-2">
+							<v-icon>account_circle</v-icon>
+						</v-list-item-icon>
+						<v-list-item-title @click="toProfile()">
+							Profile
+						</v-list-item-title>
+					</v-list-item>
+					<v-divider class="ml-4" />
+					<v-list-item>
+						<v-list-item-icon class="mr-2">
+							<v-icon>input</v-icon>
+						</v-list-item-icon>
+						<v-list-item-title @click="logOut()">
+							Logout
+						</v-list-item-title>
+					</v-list-item>
+				</v-list>
+			</v-menu>
 			<v-tooltip bottom>
 				<template #activator="{on, attrs}">
 					<v-slide-x-transition>
@@ -236,7 +222,7 @@
 					</v-col>
 				</v-row>
 			</v-img>
-			<v-form>
+			<v-form class="login-form">
 				<v-row class="ma-0 pa-0"
 					justify="center" align="center"
 				>
@@ -676,18 +662,17 @@ export default {
 .organization-title
 	transition: all .3s
 	text-transform: uppercase
-	font-size: 1.5rem
-	line-height: 1.5rem
 	font-family: MainframeBB, serif
-	@media only screen and (max-width: 600px)
-		font-size: 1.3rem
-		line-height: 1.3rem
-	@media only screen and (max-width: 320px)
-		font-size: 1.1rem
-		line-height: 1.1rem
-	@media only screen and (max-width: 220px)
-		font-size: .8rem
-		line-height: .8rem
+	::v-deep.org-name
+		@media only screen and (max-width: 600px)
+		font-size: 1.3rem !important
+		line-height: 1.3rem !important
+		@media only screen and (max-width: 400px)
+			font-size: 1.1rem !important
+			line-height: 1.1rem !important
+		@media only screen and (max-width: 220px)
+			font-size: .8rem !important
+			line-height: .8rem !important
 .profile-avatar
 	border: 2px solid white
 .login-terms

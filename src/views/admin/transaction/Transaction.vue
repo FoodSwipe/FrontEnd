@@ -1,146 +1,166 @@
 <template>
-	<v-data-table
-		v-model:expanded="expanded"
-		dark
-		:headers="dessertHeaders"
-		:items="desserts"
-		:search="searchTransactions"
-		:single-expand="true"
-		show-expand
-		class="elevation-1"
-		item-key="order.id"
-	>
-		<template #top>
-			<v-toolbar flat
-				height="auto"
-				class="px-3"
+	<div>
+		<v-row class="ma-0 pa-0">
+			<v-breadcrumbs v-if="!isLoading"
+				dark
+				:items="transactionPageBreadcrumbs"
+				class="px-1 pt-3"
 			>
-				<v-toolbar-title>
-					<v-avatar size="32"
-						class="elevation-4 golden-rod-border-2" color="orange"
+				<template #item="{ item }">
+					<v-breadcrumbs-item
+						class="admin-breadcrumb-item"
+						:href="item.href"
+						:disabled="item.disabled"
 					>
-						<v-img src="https://banner2.cleanpng.com/20180427/zle/kisspng-financial-transaction-finance-money-credit-card-co-e-commerce-5ae3503a9e8fc2.5425949615248466506495.jpg" />
-					</v-avatar>
-					<v-fade-transition mode="out-in">
-						<span v-if="$vuetify.breakpoint.width > 600"
-							class="px-2"
-						>Transactions</span>
-					</v-fade-transition>
-				</v-toolbar-title>
-				<v-divider inset
-					vertical
-					class="mx-4 my-2"
-				/>
-				<v-text-field
-					v-model="searchTransactions"
-					solo
-					dense
-					clearable label="Search transactions"
-					hide-details
-					prepend-inner-icon="search"
-				/>
-				<v-divider inset
-					vertical
-					class="mx-4 my-2"
-				/>
-				<date-filter what-to-filter="transaction" />
-				<v-divider inset
-					vertical
-					class="mx-4 my-2"
-				/>
-				<v-menu offset-y>
-					<template #activator="{ on, attrs }">
-						<v-btn icon
-							v-bind="attrs"
-							v-on="on"
-						>
-							<v-icon>filter_list</v-icon>
-						</v-btn>
-					</template>
-					<dropdown-list :filter-options="filterTransactionsOptions" />
-				</v-menu>
-			</v-toolbar>
-		</template>
-		<!-- eslint-disable-next-line vue/valid-v-slot-->
-		<template #item.actions="{ item }">
-			<v-btn icon
-				@click="deleteTransaction(item)"
-			>
-				<v-icon
-					size="20"
-					color="error"
+						{{ item.text.toUpperCase() }}
+					</v-breadcrumbs-item>
+				</template>
+			</v-breadcrumbs>
+		</v-row>
+		<v-data-table
+			v-model:expanded="expanded"
+			:loading="isLoading"
+			dark
+			:headers="dessertHeaders"
+			:items="desserts"
+			:search="searchTransactions"
+			:single-expand="true"
+			show-expand
+			class="elevation-1"
+			item-key="order.id"
+		>
+			<template #top>
+				<v-toolbar flat
+					height="auto"
+					class="px-3"
 				>
-					delete
-				</v-icon>
-			</v-btn>
-		</template>
-		<template #expanded-item="{ headers, item }">
-			<td :colspan="headers.length">
-				<v-row class="ma-0 pa-0 py-1">
-					<v-col cols="12"
-						class="py-1 d-flex align-center"
+					<v-toolbar-title>
+						<v-avatar size="32"
+							class="elevation-4 golden-rod-border-2" color="orange"
+						>
+							<v-img src="https://banner2.cleanpng.com/20180427/zle/kisspng-financial-transaction-finance-money-credit-card-co-e-commerce-5ae3503a9e8fc2.5425949615248466506495.jpg" />
+						</v-avatar>
+						<v-fade-transition mode="out-in">
+							<span v-if="$vuetify.breakpoint.width > 600"
+								class="px-2"
+							>Transactions</span>
+						</v-fade-transition>
+					</v-toolbar-title>
+					<v-divider inset
+						vertical
+						class="mx-4 my-2"
+					/>
+					<v-text-field
+						v-model="searchTransactions"
+						solo
+						dense
+						clearable label="Search transactions"
+						hide-details
+						prepend-inner-icon="search"
+					/>
+					<v-divider inset
+						vertical
+						class="mx-4 my-2"
+					/>
+					<date-filter what-to-filter="transaction" />
+					<v-divider inset
+						vertical
+						class="mx-4 my-2"
+					/>
+					<v-menu offset-y>
+						<template #activator="{ on, attrs }">
+							<v-btn icon
+								v-bind="attrs"
+								v-on="on"
+							>
+								<v-icon>filter_list</v-icon>
+							</v-btn>
+						</template>
+						<dropdown-list :filter-options="filterTransactionsOptions" />
+					</v-menu>
+				</v-toolbar>
+			</template>
+			<!-- eslint-disable-next-line vue/valid-v-slot-->
+			<template #item.actions="{ item }">
+				<v-btn icon
+					@click="deleteTransaction(item)"
+				>
+					<v-icon
+						size="20"
+						color="error"
 					>
-						<span class="more-info">More info about #{{ item.order.id }}</span>
-					</v-col>
-					<v-col cols="12"
-						class="ma-0 pa-0"
-					>
-						<v-divider class="mt-2 mb-1" />
-					</v-col>
-					<v-col cols="12"
-						xl="6"
-						lg="6"
-						md="6"
-						sm="6"
-						class="py-1"
-					>
-						<v-icon>add_circle</v-icon>
-						<span class="px-2">Created by</span>
-						<b>{{ item.created_by }}</b>
-						<span class="px-1">on</span>
-						<b>{{ item.created_at }}</b>
-					</v-col>
-					<v-col cols="12"
-						xl="6"
-						lg="6"
-						md="6"
-						sm="6"
-						class="py-1"
-					>
-						<v-icon>history</v-icon>
-						<span class="px-2">Last modified by</span>
-						<b>{{ item.updated_by }}</b>
-						<span class="px-1">on</span>
-						<b>{{ item.updated_at }}</b>
-					</v-col>
-					<v-col cols="12"
-						xl="6"
-						lg="6"
-						md="6"
-						sm="6"
-						class="py-1"
-					>
-						<v-icon>person_pin</v-icon>
-						<span class="px-2">On behalf of</span>
-						<b>{{ item.order.created_by }}</b>
-						<span class="px-1">from</span>
-						<b>{{ item.order.delivery_location }}</b>
-					</v-col>
-					<v-col cols="12"
-						xl="6"
-						lg="6"
-						md="6"
-						sm="6"
-						class="py-1"
-					>
-						<v-icon>shopping_cart</v-icon>
-						<span class="px-2">Order placed on</span>
-						<b>{{ item.order.created_at }}</b>
-					</v-col>
-				</v-row>
-			</td>
-		</template>
-	</v-data-table>
+						delete
+					</v-icon>
+				</v-btn>
+			</template>
+			<template #expanded-item="{ headers, item }">
+				<td :colspan="headers.length">
+					<v-row class="ma-0 pa-0 py-1">
+						<v-col cols="12"
+							class="py-1 d-flex align-center"
+						>
+							<span class="more-info">More info about #{{ item.order.id }}</span>
+						</v-col>
+						<v-col cols="12"
+							class="ma-0 pa-0"
+						>
+							<v-divider class="mt-2 mb-1" />
+						</v-col>
+						<v-col cols="12"
+							xl="6"
+							lg="6"
+							md="6"
+							sm="6"
+							class="py-1"
+						>
+							<v-icon>add_circle</v-icon>
+							<span class="px-2">Created by</span>
+							<b>{{ item.created_by }}</b>
+							<span class="px-1">on</span>
+							<b>{{ item.created_at }}</b>
+						</v-col>
+						<v-col cols="12"
+							xl="6"
+							lg="6"
+							md="6"
+							sm="6"
+							class="py-1"
+						>
+							<v-icon>history</v-icon>
+							<span class="px-2">Last modified by</span>
+							<b>{{ item.updated_by }}</b>
+							<span class="px-1">on</span>
+							<b>{{ item.updated_at }}</b>
+						</v-col>
+						<v-col cols="12"
+							xl="6"
+							lg="6"
+							md="6"
+							sm="6"
+							class="py-1"
+						>
+							<v-icon>person_pin</v-icon>
+							<span class="px-2">On behalf of</span>
+							<b>{{ item.order.created_by }}</b>
+							<span class="px-1">from</span>
+							<b>{{ item.order.delivery_location }}</b>
+						</v-col>
+						<v-col cols="12"
+							xl="6"
+							lg="6"
+							md="6"
+							sm="6"
+							class="py-1"
+						>
+							<v-icon>shopping_cart</v-icon>
+							<span class="px-2">Order placed on</span>
+							<b>{{ item.order.created_at }}</b>
+						</v-col>
+					</v-row>
+				</td>
+			</template>
+		</v-data-table>
+	</div>
 </template>
 <script>
 export default {
@@ -151,6 +171,7 @@ export default {
 	},
 	data() {
 		return {
+			isLoading: false,
 			expanded: [],
 			singleExpand: false,
 			searchTransactions: "",
@@ -222,12 +243,22 @@ export default {
 			filterTransactionsOptions: [
 				{icon: "history", title: "Recent First"},
 				{icon: "stars", title: "Top Transactions"},
+			],
+			transactionPageBreadcrumbs: [
+				{
+					text: "> Home",
+					disabled: false,
+					href: "/admin/home",
+				},
+				{
+					text: "Transactions",
+					disabled: true,
+				}
 			]
 		}
 	},
 	methods: {
 		deleteTransaction() {
-
 		},
 	}
 }

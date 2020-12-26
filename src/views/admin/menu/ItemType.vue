@@ -1,6 +1,24 @@
 <template>
 	<div>
+		<v-row class="ma-0 pa-0">
+			<v-breadcrumbs v-if="!loading"
+				dark
+				:items="itemTypeBreadcrumbs"
+				class="px-1 pt-3"
+			>
+				<template #item="{ item }">
+					<v-breadcrumbs-item
+						class="admin-breadcrumb-item"
+						:href="item.href"
+						:disabled="item.disabled"
+					>
+						{{ item.text.toUpperCase() }}
+					</v-breadcrumbs-item>
+				</template>
+			</v-breadcrumbs>
+		</v-row>
 		<v-data-table
+			:loading="loading"
 			dark
 			:search="searchItemTypes"
 			:headers="headers"
@@ -206,7 +224,20 @@ export default {
 		...mapGetters({
 			itemTypes: "itemType/allItemTypes",
 			addItemTypeErrorMessages: "itemType/addItemTypeErrorMessages"
-		})
+		}),
+		itemTypeBreadcrumbs() {
+			return [
+				{
+					text: "> Home",
+					disabled: false,
+					href: "/admin/home",
+				},
+				{
+					text: "Item Types",
+					disabled: true,
+				}
+			]
+		}
 	},
 	created() {
 		this.initialize();
