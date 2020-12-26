@@ -2,8 +2,9 @@
 	<div>
 		<v-app-bar
 			app
+			fixed
 			color="#FFC107"
-			height="auto"
+			height="80"
 			width="100vw"
 			class="ma-0 pr-4"
 		>
@@ -71,7 +72,7 @@
 					</v-btn>
 				</template>
 				<v-list color="orange lighten-4">
-					<v-list-item>
+					<v-list-item class="cursor">
 						<v-list-item-icon class="mr-2">
 							<v-icon>account_circle</v-icon>
 						</v-list-item-icon>
@@ -80,7 +81,7 @@
 						</v-list-item-title>
 					</v-list-item>
 					<v-divider class="ml-4" />
-					<v-list-item>
+					<v-list-item class="cursor">
 						<v-list-item-icon class="mr-2">
 							<v-icon>input</v-icon>
 						</v-list-item-icon>

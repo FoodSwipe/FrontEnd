@@ -147,7 +147,6 @@ export default {
 			} else if (patched === 500) {
 				await this.openSnack("Internal Server Error")
 			} else if(patched === false) {
-				console.log("here")
 			}
 		}
 	}

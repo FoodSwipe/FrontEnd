@@ -8,6 +8,7 @@ export const SET_USER = "SET_USER"
 export const SET_USERS = "SET_USERS"
 export const SET_REGISTER_ERROR_MESSAGES = "SET_REGISTER_ERROR_MESSAGES"
 export const SET_ADD_USER_ERROR_MESSAGES = "SET_ADD_USER_ERROR_MESSAGES"
+export const SET_REGISTRATION_SUMMARY = "SET_REGISTRATION_SUMMARY"
 
 const defaultSet = {
 	full_name: null,
@@ -29,6 +30,7 @@ const state = {
 		...defaultSet,
 		birth_date: null
 	},
+	regSummary: {}
 }
 
 const mutations = {
@@ -44,6 +46,9 @@ const mutations = {
 	[SET_ADD_USER_ERROR_MESSAGES](state, value) {
 		state.addUserErrors = value
 	},
+	[SET_REGISTRATION_SUMMARY](state, value) {
+		state.regSummary = value
+	}
 }
 
 const getters = {
@@ -58,6 +63,9 @@ const getters = {
 	},
 	addUserErrorMessages: state => {
 		return state.addUserErrors
+	},
+	registrationSummary: state => {
+		return state.regSummary.results
 	}
 }
 
@@ -170,6 +178,15 @@ const actions = {
 				return false
 			}
 			return 500
+		}
+	},
+	async fetchRegistrationSummary({commit}) {
+		try {
+			const res = await $api.get(userUrls.registrationSummary)
+			commit("SET_REGISTRATION_SUMMARY", res)
+			return true
+		} catch(e) {
+			return false
 		}
 	}
 }

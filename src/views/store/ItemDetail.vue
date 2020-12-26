@@ -333,7 +333,6 @@ export default {
 	},
 	methods: {
 		async addItemToCart() {
-			console.log("here")
 			if (this.$helper.isAuthenticated()) {
 				const currentUser = this.$helper.getCurrentUser()
 				this.$bus.emit("start-order-prefill", {

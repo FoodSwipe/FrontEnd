@@ -9,7 +9,8 @@
     "userProfile": "user/%s/profile",
     "profileDetail": "profile/%s",
     "toggleSuperUserStatus": "user/%s/toggle-superuser-status",
-    "toggleStaffStatus": "user/%s/toggle-staff-status"
+    "toggleStaffStatus": "user/%s/toggle-staff-status",
+    "registrationSummary": "registration-summary"
   },
   "auth": {
     "login": "login",
@@ -25,7 +26,11 @@
   "menuItem": {
     "list": "menu-item/",
     "detail": "menu-item/%s/",
-    "orderNowList": "order-now-list"
+    "orderNowList": "order-now-list",
+    "topRecommendedMenuItem": "top-recommended-items/",
+    "topRecommendedMenuItemDetail": "top-recommended-items/%s/",
+    "topItems": "top-items",
+    "recommendedItems": "recommended-items"
   },
   "menuItemGroup": {
     "list": "menu-item-group/",
@@ -44,7 +49,8 @@
     "unAuthUpdateOrder": "update-order/%s",
     "initializeOrder": "init-order",
     "withCartItems": "order/%s/cart",
-    "userStoreSummary": "user/%s/store-summary"
+    "userStoreSummary": "user/%s/store-summary",
+    "saleSummary": "sales-report"
   },
   "review": {
     "list": "review/",
@@ -55,8 +61,7 @@
     "detail": "homepage-content/%s/"
   },
   "log": {
-    "list": "log/",
-    "detail": "log/%s/"
+    "list": "log"
   },
   "transaction": {
     "list": "transaction/",

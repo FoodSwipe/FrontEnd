@@ -9,6 +9,8 @@ export const SET_ORDERS = "SET_ORDERS"
 export const SET_ORDER = "SET_ORDER"
 export const SET_ORDER_FORM_ERRORS = "SET_ORDER_FORM_ERRORS"
 export const SET_STORE_SUMMARY = "SET_STORE_SUMMARY"
+export const SET_SALE_SUMMARY = "SET_SALE_SUMMARY"
+export const SET_REGISTRATION_SUMMARY = "SET_REGISTRATION_SUMMARY"
 
 const defaultOrderErrors = {
 	custom_location: null,
@@ -23,7 +25,9 @@ const state = {
 	orderFormErrors: {
 		...defaultOrderErrors
 	},
-	storeSummary: {}
+	storeSummary: {},
+	saleSummary: {},
+	registrationSummary: {}
 }
 
 const mutations = {
@@ -38,7 +42,13 @@ const mutations = {
 	},
 	[SET_STORE_SUMMARY](state, value) {
 		state.storeSummary = value
-	}
+	},
+	[SET_SALE_SUMMARY](state, value) {
+		state.saleSummary = value
+	},
+	[SET_REGISTRATION_SUMMARY](state, value) {
+		state.registrationSummary = value
+	},
 }
 
 const getters = {
@@ -56,6 +66,12 @@ const getters = {
 	},
 	userStoreSummary: state => {
 		return state.storeSummary
+	},
+	saleSummary: state => {
+		return state.saleSummary.results
+	},
+	registrationSummary: state => {
+		return state.registrationSummary
 	}
 }
 
@@ -169,6 +185,15 @@ const actions = {
 		try {
 			const res = await $api.get(util.format(orderUrls.userStoreSummary, payload.id))
 			commit("SET_STORE_SUMMARY", res)
+			return true
+		} catch (e) {
+			return false
+		}
+	},
+	async fetchSaleSummary({commit}) {
+		try {
+			const res = await $api.get(orderUrls.saleSummary)
+			commit("SET_SALE_SUMMARY", res)
 			return true
 		} catch (e) {
 			return false

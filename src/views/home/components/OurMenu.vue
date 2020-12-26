@@ -455,8 +455,7 @@ export default {
 		]
 	}),
 	created() {
-		// const el = this.$refs.menuColumn.clientHeight;
-		// console.log(el)
+		// do something
 	}
 }
 </script>

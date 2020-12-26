@@ -77,7 +77,6 @@ export default {
 			this.storeItemGroups.forEach((item, index) => {
 				if (item["menu_items"].length !== 0) this.panel.push(index)
 			})
-			console.log(this.$store.state.order.order)
 		}
 	}
 }

@@ -60,7 +60,6 @@ export default {
 <style scoped lang="scss">
 .home-layout {
 	min-height: calc(100vh - 48px);
-	padding: 0;
 }
 .home-snack {
 	margin-top: -60px;

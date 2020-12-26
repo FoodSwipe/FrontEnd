@@ -161,6 +161,7 @@ export default {
 			{ title: "Menu Item Types", icon: "group_work", to: "/admin/item-type" },
 			{ title: "Menu Items", icon: "local_bar", to: "/admin/menu-item" },
 			{ title: "Menu Item Groups", icon: "bubble_chart", to: "/admin/menu-item-group" },
+			{ title: "Top / Recommend", icon: "assistant", to: "/admin/top-recommended-items" },
 			{ title: "Orders", icon: "view_list", to: "/admin/order" },
 			{ title: "Transactions", icon: "payment", to: "/admin/transaction" },
 			{ title: "Utilities", icon: "stars", to: "/admin/utilities" },

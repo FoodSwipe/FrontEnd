@@ -524,7 +524,9 @@ export default {
 				})
 				if (patched === true) {
 					await this.openSnack("Order completed successfully.", "success")
-					await this.initialize()
+					await this.initialize({
+						id: this.order.id
+					})
 				} else await this.openSnack("Internal server error. Please try again.")
 			}
 		},
@@ -539,7 +541,9 @@ export default {
 				})
 				if (patched === true) {
 					await this.openSnack("Order updated successfully.", "success")
-					await this.initialize()
+					await this.initialize({
+						id: this.order.id
+					})
 				} else await this.openSnack("Internal server error. Please try again.")
 			}
 		},
@@ -748,7 +752,9 @@ export default {
 			} else {
 				await this.openSnack(patched.quantity[0])
 			}
-			await this.initialize()
+			await this.initialize({
+				id: this.order.id
+			})
 		},
 		async openSnack(text, color="error") {
 			await this.$store.dispatch("snack/setSnackState", true)

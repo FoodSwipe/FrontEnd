@@ -1,5 +1,6 @@
 <template>
 	<v-card
+		:loading="isLoading"
 		flat
 		class="rounded-0 pa-4"
 	>
@@ -13,7 +14,7 @@
 			<div class="swiper-container pa-1">
 				<div class="swiper-wrapper">
 					<v-card
-						v-for="(item, index) in foodItems"
+						v-for="(item, index) in topItemsSet"
 						:key="index"
 						flat
 						class="swiper-slide"
@@ -27,13 +28,13 @@
 							bottom
 							offset-x="30"
 							offset-y="20"
+							color="white"
 						>
 							<template #badge>
-								<v-avatar>
-									<v-img
-										contain
-										src="https://png.pngtree.com/png-vector/20190903/ourmid/pngtree-vector-red-chili-pepper-png-image_1716344.jpg"
-									/>
+								<v-avatar size="25"
+									color="transparent"
+								>
+									<v-img :src="item.menu_item.item_type[0].badge" />
 								</v-avatar>
 							</template>
 
@@ -42,14 +43,14 @@
 							>
 								<v-img
 									class="car-image"
-									:src="item.src"
+									:src="item.menu_item.image"
 									max-width="100%"
 								/>
 							</v-avatar>
 						</v-badge>
 
 						<p class="mb-0 text-center item-name">
-							{{ item.name }}
+							{{ item.menu_item.name }}
 						</p>
 					</v-card>
 				</div>
@@ -61,41 +62,22 @@
 </template>
 <script>
 import Swiper, { Navigation } from "swiper"
+import { mapGetters } from "vuex"
 
 export default {
 	name: "HotItemsComponent",
 	data: () => ({
-		foodItems: [
-			{
-				src: "https://www.listchallenges.com/f/lists/3d06c742-15cc-49b2-8845-7ef42d0c9f97.jpg",
-				name: "Burger with chips"
-			},
-			{
-				src: "https://www.skymetweather.com/themes/skymet/images/gallery/toplists/Top-Not-to-miss-food-items-in-Monsoon/4.jpg",
-				name: "Samosa Tarkari"
-			},
-			{
-				src: "https://img.theweek.in/content/dam/week/webworld/feature/lifestyle/2017/december/chicken-biriyani.jpg",
-				name: "Chicken Biryani"
-			},
-			{
-				src: "https://i.ndtvimg.com/i/2016-07/chicken-korma_625x350_71467713811.jpg",
-				name: "Chicken Korma"
-			},
-			{
-				src: "https://www.jocooks.com/wp-content/uploads/2019/03/chow-mein-1-5.jpg",
-				name: "Chowmein"
-			},
-			{
-				src: "https://static.toiimg.com/photo/76481989.cms",
-				name: "Pizza"
-			},
-			{
-				src: "https://daily.jstor.org/wp-content/uploads/2015/09/SpicyChinese_1050x700.jpg",
-				name: "Chicken Spicy"
-			},
-		],
+		isLoading: false,
+		topItemsSet: []
 	}),
+	computed: {
+		...mapGetters({
+			topItems: "menuItem/allTopItems"
+		})
+	},
+	async created() {
+		await this.initialize()
+	},
 	mounted() {
 		Swiper.use([Navigation]);
 
@@ -112,6 +94,16 @@ export default {
 			}
 		})
 	},
+	methods: {
+		async initialize() {
+			this.isLoading = true
+			const fetched = await this.$store.dispatch("menuItem/fetchTopItems")
+			if (fetched) {
+				this.topItemsSet = this.topItems
+			}
+			this.isLoading = false
+		}
+	}
 }
 </script>
 <style scoped>

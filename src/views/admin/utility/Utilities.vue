@@ -417,7 +417,6 @@ export default {
 			} else {
 				delete this.editedItem.image
 			}
-			console.log(this.editedItem)
 			const payload = getFormData(this.editedItem)
 			if (this.editedIndex > -1) {
 				const updated = await this.$store.dispatch(

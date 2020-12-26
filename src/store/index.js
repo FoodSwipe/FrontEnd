@@ -11,6 +11,7 @@ import menuItemType from "@/store/modules/menuItemType"
 import cart from "@/store/modules/cart"
 import order from "@/store/modules/order"
 import review from "@/store/modules/review"
+import log from "@/store/modules/logs"
 
 Vue.use(Vuex)
 
@@ -26,6 +27,7 @@ export default new Vuex.Store({
 		menuItemType,
 		order,
 		cart,
-		review
+		review,
+		log
 	}
 })

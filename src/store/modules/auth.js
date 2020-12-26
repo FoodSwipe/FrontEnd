@@ -37,16 +37,13 @@ const actions = {
 			setTokenOnLocalStorage(res.token)
 			setCurrentUserOnLocalStorage(JSON.stringify(res.user))
 			if (res["cooking_order"] !== undefined) {
-				console.log(res["cooking_order"])
 				setCookingOrderOnLocalStorage(res["cooking_order"].id)
 				return res["cooking_order"]["total_items"]
 			} else {
-				console.log("mememe")
 				removeCookingOrderIdFromLocalStorage()
 				return true
 			}
 		} catch (e) {
-			console.log("here")
 			if (parseInt(e.response.status.toString()) === 400) {
 				commit("SET_LOGIN_ERROR_MESSAGES", e.response.data)
 				return "formError"

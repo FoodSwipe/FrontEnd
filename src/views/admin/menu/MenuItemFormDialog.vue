@@ -511,12 +511,13 @@ export default {
 		},
 		async save() {
 			if (this.editedIndex > -1) {
+				let rawData = cookEditData(this.editedItem, ["item_type", "menu_item_group"])
 				if (this.imageForUpload.length > 0) {
-					this.editedItem = this.imageForUpload[0]
-				} else {
-					delete this.editedItem.image
+					rawData = {
+						...rawData,
+						image: this.imageForUpload[0]
+					}
 				}
-				const rawData = cookEditData(this.editedItem, ["item_type", "menu_item_group"])
 				const payload = getFormData(rawData)
 				const updated = await this.$store.dispatch(
 					"menuItem/update",

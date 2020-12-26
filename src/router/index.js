@@ -111,6 +111,11 @@ const routes = [
 				name: "Utilities",
 				component: () =>import("@/views/admin/utility/Utilities")
 			},
+			{
+				path: "top-recommended-items",
+				name: "Top / Recommended",
+				component: () =>import("@/views/admin/menu/TopRecommendedItems")
+			},
 		]
 	}
 ]

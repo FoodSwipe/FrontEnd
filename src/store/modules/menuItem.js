@@ -7,6 +7,9 @@ const menuItemUrls = urls.menuItem
 export const SET_MENU_ITEMS = "SET_MENU_ITEMS"
 export const SET_MENU_ITEM = "SET_MENU_ITEM"
 export const SET_MENU_ITEM_FORM_ERRORS = "SET_MENU_ITEM_FORM_ERRORS"
+export const SET_TOP_RECOMMENDED_ITEMS = "SET_TOP_RECOMMENDED_ITEMS"
+export const SET_TOP_ITEMS = "SET_TOP_ITEMS"
+export const SET_RECOMMENDED_ITEMS = "SET_RECOMMENDED_ITEMS"
 
 const defaultErrors = {
 	name: null,
@@ -34,7 +37,10 @@ const state = {
 	menuItem: {},
 	formError: {
 		...defaultErrors
-	}
+	},
+	topRecommendedMenuItems: {},
+	topItems: {},
+	recommendedItems: {},
 }
 
 const mutations = {
@@ -46,7 +52,16 @@ const mutations = {
 	},
 	[SET_MENU_ITEM_FORM_ERRORS](state, value) {
 		state.formError = value
-	}
+	},
+	[SET_TOP_RECOMMENDED_ITEMS](state, value) {
+		state.topRecommendedMenuItems = value
+	},
+	[SET_TOP_ITEMS](state, value) {
+		state.topItems = value
+	},
+	[SET_RECOMMENDED_ITEMS](state, value) {
+		state.recommendedItems = value
+	},
 }
 
 const getters = {
@@ -58,6 +73,15 @@ const getters = {
 	},
 	menuItemFormErrors: state => {
 		return state.formError
+	},
+	topRecommendedItems: state => {
+		return state.topRecommendedMenuItems.results
+	},
+	allTopItems: state => {
+		return state.topItems.results
+	},
+	allRecommendedItems: state => {
+		return state.recommendedItems.results
 	}
 }
 
@@ -122,7 +146,45 @@ const actions = {
 			}
 			return 500
 		}
-	}
+	},
+	async fetchTopRecommendedItems({commit}) {
+		try {
+			const res = await $api.get(menuItemUrls.topRecommendedMenuItem)
+			commit("SET_TOP_RECOMMENDED_ITEMS", res)
+			return true
+		} catch (e) {
+			return false
+		}
+	},
+	async fetchTopItems({commit}) {
+		try {
+			const res = await $api.get(menuItemUrls.topItems)
+			commit("SET_TOP_ITEMS", res)
+			return true
+		} catch (e) {
+			return false
+		}
+	},
+	async fetchRecommendedItems({commit}) {
+		try {
+			const res = await $api.get(menuItemUrls.recommendedItems)
+			commit("SET_RECOMMENDED_ITEMS", res)
+			return true
+		} catch (e) {
+			return false
+		}
+	},
+	async patchTopRecommended({commit}, payload) {
+		try {
+			await $api.patch(util.format(menuItemUrls.topRecommendedMenuItemDetail, payload.id), payload.body)
+			return true
+		} catch (e) {
+			if (parseInt(e.response.status.toString()) === 400) {
+				return e.response.data
+			}
+			return 500
+		}
+	},
 }
 
 export default {
