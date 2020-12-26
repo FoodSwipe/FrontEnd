@@ -1,24 +1,24 @@
 <template>
-	<div>
+	<div v-if="homePageContents">
 		<flickity ref="flickity"
 			:options="flickityOptions"
 		>
-			<template v-for="(item, index) in items">
+			<template v-for="(item, index) in homePageContents">
 				<!-- eslint-disable-next-line vue/no-v-for-template-key-on-child-->
 				<div :key="index"
 					class="carousel-cell"
 				>
 					<v-img class="carousel-image"
-						:src="item.src"
+						:src="item.image"
 						dark
 						gradient="to top, rgb(0 0 0 / 0%), rgb(0 0 0 / 60%), rgb(0 0 0 / 20%)"
 					>
 						<slider-image-content
-							:main-heading="item.mainHeading"
+							:heading="item.heading"
 							:subtitle="item.subtitle"
-							:button-icon="item.buttonIcon"
-							:button-text="item.buttonText"
-							:button-color="item.buttonColor"
+							:button-icon="item.button_icon"
+							:button-text="item.button_text"
+							:button-color="colors[index % colors.length]"
 						/>
 					</v-img>
 				</div>
@@ -28,6 +28,7 @@
 </template>
 <script>
 import Flickity from "vue-flickity"
+import { mapGetters } from "vuex"
 
 export default {
 	name: "ShowCaseSliderComponent",
@@ -51,42 +52,30 @@ export default {
 			selectedAttraction: 0.01,
 			friction: 0.25,
 		},
-		items: [
-			{
-				src: "https://i.ytimg.com/vi/fovrUHwf0e8/maxresdefault.jpg",
-				mainHeading: "Hello Welcome Tasty Momo",
-				subtitle: "Vivamus suscipit tortor eget felis porttitor volutpat." +
-					" Quisque velit nisi, pretium ut lacinia in, elementum id enim.",
-				buttonIcon: "hdr_weak",
-				buttonText: "Get Momo'ed",
-				buttonColor: "peach-gradient-rgba"
-			},
-			{
-				src: "https://i.pinimg.com/originals/6d/79/e6/6d79e62312ae92757667ca1dae5289d9.jpg",
-				mainHeading: "Get Hot & Spicy Foods at your location",
-				subtitle: "Donec molestie malesuada. Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui.",
-				buttonIcon: "local_grocery_store",
-				buttonText: "Order Now",
-				buttonColor: "aqua-gradient-rgba"
-			},
-			{
-				src: "https://s1.1zoom.me/b5050/401/Drinks_Bar_Bottle_468131_1920x1080.jpg",
-				mainHeading: "Enjoy our bar service online",
-				subtitle: "Cras ultricies ligula sed magna dictum porta. Donec sollicitudin molestie malesuada.",
-				buttonIcon: "store",
-				buttonText: "Visit Store",
-				buttonColor: "blue-gradient"
-			},
-			{
-				src: "https://wallpaperaccess.com/full/235960.jpg",
-				mainHeading: "Get booz'ed and oozed with our beverages",
-				subtitle: "Vivamus suscipit tortor eget felis porttitor volutpat. Donec rutrum congue leo eget malesuada.",
-				buttonIcon: "local_bar",
-				buttonText: "Get booz'ed",
-				buttonColor: "green-gradient-rgba"
-			},
+		colors: [
+			"green-gradient-rgba",
+			"peach-gradient-rgba",
+			"blue-gradient",
+			"green-gradient-rgba"
 		],
 	}),
+	computed: {
+		...mapGetters({
+			homePageContents: "homePageContent/allContent",
+		}),
+	},
+	created() {
+		this.initialize()
+	},
+	methods: {
+		async initialize() {
+			this.isLoading = true
+			const fetched = await this.$store.dispatch("homePageContent/fetchAllHomePageContent")
+			if (!fetched) {
+				await this.openSnack("Internal server error. Please try again")
+			} else { this.isLoading = false}
+		},
+	}
 }
 </script>
 

@@ -9,7 +9,7 @@
 			class="mx-auto"
 		>
 			<v-card-title class="display-1 px-3">
-				{{ mainHeading }}
+				{{ heading }}
 			</v-card-title>
 			<v-card-subtitle class="subtitle px-3">
 				{{ subtitle }}
@@ -31,7 +31,7 @@
 export default {
 	name: "SwiperImageContentComponent",
 	props: {
-		mainHeading: {
+		heading: {
 			type: String,
 			required: true
 		},

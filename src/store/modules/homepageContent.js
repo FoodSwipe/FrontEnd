@@ -1,30 +1,99 @@
-export const ADD_SWIPER_IMAGE_WITH_CONTENT = "ADD_SWIPER_IMAGE_WITH_CONTENT"
-export const REMOVE_SWIPER_IMAGE = "REMOVE_SWIPER_IMAGE"
+import $api from "@/handler/axios"
+
+export const SET_HOME_PAGE_CONTENT = "SET_HOME_PAGE_CONTENT"
+export const SET_HOME_PAGE_CONTENT_FORM_ERRORS = "SET_HOME_PAGE_CONTENT_FORM_ERRORS"
+
+import urls from "@/urls.json"
+const util = require("util")
+
+const homePageContentUrls = urls.homePageContent
+
+const defaultFormErrors = {
+	heading: null,
+	subtitle: null,
+	image: null,
+	button_text: null,
+	button_icon: null,
+	button_to: null,
+}
 
 const state = {
-	swiperImages: []
+	swiperImages: {},
+	homePageContentFormErrors: {
+		... defaultFormErrors
+	}
 }
 const mutations = {
-	[ADD_SWIPER_IMAGE_WITH_CONTENT](state, value) {
-		state.swiperImages.push = value
+	[SET_HOME_PAGE_CONTENT](state, value) {
+		state.swiperImages = value
 	},
-	[REMOVE_SWIPER_IMAGE](state, value) {
-		state.splice(value, 1)
+	[SET_HOME_PAGE_CONTENT_FORM_ERRORS](state, value) {
+		state.homePageContentFormErrors = value
 	}
 }
 
 const getters = {
-	swiperImagesWithContent: state => {
-		return state.swiperImages
+	allContent: state => {
+		return state.swiperImages.results
+	},
+	homePageContentAllFormErrors: state => {
+		return state.homePageContentFormErrors
 	}
 }
 
 const actions = {
-	addSwiperImageWithContent({commit}, data) {
-
+	clearHomePageContentFormErrors({commit}) {
+		commit("SET_HOME_PAGE_CONTENT_FORM_ERRORS", defaultFormErrors)
 	},
-	removeSwiperImage({state, commit}, value) {
-
+	async fetchAllHomePageContent({ commit }) {
+		try {
+			const res = await $api.get(homePageContentUrls.list)
+			commit("SET_HOME_PAGE_CONTENT", res)
+			return true
+		} catch (e) {
+			return false
+		}
+	},
+	async create({commit}, payload) {
+		try {
+			await $api.post(homePageContentUrls.list, payload.body)
+			return true
+		} catch (e) {
+			if (parseInt(e.response.status.toString()) === 400) {
+				commit("SET_HOME_PAGE_CONTENT_FORM_ERRORS", e.response.data)
+				return false
+			} return 500
+		}
+	},
+	async update({commit}, payload) {
+		try {
+			await $api.put(util.format(homePageContentUrls.detail, payload.id), payload.body)
+			return true
+		} catch (e) {
+			if (parseInt(e.response.status.toString()) === 400) {
+				commit("SET_HOME_PAGE_CONTENT_FORM_ERRORS", e.response.data)
+				return false
+			} return 500
+		}
+	},
+	async patch({commit}, payload) {
+		try {
+			await $api.patch(util.format(homePageContentUrls.detail, payload.id), payload.body)
+			return true
+		} catch (e) {
+			if (parseInt(e.response.status.toString()) === 400) {
+				commit("SET_HOME_PAGE_CONTENT_FORM_ERRORS", e.response.data)
+				return false
+			} return 500
+		}
+	},
+	async delete({}, payload) {
+		try {
+			await $api.delete(util.format(homePageContentUrls.detail, payload.id))
+			return true
+		} catch (e) {
+			return false
+		}
 	},
 }
 
