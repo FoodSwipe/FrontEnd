@@ -4,7 +4,7 @@ import { getAccessToken } from "@/Helper"
 const api = {
 	setHeaders: function (contentType) {
 		return axios.create({
-			baseURL: "http://localhost:8000/api/",
+			baseURL: "http://foodswipe.com.np/backend/api/",
 			headers: {
 				"Content-Type": contentType || "application/json",
 				Accept: "application/json",
