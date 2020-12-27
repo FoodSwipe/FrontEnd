@@ -4,12 +4,12 @@ import { getAccessToken } from "@/Helper"
 const api = {
 	setHeaders: function (contentType) {
 		return axios.create({
-			baseURL: "http://foodswipe.com.np/backend/api/",
+			baseURL: "http://backend.foodswipe.com.np/api/",
 			headers: {
 				"Content-Type": contentType || "application/json",
 				Accept: "application/json",
 				Authorization:
-					getAccessToken() === null
+					getAccessToken() === null || getAccessToken() === undefined
 						? null
 						: `Token ${getAccessToken()}`
 			}
