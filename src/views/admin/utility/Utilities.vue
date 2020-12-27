@@ -108,9 +108,9 @@
 										</v-col>
 										<v-col
 											cols="12"
-											md="4"
-											xl="4"
-											lg="4"
+											md="6"
+											xl="6"
+											lg="6"
 											sm="6"
 										>
 											<v-text-field
@@ -125,9 +125,9 @@
 										</v-col>
 										<v-col
 											cols="12"
-											md="4"
-											xl="4"
-											lg="4"
+											md="6"
+											xl="6"
+											lg="6"
 											sm="6"
 										>
 											<v-text-field

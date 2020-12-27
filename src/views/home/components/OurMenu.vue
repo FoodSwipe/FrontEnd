@@ -1,11 +1,6 @@
 <template>
 	<div id="menuColumn">
 		<div class="text-center pa-2">
-			<v-avatar size="120"
-				tile
-			>
-				<v-img :src="logo" />
-			</v-avatar>
 			<p class="our-menu">
 				Our Menu
 			</p>
@@ -69,7 +64,6 @@
 export default {
 	name: "OurMenu",
 	data: () => ({
-		logo: require("@/assets/food_swipe_logo.png"),
 		menuItemGroups: [
 			{ name: "Salad",
 				image: "",

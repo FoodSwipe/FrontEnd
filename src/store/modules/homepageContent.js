@@ -47,7 +47,7 @@ const actions = {
 	},
 	async fetchAllHomePageContent({ commit }) {
 		try {
-			const res = await $api.get(homePageContentUrls.list)
+			const res = await $api.get(homePageContentUrls.unAuthList)
 			commit("SET_HOME_PAGE_CONTENT", res)
 			return true
 		} catch (e) {

@@ -7,12 +7,20 @@
 			class="mb-2"
 		/>
 		<v-row class="ma-0 pa-0">
+			<v-col cols="12">
+				<div class="text-center pa-2">
+					<v-avatar size="120"
+						tile
+					>
+						<v-img :src="logo" />
+					</v-avatar>
+				</div>
+			</v-col>
 			<v-col
 				cols="12"
 				xl="8"
 				lg="8"
 				md="8"
-				sm="8"
 			>
 				<our-menu />
 			</v-col>
@@ -20,7 +28,6 @@
 				xl="4"
 				lg="4"
 				md="4"
-				sm="4"
 			>
 				<recommended-items />
 			</v-col>
@@ -52,6 +59,9 @@ export default {
 		RecommendedItems: () => import("@/views/home/components/Recommendations"),
 		HowWeServe: () => import("@/views/home/components/HowWeServe"),
 		FoodSwipeFacebook: () => import("@/views/home/components/Facebook")
-	}
+	},
+	data: () => ({
+		logo: require("@/assets/food_swipe_logo.png"),
+	})
 }
 </script>

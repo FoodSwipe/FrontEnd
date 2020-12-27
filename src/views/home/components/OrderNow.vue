@@ -2,7 +2,7 @@
 	<div class="pa-4">
 		<v-card
 			color="brown lighten-4"
-			max-width="100vw"
+			max-width="800"
 			class="mx-auto pa-2 order-now-card"
 		>
 			<v-row class="ma-0 pa-0"
@@ -11,67 +11,8 @@
 			>
 				<v-col cols="12"
 					class="pa-1"
-					xl="4"
-					lg="4"
-					md="12"
-					sm="12"
-				>
-					<v-autocomplete
-						v-model="selectedItems"
-						:disabled="isUpdating"
-						:items="orderNowRefinedList"
-						filled
-						chips
-						deletable-chips
-						color="orange darken-4"
-						placeholder="Select menu items (*)"
-						item-text="name"
-						item-value="id"
-						item-color="orange darken-2"
-						multiple
-						prepend-inner-icon="emoji_food_beverage"
-						hide-details="auto"
-						attach=""
-						clearable
-						hint="Order as much as you can, service guaranteed!"
-						:open-on-clear="false"
-						:error-messages="itemsFieldRequiredErrorMessage"
-					>
-						<template #selection="data">
-							<v-chip
-								v-bind="data.attrs"
-								:input-value="data.selected"
-								close
-								@click="data.select"
-								@click:close="removeItemFromSelectedOrderInput(data.item)"
-							>
-								<v-avatar left>
-									<v-img :src="data.item.avatar" />
-								</v-avatar>
-								{{ data.item.name }}
-							</v-chip>
-						</template>
-						<template #item="data">
-							<template v-if="typeof data.item !== 'object'">
-								<v-list-item-content v-text="data.item" />
-							</template>
-							<template v-else>
-								<v-list-item-avatar>
-									<v-img :src="data.item.avatar" />
-								</v-list-item-avatar>
-								<v-list-item-content>
-									<v-list-item-title>{{ data.item.name }}</v-list-item-title>
-									<v-list-item-subtitle>{{ data.item.group }}</v-list-item-subtitle>
-								</v-list-item-content>
-								<v-list-item-action-text>{{ data.item.price }}</v-list-item-action-text>
-							</template>
-						</template>
-					</v-autocomplete>
-				</v-col>
-				<v-col cols="12"
-					class="pa-1"
-					xl="3"
-					lg="3"
+					xl="6"
+					lg="6"
 					md="6"
 					sm="6"
 				>
@@ -88,8 +29,8 @@
 					/>
 				</v-col>
 				<v-col cols="12"
-					xl="3"
-					lg="3"
+					xl="6"
+					lg="6"
 					md="6"
 					sm="6"
 					class="pa-1"
@@ -107,10 +48,6 @@
 					/>
 				</v-col>
 				<v-col cols="12"
-					xl="2"
-					lg="2"
-					md="12"
-					sm="12"
 					class="d-flex justify-center pa-1"
 				>
 					<v-btn depressed
@@ -122,7 +59,7 @@
 						<v-icon>fastfood</v-icon>
 						<span v-if="$vuetify.breakpoint.width > 255"
 							class="ml-2"
-						>start my order</span>
+						>start Shopping</span>
 					</v-btn>
 				</v-col>
 			</v-row>
@@ -145,11 +82,9 @@ export default {
 			custom_contact: ""
 		},
 		isUpdating: false,
-		orderNowRefinedList: []
 	}),
 	computed: {
 		...mapGetters({
-			orderNowList: "menuItem/allMenuItems",
 			startOrderFormErrors: "order/orderFormFieldErrors",
 			pendingOrder: "order/detailOrder"
 		}),
@@ -165,11 +100,7 @@ export default {
 	},
 	methods: {
 		async initialize() {
-			await this.$store.dispatch("menuItem/fetchOrderNowList")
 			this.isDisabled = (this.$helper.getCookingOrderId() !== null)
-			this.isUpdating = true
-			this.orderNowRefinedList = refineOrderNowList(this.orderNowList)
-			this.isUpdating = false
 		},
 		preFillForm() {
 			if(this.$helper.isAuthenticated()) {
@@ -201,21 +132,12 @@ export default {
 			}
 			const started = await this.$store.dispatch("order/startOrder", this.order)
 			if (started === true) {
-				for (const itemId of this.selectedItems) {
-					const addedToCart = await this.$store.dispatch("cart/addToCart", {
-						order: this.$helper.getCookingOrderId(),
-						item: itemId
-					})
-					if(addedToCart !== true) await this.openSnack(addedToCart)
-				}
-				this.$bus.emit("set-cart-count", this.selectedItems.length)
-				this.selectedItems = []
 				this.order = {
 					custom_location: "",
 					custom_contact: ""
 				}
 				this.isDisabled = true
-				await this.openSnack("Cheers! Selected items has been added to cart.", "success")
+				await this.openSnack("Cheers! Lets start shopping now!", "success")
 				await router.push({"name": "Cart"})
 			} else if (started === 500) {
 				await this.openSnack("Internal Server Error.")

@@ -146,7 +146,7 @@ export default {
 			await this.$store.dispatch("snack/setSnackText", text)
 		},
 		async doneOrder() {
-			const done = await this.$store.dispatch("order/unauthorizedUpdateOrder", {
+			const done = await this.$store.dispatch("order/doneFromCustomer", {
 				id: this.$helper.getCookingOrderId(),
 				body: {
 					done_from_customer: true

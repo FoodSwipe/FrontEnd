@@ -50,7 +50,8 @@
     "initializeOrder": "init-order",
     "withCartItems": "order/%s/cart",
     "userStoreSummary": "user/%s/store-summary",
-    "saleSummary": "sales-report"
+    "saleSummary": "sales-report",
+    "doneFromCustomer": "done-from-customer/%s"
   },
   "review": {
     "list": "review/",
@@ -58,7 +59,8 @@
   },
   "homePageContent": {
     "list": "homepage-content/",
-    "detail": "homepage-content/%s/"
+    "detail": "homepage-content/%s/",
+    "unAuthList": "home-page-contents"
   },
   "log": {
     "list": "log"

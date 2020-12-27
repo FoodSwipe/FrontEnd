@@ -1,57 +1,48 @@
 <template>
-	<div v-if="$vuetify.breakpoint.smAndUp">
-		<v-card flat>
-			<v-card-title class="px-0 recommend">
-				Recommendations:
-			</v-card-title>
-		</v-card>
-		<div class="overflow-y">
-			<v-card
-				v-for="(food, index) in recommendedItemsSet"
+	<div>
+		<v-subheader class="px-0 recommend d-flex justify-center">
+			Our Recommendations
+		</v-subheader>
+		<v-list two-line dark
+			class="blue-gradient rounded"
+			:max-width="
+				($vuetify.breakpoint.mdAndUp) ? '500' : '100%'
+			"
+		>
+			<div v-for="(food, index) in recommendedItemsSet"
 				:key="index"
-				dark
-				:loading="isLoading"
-				:class="(index + 1 !== recommendedItemsSet.length) ? 'mb-4' : ''"
-				max-width="270"
-				:color="
-					colors[index%colors.length]
-				"
 			>
-				<v-img
-					:src="food.menu_item.image"
-					height="150"
-				/>
-				<v-card-title class="recommendation-item-name pt-2 pb-1">
-					{{ food.name }}
-					<span class="px-1">
-						<v-avatar v-for="type in food.menu_item.item_type"
-							:key="type.id * 27 +47" size="22"
-						>
-							<v-img :src="type.badge" />
-						</v-avatar>
-					</span>
-				</v-card-title>
-				<v-divider class="mx-4" />
-				<v-card-text class="d-flex align-center py-2">
-					<div><span class="nrs">NRs</span><span class="recommendation-item-price">{{ food.menu_item.price }}</span></div>
-					<v-spacer />
-					<v-btn icon
-						@click="addedToCart = !addedToCart"
+				<v-list-item>
+					<v-list-item-avatar size="50"
+						class="golden-rod-border-2"
 					>
-						<v-scale-transition>
-							<v-icon v-if="!addedToCart"
-								size="22"
-							>
-								add_shopping_cart
-							</v-icon>
-							<v-icon v-else>
-								shopping_cart
-							</v-icon>
-						</v-scale-transition>
-					</v-btn>
-				</v-card-text>
-			</v-card>
-		</div>
+						<v-avatar>
+							<v-img :src="food.menu_item.image" />
+						</v-avatar>
+					</v-list-item-avatar>
+					<v-list-item-content>
+						<v-list-item-title class="recommendation-item-name">
+							{{ food.menu_item.name }}
+						</v-list-item-title>
+						<v-list-item-subtitle>
+							<span class="px-1">
+								<v-avatar v-for="type in food.menu_item.item_type"
+									:key="type.id * 27 +47" size="22"
+								>
+									<v-img :src="type.badge" />
+								</v-avatar>
+							</span>
+						</v-list-item-subtitle>
+					</v-list-item-content>
+					<v-list-item-action-text>
+						<span class="nrs">NRs</span><span class="recommendation-item-price">{{ food.menu_item.price }}</span>
+					</v-list-item-action-text>
+				</v-list-item>
+				<v-divider v-if="index !== recommendedItemsSet.length -1"
+					inset
+				/>
+			</div>
+		</v-list>
 	</div>
 </template>
 <script>
@@ -107,11 +98,16 @@ export default {
 .overflow-y::-webkit-scrollbar
 	display: none
 .recommendation-item-name
-	font-size: .9rem
+	font-size: 1.4rem
+	line-height: 1.6rem
+	font-weight: 500
+	letter-spacing: 0
 	padding-left: .5rem
+	font-family: 'Jura', sans-serif
 .nrs
 	color: #e5ba50
 	font-size: .8rem
+	font-weight: bold
 .recommendation-item-price
 	font-size: 1.2rem
 	line-height: 1.2rem
@@ -119,11 +115,12 @@ export default {
 	font-weight: 500
 	padding: 0 0 0 .5rem
 .recommend
-	background: linear-gradient(to right, green, transparent)
-	max-width: 300px
+	max-width: 500px
 	padding-left: 10px !important
 	color: #153b3b
 	margin-bottom: 10px
 	font-family: 'Sacramento', cursive
 	font-size: 2.4rem
+.blue-gradient
+	background: linear-gradient(40deg, #2d9cf4, #303f9f) !important
 </style>

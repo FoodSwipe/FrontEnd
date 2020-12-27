@@ -198,6 +198,17 @@ const actions = {
 		} catch (e) {
 			return false
 		}
+	},
+	async doneFromCustomer({}, payload) {
+		try {
+			const res = await $api.patch(util.format(orderUrls.doneFromCustomer, payload.id), payload.body)
+			return true
+		} catch (e) {
+			const status = parseInt(e.response.status.toString())
+			if (status === 400 || status === 500 || status === 404) {
+				return false
+			}
+		}
 	}
 }
 
