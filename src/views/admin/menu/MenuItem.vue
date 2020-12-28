@@ -333,6 +333,7 @@ export default {
 			this.$bus.emit("open-menu-item-form-dialog-add-item")
 		},
 		openEditMenuItemFormDialog(item) {
+			console.log(item)
 			this.$bus.emit("open-menu-item-form-dialog-edit-item", {
 				editedIndex: this.menuItems.indexOf(item),
 				editedItem: Object.assign({}, item),

@@ -76,7 +76,6 @@ export default {
 	data: () => ({
 		itemsFieldRequiredErrorMessage: null,
 		isDisabled: false,
-		selectedItems: [],
 		order: {
 			custom_location: "",
 			custom_contact: ""
@@ -116,20 +115,13 @@ export default {
 				}
 			}
 		},
-		removeItemFromSelectedOrderInput(item) {
-			const index = this.selectedItems.indexOf(item.id)
-			if (index >= 0) this.selectedItems.splice(index, 1)
-		},
 		async openSnack(text, color="error") {
 			await this.$store.dispatch("snack/setSnackState", true)
 			await this.$store.dispatch("snack/setSnackColor", color)
 			await this.$store.dispatch("snack/setSnackText", text)
 		},
 		async startShopping() {
-			if (this.selectedItems.length === 0) {
-				this.itemsFieldRequiredErrorMessage = "This field is required."
-				return
-			}
+			console.log("here")
 			const started = await this.$store.dispatch("order/startOrder", this.order)
 			if (started === true) {
 				this.order = {

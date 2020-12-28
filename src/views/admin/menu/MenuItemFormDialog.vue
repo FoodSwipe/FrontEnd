@@ -140,6 +140,7 @@
 						<v-text-field
 							id="name"
 							v-model="editedItem.name"
+							dense
 							label="Name (*)"
 							filled
 							clearable
@@ -158,6 +159,7 @@
 						<v-checkbox
 							id="is-veg"
 							v-model="editedItem.is_veg"
+							dense
 							label="Vegetarian ?"
 							hide-details="auto"
 							:error-messages="menuItemFormErrors.is_veg"
@@ -167,6 +169,7 @@
 						<v-autocomplete
 							id="item-group"
 							v-model="editedItem.menu_item_group"
+							dense
 							:items="menuItemGroups"
 							item-text="name"
 							item-value="id"
@@ -193,6 +196,7 @@
 						<v-text-field
 							id="item-weight"
 							v-model="editedItem.weight"
+							dense
 							filled
 							clearable
 							type="number"
@@ -207,6 +211,7 @@
 						<v-text-field
 							id="item-calorie"
 							v-model="editedItem.calorie"
+							dense
 							filled
 							clearable
 							type="number"
@@ -219,6 +224,7 @@
 					<v-col cols="12">
 						<v-autocomplete id="item-type"
 							v-model="editedItem.item_type"
+							dense
 							:items="itemTypes"
 							item-text="name"
 							item-value="id"
@@ -239,6 +245,7 @@
 						<v-text-field
 							id="item-ingredients"
 							v-model="editedItem.ingredients"
+							dense
 							hint="Comma separated values will be very useful for item presentation"
 							label="Ingredients"
 							filled
@@ -258,6 +265,7 @@
 						<v-checkbox
 							id="is-bar-item"
 							v-model="editedItem.is_bar_item"
+							dense
 							label="Is Bar Item?"
 							append-icon="local_bar"
 							hide-details="auto"
@@ -275,6 +283,7 @@
 							<v-select
 								id="bar-weight"
 								v-model="editedItem.bar_size"
+								dense
 								dark
 								:items="BAR_SIZE_ARRAY"
 								label="Bar item size"
@@ -301,6 +310,7 @@
 						<v-text-field
 							id="price"
 							v-model="editedItem.price"
+							dense
 							label="Price (NRs) (*)"
 							filled
 							type="number"
@@ -319,6 +329,7 @@
 						<v-text-field
 							id="scale"
 							v-model="editedItem.scale"
+							dense
 							label="Scale"
 							hint="How much (quantity(pcs) / weight(ml)) at this price?"
 							filled
@@ -335,6 +346,7 @@
 						<v-checkbox
 							id="is-available"
 							v-model="editedItem.is_available"
+							dense
 							label="Is available?"
 							hide-details="auto"
 							:error-messages="menuItemFormErrors.is_available"
@@ -349,6 +361,7 @@
 						<v-textarea
 							id="description"
 							v-model="editedItem.description"
+							dense
 							label="Description"
 							filled
 							clearable
@@ -362,6 +375,7 @@
 						<v-file-input
 							id="item-image"
 							v-model="imageForUpload"
+							dense
 							filled
 							small-chips
 							show-size
@@ -432,7 +446,19 @@ export default {
 			updated_at: null,
 			updated_by: null,
 		},
-		defaultItem: {},
+		defaultItem: {
+			name: "",
+			description: "",
+			ingredients: [],
+			weight: 0,
+			calorie: 0,
+			scale: 1,
+			price: 0,
+			is_veg: false,
+			is_available: true,
+			is_bar_item: false,
+			bar_size: "",
+		},
 		BAR_SIZE_ARRAY: ["Quarter", "Half", "Full"]
 	}),
 	computed: {
@@ -517,7 +543,10 @@ export default {
 						...rawData,
 						image: this.imageForUpload[0]
 					}
+				} else {
+					delete rawData["image"]
 				}
+				if (rawData.bar_size === null) delete rawData["bar_size"]
 				const payload = getFormData(rawData)
 				const updated = await this.$store.dispatch(
 					"menuItem/update",
@@ -578,7 +607,7 @@ export default {
 	::v-deep.v-input--checkbox {
 		background-color: rgb(255 255 255 / 8%);
 		margin-top: 0;
-		padding: 18px 12px;
+		padding: 13px 12px;
 		border-bottom: 1px solid rgb(156 155 150) !important;
 		border-radius: 3px 3px 0 0;
 		&:hover {
