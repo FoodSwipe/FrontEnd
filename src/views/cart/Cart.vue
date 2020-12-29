@@ -342,7 +342,8 @@ export default {
 			]
 		},
 		...mapGetters({
-			currentOrder: "order/detailOrder"
+			currentOrder: "order/detailOrder",
+			cartItemDetail: "cart/detailCartItem"
 		})
 	},
 	created() {
@@ -353,13 +354,19 @@ export default {
 		this.$bus.off("refresh-cart", this.initialize)
 	},
 	methods: {
-		quantityChanged(item) {
-			this.$store.dispatch("cart/patch", {
+		async quantityChanged(item) {
+			await this.$store.dispatch("cart/fetchParticular", {id: item.id})
+			const previousCartQuantity = this.cartItemDetail.quantity
+
+			const patched = await this.$store.dispatch("cart/patch", {
 				id: item.id,
 				body: {
 					quantity: item.quantity
 				}
 			})
+			if (patched === true) {
+				this.$bus.emit("update-cart-count", parseInt(item.quantity)-previousCartQuantity)
+			}
 		},
 		async initialize() {
 			const cookingOrder = this.$helper.getCookingOrderId()

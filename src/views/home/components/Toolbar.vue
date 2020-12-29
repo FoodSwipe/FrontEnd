@@ -144,7 +144,6 @@
 
 			<v-fade-transition>
 				<v-badge
-					v-if="$route.name !== 'Cart'"
 					dark
 					color="black"
 					:content="cartCount"
@@ -154,7 +153,7 @@
 					<v-tooltip bottom>
 						<template #activator="{on, attrs}">
 							<v-btn
-								v-if="$route.name !== 'Cart'"
+								:disabled="$route.name === 'Cart'"
 								light
 								icon
 								small
@@ -526,6 +525,7 @@ export default {
 		this.$bus.on("set-cart-count", this.setCartCount)
 		this.$bus.on("add-cart-count-by-one", this.addCartCountByOne)
 		this.$bus.on("subtract-cart-count", this.subtractCartCount)
+		this.$bus.on("update-cart-count", this.updateCartCount)
 
 		this.currentUser = this.$helper.getCurrentUser()
 		this.showAdminButton = this.$helper.isAdminUser()
@@ -555,6 +555,9 @@ export default {
 		},
 		setCartCount(count) {
 			this.cartCount = count.toString()
+		},
+		updateCartCount(expression) {
+			this.cartCount = (parseInt(this.cartCount) + expression).toString()
 		},
 		toggleDrawerState() {
 			this.login = {
