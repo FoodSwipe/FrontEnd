@@ -15,18 +15,6 @@
 		<!--		<v-divider class="mx-4" />-->
 		<v-card-text class="card-text">
 			<v-row class="ma-0 pa-0">
-				<v-col v-if="$helper.isAuthenticated()"
-					cols="12"
-				>
-					<v-text-field
-						v-model="$helper.getCurrentUser().profile.full_name"
-						filled
-						dense
-						readonly
-						prepend-inner-icon="account_circle" label="Full name"
-						hide-details
-					/>
-				</v-col>
 				<v-col cols="12">
 					<v-text-field
 						v-model="order.custom_location"
@@ -101,7 +89,6 @@ import { mapGetters } from "vuex"
 export default {
 	name: "OrderConfirmation",
 	data: () =>  ({
-		full_name: null,
 		order: {
 			custom_location: null,
 			custom_contact: null,
