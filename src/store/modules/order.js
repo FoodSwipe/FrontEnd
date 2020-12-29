@@ -16,6 +16,8 @@ const defaultOrderErrors = {
 	custom_location: null,
 	custom_contact: null,
 	custom_email: null,
+	loyalty_discount: null,
+	delivery_charge: null
 }
 
 const state = {

@@ -157,7 +157,7 @@
 													chips
 													deletable-chips
 													color="grey darken-3"
-													placeholder="Select menu items (*)"
+													placeholder="Add menu items in this order (*)"
 													item-text="name"
 													item-value="id"
 													item-color="orange darken-2"
@@ -200,10 +200,9 @@
 													</template>
 													<template #append-outer>
 														<v-avatar v-ripple
-															size="22"
+															size="30"
 															color="orange"
 															class="golden-rod-border-2 elevation-4"
-															disabled
 															@click="addSelectedItemsToOrderCart()"
 														>
 															<v-icon>
@@ -322,12 +321,12 @@
 								>
 									<v-text-field
 										v-model="order.custom_location"
-										readonly
 										filled
 										label="Delivery Location"
 										clearable
 										prepend-inner-icon="explore"
 										hide-details="auto"
+										:error-messages="orderFormError.custom_location"
 									/>
 								</v-col>
 								<v-col cols="12"
@@ -339,12 +338,12 @@
 								>
 									<v-text-field
 										v-model="order.delivery_charge"
-										readonly
 										filled
 										label="Delivery Charge"
 										type="number"
 										prepend-inner-icon="money"
 										hide-details="auto"
+										:error-messages="orderFormError.delivery_charge"
 									/>
 								</v-col>
 								<v-col cols="12"
@@ -356,12 +355,12 @@
 								>
 									<v-text-field
 										v-model="order.loyalty_discount"
-										readonly
 										filled
 										label="Loyalty Discount (%)"
 										type="number"
 										prepend-inner-icon="emoji_symbols"
 										hide-details="auto"
+										:error-messages="orderFormError.loyalty_discount"
 									/>
 								</v-col>
 								<v-col v-for="(orderSummaryItem, index) in orderSummaryItems()"
@@ -400,7 +399,7 @@
 					>
 						<v-btn block
 							large
-							disabled
+							@click="updateOrder"
 						>
 							<v-icon>save</v-icon><span class="pl-2">Update Order</span>
 						</v-btn>
@@ -461,6 +460,7 @@ export default {
 		...mapGetters({
 			orderList: "order/detailOrder",
 			orderNowList: "menuItem/allMenuItems",
+			orderFormError: "order/orderFormFieldErrors"
 		}),
 		orderDetailBreadCrumbs() {
 			return [
@@ -712,7 +712,12 @@ export default {
 		},
 		orderSummaryItems() {
 			const order = this.order
-			const summary = this.$helper.getCartSummary(order, this.order.cart_items)
+			const summary = this.$helper.getCartSummary(
+				order,
+				this.order.cart_items,
+				this.order.delivery_charge,
+				this.order.loyalty_discount
+			)
 
 			return [
 				{class: "total-items", field: "Total Items", value: summary.totalItems, icon: "casino"},
@@ -730,7 +735,7 @@ export default {
 				})
 				if (removed) {
 					await this.openSnack(orderMenuItem.item.name + " removed from cart.", "success")
-					await this.initialize()
+					await this.initialize({id: this.order.id})
 				} else await this.openSnack("Internal server error. Try again.")
 			}
 		},
@@ -772,12 +777,31 @@ export default {
 					order: this.order.id,
 					item: itemID
 				})
-				if (addedToCart!==true) await this.openSnack(addedToCart)
+				if (addedToCart !== true) await this.openSnack(addedToCart)
 			}
 			if (addedToCart) {
 				await this.openSnack("Selected items added to cart.", "success")
-				await this.initialize()
+				await this.initialize({id: this.order.id})
 				this.selectedItems = []
+			}
+		},
+		/**
+		 * update delivery location, delivery charge and loyalty discount
+		 */
+		async updateOrder() {
+			const patched = await this.$store.dispatch("order/patch", {
+				id: this.order.id,
+				body: {
+					custom_location: this.order.custom_location,
+					delivery_charge: this.order.delivery_charge,
+					loyalty_discount: this.order.loyalty_discount,
+				}
+			})
+			if (patched === true) {
+				await this.openSnack("Order updated successfully.", "success")
+				await this.$store.dispatch("order/clearFormErrors")
+			} else if (patched === 500) {
+				await this.openSnack("Internal Server Error.")
 			}
 		}
 	}

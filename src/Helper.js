@@ -105,15 +105,19 @@ module.exports = {
 	getAccessToken() {
 		return localStorage.getItem("token")
 	},
-	getCartSummary(order, cartItems) {
+	getCartSummary(
+		order, cartItems, delivery_charge=null, loyalty_discount=null
+	) {
 		const today = new Date()
 		if (!order) return []
 
-		const LOYALTY_DISCOUNT = 10
 		const DELIVERY_START_PM = 17
 		const DELIVER_START_AM = 4
 		const DELIVERY_CHARGE = 50
-		const LOYALTY_STARTS_AT = 10000
+		const LOYALTY_10_PER_FROM = 10000
+		const LOYALTY_12_PER_FROM = 12000
+		const LOYALTY_13_PER_FROM = 15000
+		const LOYALTY_15_PER_FROM = 20000
 
 		let totalPrice = 0
 		let totalItems = 0
@@ -125,15 +129,35 @@ module.exports = {
 			totalPrice += item.quantity * item.item.price
 			totalItems += item.quantity
 		})
-		grandTotal = totalPrice
-		if (totalPrice > LOYALTY_STARTS_AT) {
-			loyaltyDiscount = LOYALTY_DISCOUNT
-			grandTotal -= (loyaltyDiscount / 100) * totalPrice
-		} else grandTotal = totalPrice
-		if (today.getHours() >= DELIVERY_START_PM || today.getHours() <= DELIVER_START_AM) {
-			deliveryCharge = DELIVERY_CHARGE
-			grandTotal += deliveryCharge
+
+		if (!loyalty_discount) {
+			if (totalPrice >= LOYALTY_10_PER_FROM && totalPrice < LOYALTY_12_PER_FROM) {
+				loyaltyDiscount = 10
+			} else if(totalPrice >= LOYALTY_12_PER_FROM && totalPrice < LOYALTY_13_PER_FROM) {
+				loyaltyDiscount = 12
+			} else if (totalPrice >= LOYALTY_13_PER_FROM && totalPrice < LOYALTY_15_PER_FROM) {
+				loyaltyDiscount = 13
+			} else if (totalPrice >= LOYALTY_15_PER_FROM) {
+				loyaltyDiscount = 15
+			} else {
+				loyaltyDiscount = 0
+			}
+		} else {
+			loyaltyDiscount = parseInt(loyalty_discount)
 		}
+
+		grandTotal = totalPrice
+		grandTotal -= (loyaltyDiscount / 100) * totalPrice
+
+		if (!delivery_charge) {
+			if (today.getHours() >= DELIVERY_START_PM || today.getHours() <= DELIVER_START_AM) {
+				deliveryCharge = DELIVERY_CHARGE
+			}
+		} else {
+			deliveryCharge = parseInt(delivery_charge)
+		}
+
+		grandTotal += deliveryCharge
 		return {
 			totalItems: totalItems,
 			totalPrice: totalPrice,
