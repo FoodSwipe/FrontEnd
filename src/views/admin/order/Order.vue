@@ -50,11 +50,28 @@
 								</v-menu>
 							</div>
 							<div class="px-1">
-								<v-btn icon>
-									<v-icon class="goldenrod">
-										add_circle
-									</v-icon>
-								</v-btn>
+								<v-tooltip bottom>
+									<template #activator="{ on, attrs }">
+										<v-btn
+											v-bind="attrs"
+											class="brown-gradient"
+											v-on="on"
+											@click="startNewOrderByAdmin()"
+										>
+											<v-icon
+												class="goldenrod"
+											>
+												add_circle
+											</v-icon>
+											<v-scale-transition>
+												<span v-if="$vuetify.breakpoint.smAndUp"
+													class="pl-3"
+												>New Order</span>
+											</v-scale-transition>
+										</v-btn>
+									</template>
+									<span>New Order</span>
+								</v-tooltip>
 							</div>
 						</v-col>
 						<v-col cols="12"
@@ -293,6 +310,7 @@
 				</v-col>
 			</v-row>
 		</v-card>
+		<start-order-form-dialog />
 	</div>
 </template>
 <script>
@@ -304,6 +322,7 @@ export default {
 	components: {
 		DropdownList: () => import("@/components/DropdownList"),
 		DateFilter: () => import("@/components/DateFilter"),
+		StartOrderFormDialog: () => import("@/views/admin/order/NewOrderForm")
 	},
 	data: () => ({
 		isLoading: false,
@@ -360,6 +379,9 @@ export default {
 		},
 		routeToOrderDetail(order) {
 			router.push(`/admin/order/${order.id}`)
+		},
+		startNewOrderByAdmin() {
+			this.$bus.emit("start-order-admin")
 		}
 	}
 }
