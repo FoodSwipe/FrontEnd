@@ -121,7 +121,6 @@ export default {
 			await this.$store.dispatch("snack/setSnackText", text)
 		},
 		async startShopping() {
-			console.log("here")
 			const started = await this.$store.dispatch("order/startOrder", this.order)
 			if (started === true) {
 				this.order = {
@@ -130,7 +129,7 @@ export default {
 				}
 				this.isDisabled = true
 				await this.openSnack("Cheers! Lets start shopping now!", "success")
-				await router.push({"name": "Cart"})
+				await router.push({"name": "Store"})
 			} else if (started === 500) {
 				await this.openSnack("Internal Server Error.")
 			} else if (started === false) {
