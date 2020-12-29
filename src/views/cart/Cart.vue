@@ -188,10 +188,10 @@
 				</transition-group>
 			</v-col>
 			<v-scale-transition
-				v-if="cartItemsList.length !== 0"
 				mode="out-in"
 			>
 				<v-col
+					v-if="cartItemsList.length > 0"
 					cols="12"
 					xl="4"
 					lg="4"
@@ -296,7 +296,11 @@ export default {
 	},
 	computed: {
 		getCartSummary() {
-			const summary = this.$helper.getCartSummary(this.currentOrder, this.cartItemsList)
+			if (!this.currentOrder) return []
+			const summary = this.$helper.getCartSummary(
+				this.currentOrder,
+				this.cartItemsList
+			)
 
 			return [
 				{
