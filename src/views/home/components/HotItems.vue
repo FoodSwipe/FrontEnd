@@ -119,6 +119,9 @@ export default {
 	line-height: 1.5rem
 	font-family: "Rasa SemiBold", cursive
 .item-name
+	padding-top: 10px
 	width: 100px
-	font-size: 1rem
+	font-size: .87rem
+	line-height: .87rem
+	font-weight: 500
 </style>

@@ -129,9 +129,9 @@ export default {
 			})
 			if (patched === true) {
 				if (item.top) {
-					await this.openSnack(`${item.menu_item.name} set as a top item.`)
+					await this.openSnack(`${item.menu_item.name} set as a top item.`, "success")
 				} else {
-					await this.openSnack(`${item.menu_item.name} removed from top items.`)
+					await this.openSnack(`${item.menu_item.name} removed from top items.`, "success")
 				}
 			} else if (patched === 500) {
 				await this.openSnack("Internal server error. Please try again.")
