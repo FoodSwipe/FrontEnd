@@ -1,6 +1,12 @@
 <template>
 	<div>
-		<v-subheader class="px-0 recommend d-flex justify-center">
+		<v-subheader class="px-0 recommend"
+			:class="
+				($vuetify.breakpoint.mdAndUp)
+					? 'd-flex justify-center py-10'
+					: 'd-flex justify-start'
+			"
+		>
 			Our Recommendations
 		</v-subheader>
 		<v-list two-line dark
