@@ -401,8 +401,17 @@
 								Cancel
 							</v-btn>
 							<v-btn
+								v-if="editedIndex !== -1"
 								color="blue lighten-5"
 								class="blue--text"
+								depressed
+								@click.stop="saveAsNew"
+							>
+								save as new
+							</v-btn>
+							<v-btn
+								color="green lighten-5"
+								class="green--text"
 								depressed
 								@click.stop="save"
 							>
@@ -535,51 +544,64 @@ export default {
 			await this.$store.dispatch("snack/setSnackColor", color)
 			await this.$store.dispatch("snack/setSnackText", text)
 		},
-		async save() {
-			if (this.editedIndex > -1) {
-				let rawData = cookEditData(this.editedItem, ["item_type", "menu_item_group"])
-				if (this.imageForUpload.length > 0) {
-					rawData = {
-						...rawData,
-						image: this.imageForUpload[0]
-					}
-				} else {
-					delete rawData["image"]
-				}
-				if (rawData.bar_size === null) delete rawData["bar_size"]
-				const payload = getFormData(rawData)
-				const updated = await this.$store.dispatch(
-					"menuItem/update",
-					{
-						id: this.editedItem.id,
-						body: payload
-					}
-				)
-				if (updated === true) {
-					await this.openSnack("Menu item updated successfully.", "success")
-					this.$bus.emit("reload-menu-items")
-					this.close()
-				} else if (updated === 500) {
-					await this.openSnack("Internal Server Error.")
-				} else {
-					await this.openSnack("Please load a valid form.")
-				}
-			} else {
-				const rawData = cookEditData(this.editedItem, ["item_type", "menu_item_group"])
-				const payload = getFormData({
+		cookMenuItemEditData() {
+			let rawData = cookEditData(this.editedItem, ["item_type", "menu_item_group"])
+			if (this.imageForUpload.length > 0) {
+				rawData = {
 					...rawData,
 					image: this.imageForUpload[0]
-				})
-				const created = await this.$store.dispatch("menuItem/create", payload)
-				if (created === true) {
-					await this.openSnack("Menu item added successfully.", "success")
-					this.$bus.emit("reload-menu-items")
-					this.close()
-				} else if (created === 500) {
-					await this.openSnack("Internal Server Error.")
-				} else {
-					await this.openSnack("Please load a valid form.")
 				}
+			} else {
+				delete rawData["image"]
+			}
+			if (rawData.bar_size === null) delete rawData["bar_size"]
+			return rawData
+		},
+		async saveAsNew() {
+			await this.createMenuItem()
+		},
+		async updateMenuItem() {
+			const rawData = this.cookMenuItemEditData()
+			const payload = getFormData(rawData)
+			const updated = await this.$store.dispatch(
+				"menuItem/update",
+				{
+					id: this.editedItem.id,
+					body: payload
+				}
+			)
+			if (updated === true) {
+				await this.openSnack("Menu item updated successfully.", "success")
+				this.$bus.emit("reload-menu-items")
+				this.close()
+			} else if (updated === 500) {
+				await this.openSnack("Internal Server Error.")
+			} else {
+				await this.openSnack("Please load a valid form.")
+			}
+		},
+		async createMenuItem() {
+			const rawData = cookEditData(this.editedItem, ["item_type", "menu_item_group"])
+			const payload = getFormData({
+				...rawData,
+				image: this.imageForUpload[0]
+			})
+			const created = await this.$store.dispatch("menuItem/create", payload)
+			if (created === true) {
+				await this.openSnack("Menu item added successfully.", "success")
+				this.$bus.emit("reload-menu-items")
+				this.close()
+			} else if (created === 500) {
+				await this.openSnack("Internal Server Error.")
+			} else {
+				await this.openSnack("Please load a valid form.")
+			}
+		},
+		async save() {
+			if (this.editedIndex > -1) {
+				await this.updateMenuItem()
+			} else {
+				await this.createMenuItem()
 			}
 		},
 	}
