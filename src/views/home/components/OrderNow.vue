@@ -1,8 +1,8 @@
 <template>
-	<div class="pa-4">
+	<div class="pa-4 order-now-wrapper">
 		<v-card
 			color="brown lighten-4"
-			max-width="800"
+			max-width="820"
 			class="mx-auto pa-2 order-now-card"
 		>
 			<v-row class="ma-0 pa-0"
@@ -152,7 +152,11 @@ export default {
 	color: black;
 }
 .order-now-card {
+	border: 6px solid goldenrod !important;
 	/*background: linear-gradient(rgba(248, 249, 250, 0), rgba(246, 242, 248, 0)), url("https://media-cdn.tripadvisor.com/media/photo-s/0b/05/09/21/dessert.jpg") no-repeat fixed center;*/
 	/*background-size: cover;*/
+}
+.order-now-wrapper {
+	margin-top: -60px;
 }
 </style>
