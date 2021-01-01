@@ -58,15 +58,19 @@ module.exports = {
 		}
 		return orderNowRefinedList
 	},
-	removeCartedItemsDuplicationFromOrderNowList(orderList, cartList) {
+	removeCartedItemsDuplicationFromOrderNowList(totalItemsList, cartList) {
+		if (cartList.length === 0) {
+			return totalItemsList
+		}
 		let magic = []
-		if (cartList.length === 0) return orderList
-		orderList.forEach((orderItem) => {
-			cartList.forEach(cartItem => {
-				if (cartItem.item.id !== orderItem.id) {
-					magic.push(orderItem)
-				}
-			})
+		let itemIdArray = []
+		cartList.forEach((iter) => {
+			itemIdArray.push(iter.item.id)
+		})
+		totalItemsList.forEach(iter => {
+			if (!itemIdArray.includes(iter.id)) {
+				magic.push(iter)
+			}
 		})
 		return magic
 	},
@@ -105,19 +109,38 @@ module.exports = {
 	getAccessToken() {
 		return localStorage.getItem("token")
 	},
-	getCartSummary(
-		order, cartItems, delivery_charge=null, loyalty_discount=null
-	) {
+	getDeliveryCharge() {
 		const today = new Date()
-		if (!order) return []
-
 		const DELIVERY_START_PM = 17
 		const DELIVER_START_AM = 4
 		const DELIVERY_CHARGE = 50
+
+		if (today.getHours() >= DELIVERY_START_PM || today.getHours() <= DELIVER_START_AM) {
+			return DELIVERY_CHARGE
+		} else return 0
+	},
+	getLoyaltyDiscount(totalPrice) {
 		const LOYALTY_10_PER_FROM = 10000
 		const LOYALTY_12_PER_FROM = 12000
 		const LOYALTY_13_PER_FROM = 15000
 		const LOYALTY_15_PER_FROM = 20000
+
+		if (totalPrice >= LOYALTY_10_PER_FROM && totalPrice < LOYALTY_12_PER_FROM) {
+			return 10
+		} else if(totalPrice >= LOYALTY_12_PER_FROM && totalPrice < LOYALTY_13_PER_FROM) {
+			return 12
+		} else if (totalPrice >= LOYALTY_13_PER_FROM && totalPrice < LOYALTY_15_PER_FROM) {
+			return 13
+		} else if (totalPrice >= LOYALTY_15_PER_FROM) {
+			return 15
+		} else {
+			return 0
+		}
+	},
+	getCartSummary(
+		order, cartItems, delivery_charge=null, loyalty_discount=null
+	) {
+		if (!order) return []
 
 		let totalPrice = 0
 		let totalItems = 0
@@ -131,17 +154,7 @@ module.exports = {
 		})
 
 		if (!loyalty_discount) {
-			if (totalPrice >= LOYALTY_10_PER_FROM && totalPrice < LOYALTY_12_PER_FROM) {
-				loyaltyDiscount = 10
-			} else if(totalPrice >= LOYALTY_12_PER_FROM && totalPrice < LOYALTY_13_PER_FROM) {
-				loyaltyDiscount = 12
-			} else if (totalPrice >= LOYALTY_13_PER_FROM && totalPrice < LOYALTY_15_PER_FROM) {
-				loyaltyDiscount = 13
-			} else if (totalPrice >= LOYALTY_15_PER_FROM) {
-				loyaltyDiscount = 15
-			} else {
-				loyaltyDiscount = 0
-			}
+			loyaltyDiscount = this.getLoyaltyDiscount(totalPrice)
 		} else {
 			loyaltyDiscount = parseInt(loyalty_discount)
 		}
@@ -150,9 +163,7 @@ module.exports = {
 		grandTotal -= (loyaltyDiscount / 100) * totalPrice
 
 		if (!delivery_charge) {
-			if (today.getHours() >= DELIVERY_START_PM || today.getHours() <= DELIVER_START_AM) {
-				deliveryCharge = DELIVERY_CHARGE
-			}
+			deliveryCharge = this.getDeliveryCharge()
 		} else {
 			deliveryCharge = parseInt(delivery_charge)
 		}

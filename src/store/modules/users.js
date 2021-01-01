@@ -6,9 +6,11 @@ const userUrls = urls.user
 
 export const SET_USER = "SET_USER"
 export const SET_USERS = "SET_USERS"
+export const SET_USER_PROFILES = "SET_USER_PROFILES"
 export const SET_REGISTER_ERROR_MESSAGES = "SET_REGISTER_ERROR_MESSAGES"
 export const SET_ADD_USER_ERROR_MESSAGES = "SET_ADD_USER_ERROR_MESSAGES"
 export const SET_REGISTRATION_SUMMARY = "SET_REGISTRATION_SUMMARY"
+export const SET_CONTACT_LIST = "SET_CONTACT_LIST"
 
 const defaultSet = {
 	full_name: null,
@@ -23,6 +25,7 @@ const defaultSet = {
 const state = {
 	users: [],
 	user: {},
+	userProfiles: [],
 	registerError: {
 		...defaultSet,
 	},
@@ -30,7 +33,8 @@ const state = {
 		...defaultSet,
 		birth_date: null
 	},
-	regSummary: {}
+	regSummary: {},
+	contactList: {},
 }
 
 const mutations = {
@@ -48,6 +52,12 @@ const mutations = {
 	},
 	[SET_REGISTRATION_SUMMARY](state, value) {
 		state.regSummary = value
+	},
+	[SET_USER_PROFILES](state, value) {
+		state.userProfiles = value
+	},
+	[SET_CONTACT_LIST](state, value) {
+		state.contactList = value
 	}
 }
 
@@ -66,6 +76,12 @@ const getters = {
 	},
 	registrationSummary: state => {
 		return state.regSummary.results
+	},
+	allUserProfiles: state => {
+		return state.userProfiles
+	},
+	profileContactList: state => {
+		return state.contactList.results
 	}
 }
 
@@ -188,6 +204,14 @@ const actions = {
 		} catch(e) {
 			return false
 		}
+	},
+	async fetchProfileContactList({commit}) {
+		const res = await $api.get(userUrls.listProfileContacts)
+		commit("SET_CONTACT_LIST", res)
+	},
+	async fetchAllUserProfiles({commit}) {
+		const res = await $api.get(userUrls.listProfiles)
+		commit("SET_USER_PROFILES", res)
 	}
 }
 

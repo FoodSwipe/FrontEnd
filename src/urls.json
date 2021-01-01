@@ -10,7 +10,9 @@
     "profileDetail": "profile/%s",
     "toggleSuperUserStatus": "user/%s/toggle-superuser-status",
     "toggleStaffStatus": "user/%s/toggle-staff-status",
-    "registrationSummary": "registration-summary"
+    "registrationSummary": "registration-summary",
+    "searchProfileByContact": "user-profiles?contact=%s",
+    "listProfileContacts": "list-user-contacts"
   },
   "auth": {
     "login": "login",

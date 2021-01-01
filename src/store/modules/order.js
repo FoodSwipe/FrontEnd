@@ -11,13 +11,16 @@ export const SET_ORDER_FORM_ERRORS = "SET_ORDER_FORM_ERRORS"
 export const SET_STORE_SUMMARY = "SET_STORE_SUMMARY"
 export const SET_SALE_SUMMARY = "SET_SALE_SUMMARY"
 export const SET_REGISTRATION_SUMMARY = "SET_REGISTRATION_SUMMARY"
+export const SET_LAST_CREATED_ORDER_ID = "SET_LAST_CREATED_ORDER_ID"
 
 const defaultOrderErrors = {
 	custom_location: null,
 	custom_contact: null,
 	custom_email: null,
 	loyalty_discount: null,
-	delivery_charge: null
+	delivery_charge: null,
+	payment_type: null,
+
 }
 
 const state = {
@@ -29,7 +32,8 @@ const state = {
 	},
 	storeSummary: {},
 	saleSummary: {},
-	registrationSummary: {}
+	registrationSummary: {},
+	lastCreatedOrderId: null,
 }
 
 const mutations = {
@@ -51,6 +55,9 @@ const mutations = {
 	[SET_REGISTRATION_SUMMARY](state, value) {
 		state.registrationSummary = value
 	},
+	[SET_LAST_CREATED_ORDER_ID](state, value) {
+		state.lastCreatedOrderId = value
+	}
 }
 
 const getters = {
@@ -74,6 +81,9 @@ const getters = {
 	},
 	registrationSummary: state => {
 		return state.registrationSummary
+	},
+	lastCreatedOrderID: state => {
+		return state.lastCreatedOrderId
 	}
 }
 
@@ -117,7 +127,8 @@ const actions = {
 	},
 	async create({commit}, payload) {
 		try {
-			await $api.post(orderUrls.list, payload)
+			const res = await $api.post(orderUrls.list, payload)
+			commit("SET_LAST_CREATED_ORDER_ID", res.id)
 			return true
 		} catch (e) {
 			if (parseInt(e.response.status.toString()) === 400) {
