@@ -16,59 +16,49 @@
 			height="200"
 			:src="item.image"
 			gradient="to top, rgba(0,0,0, .3), rgba(0,0,0, .7)"
-			class="cursor store-item-image"
+			class="cursor store-item-image rounded"
 			@click="routeToItemDetail(item)"
-		>
-			<v-row class="fill-height text-center ma-0 pa-0"
-				no-gutters justify="end"
-				align="start"
-			>
-				<v-card class="pa-4"
-					width="100%"
-					color="transparent"
-					flat
-				>
-					<v-card-title class="item-name py-0 d-flex justify-end">
-						{{ item.name }}
-					</v-card-title>
-					<v-card-text class="px-2">
-						<div class="d-flex justify-end item-type-row">
-							<span
-								v-for="(type, index) in item.item_type"
-								:key="index"
-								class="pl-1"
-							>
-								<v-tooltip bottom>
-									<template #activator="{on, attrs}">
-										<v-avatar
-											class="elevation-1"
-											size="20"
-											v-bind="attrs"
-											v-on="on"
-										>
-											<v-img
-												:src="type.badge"
-											/>
-										</v-avatar>
-									</template>
-									<span>{{ type.name }}</span>
-								</v-tooltip>
-							</span>
-						</div>
-					</v-card-text>
-				</v-card>
-			</v-row>
-		</v-img>
+		/>
 
-		<v-card-text class="item-details">
+		<v-card-text class="py-0">
+			<div class="text-center item-name">
+				{{ item.name }}
+			</div>
+		</v-card-text>
+		<v-card-subtitle class="text-center py-0">
+			<span
+				v-for="(type, index) in item.item_type"
+				:key="index"
+				class="px-1"
+			>
+				<v-tooltip bottom>
+					<template #activator="{on, attrs}">
+						<v-avatar
+							class="elevation-1"
+							size="20"
+							v-bind="attrs"
+							v-on="on"
+						>
+							<v-img
+								:src="type.badge"
+							/>
+						</v-avatar>
+					</template>
+					<span>{{ type.name }}</span>
+				</v-tooltip>
+			</span>
+		</v-card-subtitle>
+
+		<v-card-text class="item-details text-center">
 			<v-row
 				align="center"
 				class="ma-0 pa-0"
 				no-gutters
 			>
 				<v-fade-transition>
-					<v-col v-if="$vuetify.breakpoint.width > 260"
-						cols="10"
+					<v-col
+						cols="12"
+						class="py-4"
 					>
 						<div>
 							<span class="rs">Rs</span><span class="item-price">{{ item.price }}</span>
@@ -76,15 +66,16 @@
 					</v-col>
 				</v-fade-transition>
 				<v-spacer v-if="$vuetify.breakpoint.width > 300" />
-				<v-col cols="2"
+				<v-col cols="12"
 					class="ma-0 pa-0"
 				>
-					<v-card-actions class="ma-0 pa-0">
+					<v-card-actions class="ma-0 pa-0 d-flex justify-center">
 						<v-tooltip bottom>
 							<template #activator="{on, attrs}">
 								<v-btn
-									color="deep-purple lighten-2"
-									icon
+									dark
+									class="add-to-cart-button"
+									color="orange"
 									v-bind="attrs"
 									:disabled="isAddedInCart(item)"
 									v-on="on"
@@ -188,10 +179,15 @@ export default {
 </script>
 <style scoped lang="scss">
 .item-name {
-	font-size: 1.2rem;
-	line-height: 1.4rem;
+	font-size: 1rem;
+	line-height: 1rem;
 	font-weight: 500;
-	padding: 0 5px;
+	padding: 10px 5px 0;
+	transition: all .3s ease;
+	@media only screen and (max-width: 600px) {
+		font-size: .875rem;
+		line-height: .875rem;
+	}
 }
 .item-details {
 	padding: 2px 17px 0;
@@ -201,8 +197,8 @@ export default {
 }
 .item-price {
 	color: green;
-	font-size: 1.5rem;
-	line-height: 1.5rem;
+	font-size: 1.4rem;
+	line-height: 1.4rem;
 	font-family: 'Yeon Sung', cursive;
 }
 .rs {
@@ -215,13 +211,26 @@ export default {
 .item-type-row {
 	width: 100%;
 }
+
+.store-item-image {
+	transition: transform .5s ease;
+}
+
 .store-item-card {
-	transition: all .2s ease-in-out;
+	overflow: hidden;
 	&:hover {
-		border: 4px solid goldenrod;
 		.store-item-image {
-			border-radius: 0
+			transform: scale(1.1);
+		}
+		.item-name {
+			padding-top: 20px;
+			font-size: 1rem;
+			line-height: 1rem;
 		}
 	}
+}
+.add-to-cart-button {
+	border-radius: 30px;
+	margin-bottom: 20px;
 }
 </style>

@@ -35,7 +35,7 @@
 					>
 						<v-col v-for="(item, i) in group['menu_items']"
 							:key="i"
-							cols="6"
+							cols="12"
 							xl="2"
 							lg="2"
 							md="2"
