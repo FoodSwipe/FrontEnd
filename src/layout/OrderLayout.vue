@@ -1,8 +1,8 @@
 <template>
 	<div>
-		<div class="bg">
-			<div class="headline text-center py-16 grey--text text--lighten-3 rounded-0">
-				<v-row class="ma-0 pa-0"
+		<div class="bg pt-12 pt-xl-16 pt-lg-16">
+			<div class="headline text-center py-16 grey--text text--lighten-3 rounded-0 my-auto">
+				<v-row class="ma-0 pa-0 pt-12 pt-xl-10 pt-lg-10"
 					justify="center"
 					align="center"
 					no-gutters
@@ -153,9 +153,9 @@ export default {
 	transition: all .3s ease;
 	background: #cba125;
 	position: relative;
-	min-height: 40vh;
-	@media only screen and (max-width: 475px) {
-		min-height: 30vh;
+	min-height: 45vh;
+	@media only screen and (max-width: 528px) {
+		min-height: 50vh;
 	}
 }
 .slight-left {

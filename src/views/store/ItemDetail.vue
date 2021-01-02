@@ -2,7 +2,7 @@
 	<div>
 		<v-card
 			:loading="isLoading"
-			class="mx-auto item-detail-card"
+			class="mx-auto item-detail-card mt-16"
 			max-width="1200"
 			flat
 			color="transparent"
@@ -15,7 +15,7 @@
 				>
 					<!--item image column-->
 					<v-col cols="12"
-						class="pt-0 pt-sm-12 pt-md-12 pt-lg-12 pt-xl-12"
+						class="pt-12 px-1"
 					>
 						<transition
 							appear
@@ -505,8 +505,6 @@ export default {
 	margin-top: -30px !important
 .item-image
 	border-radius: 20px
-	@media only screen and (max-width: 599px)
-			border-radius: 0 0 20px 20px
 .review-field
 	max-width: 900px
 .relative

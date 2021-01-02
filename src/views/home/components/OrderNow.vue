@@ -157,6 +157,6 @@ export default {
 	/*background-size: cover;*/
 }
 .order-now-wrapper {
-	margin-top: -60px;
+	margin-top: -70px;
 }
 </style>
