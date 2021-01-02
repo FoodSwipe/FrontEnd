@@ -2,181 +2,214 @@
 	<div>
 		<v-app-bar
 			app
-			fixed
-			color="#FFC107"
-			height="80"
+			color="transparent"
 			width="100vw"
-			class="ma-0 pr-4"
+			class="ma-0 pa-0 elevation-0 food-swipe-toolbar"
 		>
-			<div class="organization-title">
-				<v-card-title class="org-name cursor"
-					@click="toHome"
-				>
-					Food Swipe
-				</v-card-title>
-				<v-fade-transition>
-					<v-card-subtitle v-if="$route.name !== 'Food Swipe'">
-						{{ $route.name }}
-					</v-card-subtitle>
-				</v-fade-transition>
+			<div class="welcome subtitle-2 white--text">
+				Welcome to Food Swipe Online!
 			</div>
 			<v-spacer />
-			<v-tooltip v-if="currentUser === null"
-				bottom
-			>
-				<template #activator="{on, attrs}">
-					<v-scale-transition>
-						<v-btn
-							v-bind="attrs"
-							icon
-							small
-							class="pr-0 mr-sm-6 mr-md-6 mr-lg-6 mr-xl-6 cursor"
-							v-on="on"
-							@click.stop="toggleDrawerState()"
-						>
-							<v-icon size="$vuetify.breakpoint.width > 300
-									? ''
-									: '16'"
-							>
-								input
-							</v-icon>
-						</v-btn>
-					</v-scale-transition>
-				</template>
-				<span>Login</span>
-			</v-tooltip>
-			<v-menu
-				v-else
-				close-on-content-click
-				offset-y
-				transition="scale-transition"
-				nudge-left="45"
-				nudge-bottom="5"
-			>
-				<template #activator="{on, attrs}">
-					<v-btn
-						icon
-						small
-						class="pr-0 mr-sm-6 mr-md-6 mr-lg-6 mr-xl-6 profile-avatar cursor"
-						v-bind="attrs"
-						v-on="on"
-					>
-						<v-icon :size="
-							$vuetify.breakpoint.width > 300
-								? ''
-								: '16'
-						"
-						>
-							account_circle
-						</v-icon>
-					</v-btn>
-				</template>
-				<v-list color="orange lighten-4">
-					<v-list-item class="cursor">
-						<v-list-item-icon class="mr-2">
-							<v-icon>account_circle</v-icon>
-						</v-list-item-icon>
-						<v-list-item-title @click="toProfile()">
-							Profile
-						</v-list-item-title>
-					</v-list-item>
-					<v-divider class="ml-4" />
-					<v-list-item class="cursor">
-						<v-list-item-icon class="mr-2">
-							<v-icon>input</v-icon>
-						</v-list-item-icon>
-						<v-list-item-title @click="logOut()">
-							Logout
-						</v-list-item-title>
-					</v-list-item>
-				</v-list>
-			</v-menu>
-			<v-tooltip bottom>
-				<template #activator="{on, attrs}">
-					<v-slide-x-transition>
-						<v-btn
-							v-show="$route.name !== 'Store'"
-							icon
-							small
-							class="pr-0 mr-sm-6 mr-md-6 mr-lg-6 mr-xl-6"
-							v-bind="attrs"
-							@click="toStore()"
-							v-on="on"
-						>
-							<v-icon :size="
-								$vuetify.breakpoint.width > 300
-									? ''
-									: '16'
-							"
-							>
-								store
-							</v-icon>
-						</v-btn>
-					</v-slide-x-transition>
-				</template>
-				<span>Store</span>
-			</v-tooltip>
-			<v-tooltip bottom>
-				<template #activator="{on, attrs}">
-					<v-slide-x-transition>
-						<v-btn
-							v-show="showAdminButton"
-							icon
-							small
-							class="pr-0 mr-sm-6 mr-md-6 mr-lg-6 mr-xl-6"
-							v-bind="attrs"
-							@click="toAdminPanel()"
-							v-on="on"
-						>
-							<v-icon :size="
-								$vuetify.breakpoint.width > 300
-									? ''
-									: '16'
-							"
-							>
-								settings_applications
-							</v-icon>
-						</v-btn>
-					</v-slide-x-transition>
-				</template>
-				<span>Administration</span>
-			</v-tooltip>
-
-			<v-fade-transition>
-				<v-badge
-					dark
-					color="black"
-					:content="cartCount"
-					offset-x="10"
-					offset-y="15"
+			<div class="social-networks px-2">
+				<v-avatar size="20"
+					class="mx-1 cursor"
+					@click="routeToFoodSwipeFacebookPage()"
 				>
-					<v-tooltip bottom>
-						<template #activator="{on, attrs}">
+					<v-img
+						src="https://icons-for-free.com/iconfiles/png/512/fb+icon-1320183899414660008.png"
+					/>
+				</v-avatar>
+				<v-avatar size="18"
+					class="mx-1 cursor"
+					@click="routeToFoodSwipeInstaPage()"
+				>
+					<v-img
+						src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Instagram_icon.png/768px-Instagram_icon.png"
+					/>
+				</v-avatar>
+			</div>
+			<v-icon size="16"
+				color="white"
+				class="public-contact-icon"
+			>
+				call
+			</v-icon>
+			<p class="ma-0 public-contact">
+				+9779802801073,
+				+9779802801077
+			</p>
+			<template #extension>
+				<div class="organization-title">
+					<v-card-title class="org-name"
+						:class="($route.name !== 'Food Swipe') ? 'cursor': ''"
+						@click="toHome"
+					>
+						Food Swipe
+					</v-card-title>
+					<v-fade-transition>
+						<v-card-subtitle v-if="$route.name !== 'Food Swipe'">
+							{{ $route.name }}
+						</v-card-subtitle>
+					</v-fade-transition>
+				</div>
+				<v-spacer />
+				<v-tooltip v-if="currentUser === null"
+					bottom
+				>
+					<template #activator="{on, attrs}">
+						<v-scale-transition>
 							<v-btn
-								:disabled="$route.name === 'Cart'"
-								light
+								v-bind="attrs"
 								icon
 								small
-								class="mr-2"
-								v-bind="attrs"
-								@click="toCart()"
+								class="pr-0 mr-sm-6 mr-md-6 mr-lg-6 mr-xl-6 cursor"
 								v-on="on"
+								@click.stop="toggleDrawerState()"
 							>
-								<v-icon
-									:size="
-										$vuetify.breakpoint.width > 300
-											? ''
-											: '16'
-									"
+								<v-icon :size="($vuetify.breakpoint.width > 300)
+									? ''
+									: '16'"
 								>
-									shopping_cart
+									input
 								</v-icon>
 							</v-btn>
-						</template>
-						<span>Cart</span>
-					</v-tooltip>
-				</v-badge>
-			</v-fade-transition>
+						</v-scale-transition>
+					</template>
+					<span>Login</span>
+				</v-tooltip>
+				<v-menu
+					v-else
+					close-on-content-click
+					offset-y
+					transition="scale-transition"
+					nudge-left="45"
+					nudge-bottom="5"
+				>
+					<template #activator="{on, attrs}">
+						<v-btn
+							icon
+							small
+							class="pr-0 mr-sm-6 mr-md-6 mr-lg-6 mr-xl-6 profile-avatar cursor"
+							v-bind="attrs"
+							v-on="on"
+						>
+							<v-icon :size="
+								$vuetify.breakpoint.width > 300
+									? ''
+									: '16'
+							"
+							>
+								account_circle
+							</v-icon>
+						</v-btn>
+					</template>
+					<v-list color="orange lighten-4">
+						<v-list-item class="cursor">
+							<v-list-item-icon class="mr-2">
+								<v-icon>account_circle</v-icon>
+							</v-list-item-icon>
+							<v-list-item-title @click="toProfile()">
+								Profile
+							</v-list-item-title>
+						</v-list-item>
+						<v-divider class="ml-4" />
+						<v-list-item class="cursor">
+							<v-list-item-icon class="mr-2">
+								<v-icon>input</v-icon>
+							</v-list-item-icon>
+							<v-list-item-title @click="logOut()">
+								Logout
+							</v-list-item-title>
+						</v-list-item>
+					</v-list>
+				</v-menu>
+				<v-tooltip bottom>
+					<template #activator="{on, attrs}">
+						<v-slide-x-transition>
+							<v-btn
+								v-show="$route.name !== 'Store'"
+								icon
+								small
+								class="pr-0 mr-sm-6 mr-md-6 mr-lg-6 mr-xl-6"
+								v-bind="attrs"
+								@click="toStore()"
+								v-on="on"
+							>
+								<v-icon :size="
+									$vuetify.breakpoint.width > 300
+										? ''
+										: '16'
+								"
+								>
+									store
+								</v-icon>
+							</v-btn>
+						</v-slide-x-transition>
+					</template>
+					<span>Store</span>
+				</v-tooltip>
+				<v-tooltip bottom>
+					<template #activator="{on, attrs}">
+						<v-slide-x-transition>
+							<v-btn
+								v-show="showAdminButton"
+								icon
+								small
+								class="pr-0 mr-sm-6 mr-md-6 mr-lg-6 mr-xl-6"
+								v-bind="attrs"
+								@click="toAdminPanel()"
+								v-on="on"
+							>
+								<v-icon :size="
+									$vuetify.breakpoint.width > 300
+										? ''
+										: '16'
+								"
+								>
+									settings_applications
+								</v-icon>
+							</v-btn>
+						</v-slide-x-transition>
+					</template>
+					<span>Administration</span>
+				</v-tooltip>
+
+				<v-fade-transition>
+					<v-badge
+						dark
+						color="black"
+						:content="cartCount"
+						offset-x="10"
+						offset-y="15"
+					>
+						<v-tooltip bottom>
+							<template #activator="{on, attrs}">
+								<v-btn
+									:disabled="$route.name === 'Cart'"
+									light
+									icon
+									small
+									class="mr-2"
+									v-bind="attrs"
+									@click="toCart()"
+									v-on="on"
+								>
+									<v-icon
+										:size="
+											$vuetify.breakpoint.width > 300
+												? ''
+												: '16'
+										"
+									>
+										shopping_cart
+									</v-icon>
+								</v-btn>
+							</template>
+							<span>Cart</span>
+						</v-tooltip>
+					</v-badge>
+				</v-fade-transition>
+			</template>
 		</v-app-bar>
 		<v-navigation-drawer
 			v-model="drawer"
@@ -543,6 +576,12 @@ export default {
 		this.$bus.off("subtract-cart-count", this.subtractCartCount)
 	},
 	methods: {
+		routeToFoodSwipeFacebookPage() {
+			window.open("https://www.facebook.com/foodswipeonline", "_blank")
+		},
+		routeToFoodSwipeInstaPage() {
+			window.open("https://www.instagram.com/foodswipeonlinefood/?hl=en", "_blank")
+		},
 		openRegisterDialog() {
 			this.$store.dispatch("user/clearRegisterErrorMessages")
 			this.registerDialog = true
@@ -581,7 +620,9 @@ export default {
 			router.push({name: "Store"})
 		},
 		toHome() {
-			router.push({name: "Food Swipe"})
+			if (this.$route.name !== "Food Swipe") {
+				router.push({ name: "Food Swipe" })
+			}
 		},
 		toAdminPanel() {
 			router.push({name: "Administration"})
@@ -643,7 +684,7 @@ export default {
 	}
 }
 </script>
-<style>
+<style lang="scss">
 .v-badge__badge {
 	height: 18px;
 	padding-top: .21rem;
@@ -657,6 +698,38 @@ export default {
 }
 .flickity-page-dots .dot {
 	background: white !important;
+}
+.food-swipe-toolbar {
+	.v-toolbar__content {
+		/*Animation*/
+		-webkit-transition: height 1s ease;
+		-moz-transition: height 1s ease;
+		-o-transition: height 1s ease;
+		-ms-transition: height 1s ease;
+		transition: height 1s ease;
+		height: 3rem !important;
+		background: #FF0000;
+		align-items: start;
+		@media only screen and (max-width: 528px) {
+			height: 5rem !important;
+		}
+	}
+	.v-toolbar__extension {
+		transition: margin-top .3s ease;
+		height: 4.5rem !important;
+		background: #FFC107 !important;
+		margin: -1.3rem auto 0;
+		padding: 0 2rem 0 1rem;
+		width: 95vw;
+		border-radius: 15px;
+		box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12) !important;
+		@media only screen and (max-width: 528px) {
+			margin-top: -2rem !important;
+		}
+	}
+}
+.public-contact-icon {
+	padding-top: 2px;
 }
 </style>
 <style lang="sass" scoped>
@@ -694,4 +767,21 @@ export default {
 	z-index: 1
 .nav-close
 	border: 2px solid #6db6de
+.public-contact
+	-webkit-transition: height .5s ease
+	-moz-transition: height .5s ease
+	-o-transition: height .5s ease
+	-ms-transition: height .5s ease
+	color: white
+	font-size: .8rem
+	font-weight: bold
+	display: flex
+	align-items: center
+	justify-items: center
+	width: 13.5rem
+	@media only screen and (max-width: 528px)
+		width: 6rem
+.social-networks
+	display: flex
+	align-items: center
 </style>

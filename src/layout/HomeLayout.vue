@@ -24,6 +24,9 @@
 		<v-main class="home-layout">
 			<v-container fluid
 				class="pa-0"
+				:class="
+					($route.name === 'Cart') ? 'top-padding': ''
+				"
 			>
 				<router-view />
 			</v-container>
@@ -59,9 +62,14 @@ export default {
 </script>
 <style scoped lang="scss">
 .home-layout {
-	min-height: calc(100vh - 48px);
+	min-height: calc(100vh + 2rem);
+	margin-top: -80px;
+	padding-top: 60px;
 }
 .home-snack {
 	margin-top: -60px;
+}
+.top-padding {
+	padding-top: 4rem !important;
 }
 </style>
