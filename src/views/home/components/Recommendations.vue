@@ -1,5 +1,6 @@
 <template>
 	<div>
+		<start-order-dialog />
 		<v-subheader class="px-0 recommend"
 			:class="
 				($vuetify.breakpoint.mdAndUp)
@@ -9,7 +10,7 @@
 		>
 			Our Recommendations
 		</v-subheader>
-		<v-list two-line dark
+		<v-list three-line dark
 			class="blue-gradient rounded"
 			:max-width="
 				($vuetify.breakpoint.mdAndUp) ? '500' : '100%'
@@ -27,7 +28,9 @@
 						</v-avatar>
 					</v-list-item-avatar>
 					<v-list-item-content>
-						<v-list-item-title class="recommendation-item-name">
+						<v-list-item-title class="recommendation-item-name cursor"
+							@click="routeToItemDetail(food.menu_item)"
+						>
 							{{ food.menu_item.name }}
 						</v-list-item-title>
 						<v-list-item-subtitle>
@@ -39,10 +42,19 @@
 								</v-avatar>
 							</span>
 						</v-list-item-subtitle>
+						<v-list-item-subtitle>
+							<span class="nrs">NRs</span><span class="recommendation-item-price">{{ food.menu_item.price }}</span>
+						</v-list-item-subtitle>
 					</v-list-item-content>
-					<v-list-item-action-text>
-						<span class="nrs">NRs</span><span class="recommendation-item-price">{{ food.menu_item.price }}</span>
-					</v-list-item-action-text>
+					<v-list-item-action>
+						<v-btn icon
+							@click="addItemToCart(food.menu_item)"
+						>
+							<v-icon>
+								add_shopping_cart
+							</v-icon>
+						</v-btn>
+					</v-list-item-action>
 				</v-list-item>
 				<v-divider v-if="index !== recommendedItemsSet.length -1"
 					inset
@@ -53,9 +65,13 @@
 </template>
 <script>
 import { mapGetters } from "vuex"
+import router from "@/router"
 
 export default {
 	name: "RecommendationsList",
+	components: {
+		StartOrderDialog: () => import("@/components/StartOrder")
+	},
 	data: () => ({
 		addedToCart: false,
 		recommendedItemsSet: [],
@@ -79,6 +95,50 @@ export default {
 		await this.initialize()
 	},
 	methods: {
+		async openSnack(text, color="error") {
+			await this.$store.dispatch("snack/setSnackState", true)
+			await this.$store.dispatch("snack/setSnackColor", color)
+			await this.$store.dispatch("snack/setSnackText", text)
+		},
+		async addItemToCart(item) {
+			console.log(item)
+			if (this.$helper.isAuthenticated()) {
+				const currentUser = this.$helper.getCurrentUser()
+				this.$bus.emit("start-order-prefill", {
+					order: {
+						custom_location: currentUser.profile.address,
+						custom_contact: (currentUser.profile.contact)
+							? currentUser.profile.contact.replace(/\D/g, "")
+							: null
+					}
+				})
+			}
+			if (this.$helper.getCookingOrderId()) {
+				const addedToCart = await this.$store.dispatch("cart/addToCart", {
+					order: parseInt(this.$helper.getCookingOrderId()),
+					item: item.id
+				})
+				if (addedToCart === true) {
+					await this.openSnack(`Cheers! ${item.name} is added to cart.`, "success")
+					this.$bus.emit("add-cart-count-by-one")
+					await this.$store.dispatch("order/withCartItems", {
+						id: this.$helper.getCookingOrderId()
+					})
+				} else {
+					if (addedToCart.non_field_errors !== undefined) {
+						if (Array.isArray(addedToCart.non_field_errors)) {
+							if (addedToCart.non_field_errors[0] === "The fields order, item must make a unique set.") {
+								await this.openSnack("Item already added to cart.")
+							}
+						}
+					}
+				}
+			} else {
+				this.$bus.emit("start-order", {
+					withItem: item
+				})
+			}
+		},
 		async initialize() {
 			this.isLoading = true
 			const fetched = await this.$store.dispatch("menuItem/fetchRecommendedItems")
@@ -86,6 +146,9 @@ export default {
 				this.recommendedItemsSet = this.recommendedItems
 			}
 			this.isLoading = false
+		},
+		routeToItemDetail(item) {
+			router.push("/product/"+item.id)
 		}
 	}
 }
