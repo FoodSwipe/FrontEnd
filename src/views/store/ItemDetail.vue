@@ -1,8 +1,44 @@
 <template>
-	<div>
+	<div class="mt-16">
+		<v-card max-width="615"
+			class="mx-auto px-2"
+			flat
+		>
+			<v-row class="ma-0 pa-0 pt-4"
+				justify="center"
+			>
+				<v-breadcrumbs v-if="!isLoading"
+					:items="itemDetailBreadcrumbs"
+					class="px-1"
+				>
+					<template #item="{ item }">
+						<v-breadcrumbs-item
+							class="home-breadcrumb-item"
+							:href="item.href"
+							:disabled="item.disabled"
+						>
+							{{ item.text.toUpperCase() }}
+						</v-breadcrumbs-item>
+					</template>
+				</v-breadcrumbs>
+				<v-spacer />
+				<v-tooltip bottom>
+					<template #activator="{on, attrs}">
+						<v-btn icon
+							v-bind="attrs"
+							v-on="on"
+							@click="$router.go(-1)"
+						>
+							<v-icon>arrow_back</v-icon>
+						</v-btn>
+					</template>
+					<span>Go Back</span>
+				</v-tooltip>
+			</v-row>
+		</v-card>
 		<v-card
 			:loading="isLoading"
-			class="mx-auto item-detail-card mt-16"
+			class="mx-auto item-detail-card"
 			max-width="1200"
 			flat
 			color="transparent"
@@ -15,7 +51,7 @@
 				>
 					<!--item image column-->
 					<v-col cols="12"
-						class="pt-12 px-1"
+						class="px-1"
 					>
 						<transition
 							appear
@@ -326,6 +362,20 @@ export default {
 				{ field: "Total purchases", value: 50 },
 				{ field: "Available?", value: this.item.isAvailable },
 			]
+		},
+		itemDetailBreadcrumbs() {
+			return [
+				{
+					text: "> Home",
+					disabled: false,
+					href: "/",
+				},
+				{
+					text: this.item.name,
+					disabled: true,
+					href: "",
+				}
+			]
 		}
 	},
 	async created() {
@@ -370,6 +420,7 @@ export default {
 		},
 		async initialize() {
 			this.isLoading = true
+			await this.$vuetify.goTo(0)
 			await this.$store.dispatch("menuItem/getDetail", {id: this.$route.params.id})
 			if (this.$helper.getCookingOrderId()) {
 				await this.$store.dispatch("order/withCartItems", {
