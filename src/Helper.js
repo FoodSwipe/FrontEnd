@@ -20,6 +20,9 @@ module.exports = {
 				})
 			} else targetData[field] = datum.id
 		})
+		if (targetData.bar_size === null) targetData.bar_size = ""
+		if (targetData.is_veg === null) targetData.is_veg = false
+		if (targetData.is_bar_item === null) targetData.is_bar_item = false
 		return targetData
 	},
 	/**
