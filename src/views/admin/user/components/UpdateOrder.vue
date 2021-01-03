@@ -151,13 +151,14 @@
 											>
 												<v-autocomplete
 													v-model="selectedItems"
+													class="menu-items-autocomplete"
 													:disabled="isUpdating"
 													:readonly="order.is_delivered"
 													:items="orderNowRefinedList"
 													filled
 													chips
 													deletable-chips
-													color="grey darken-3"
+													color="orange"
 													placeholder="Add menu items in this order (*)"
 													item-text="name"
 													item-value="id"
@@ -186,7 +187,9 @@
 													</template>
 													<template #item="data">
 														<template v-if="typeof data.item !== 'object'">
-															<v-list-item-content v-text="data.item" />
+															<v-list-item-content style="color: white">
+																{{ data.item }}
+															</v-list-item-content>
 														</template>
 														<template v-else>
 															<v-list-item-avatar>
@@ -194,9 +197,13 @@
 															</v-list-item-avatar>
 															<v-list-item-content>
 																<v-list-item-title>{{ data.item.name }}</v-list-item-title>
-																<v-list-item-subtitle>{{ data.item.group }}</v-list-item-subtitle>
+																<v-list-item-subtitle style="color: white;">
+																	{{ data.item.group }}
+																</v-list-item-subtitle>
 															</v-list-item-content>
-															<v-list-item-action-text>{{ data.item.price }}</v-list-item-action-text>
+															<v-list-item-action-text style="color: white;">
+																{{ data.item.price }}
+															</v-list-item-action-text>
 														</template>
 													</template>
 													<template #append-outer>
@@ -323,10 +330,11 @@
 									<v-text-field
 										v-model="order.custom_location"
 										filled
-										label="Delivery Location"
 										clearable
-										prepend-inner-icon="explore"
 										hide-details="auto"
+										:readonly="order.is_delivered"
+										label="Delivery Location"
+										prepend-inner-icon="explore"
 										:error-messages="orderFormError.custom_location"
 									/>
 								</v-col>
@@ -340,10 +348,11 @@
 									<v-text-field
 										v-model="order.delivery_charge"
 										filled
-										label="Delivery Charge"
 										type="number"
-										prepend-inner-icon="money"
 										hide-details="auto"
+										label="Delivery Charge"
+										prepend-inner-icon="money"
+										:readonly="order.is_delivered"
 										:error-messages="orderFormError.delivery_charge"
 									/>
 								</v-col>
@@ -357,10 +366,11 @@
 									<v-text-field
 										v-model="order.loyalty_discount"
 										filled
-										label="Loyalty Discount (%)"
 										type="number"
-										prepend-inner-icon="emoji_symbols"
 										hide-details="auto"
+										label="Loyalty Discount (%)"
+										:readonly="order.is_delivered"
+										prepend-inner-icon="emoji_symbols"
 										:error-messages="orderFormError.loyalty_discount"
 									/>
 								</v-col>
@@ -398,7 +408,9 @@
 					<v-col cols="12"
 						class="pb-4"
 					>
-						<v-btn block
+						<v-btn
+							:disabled="order.is_delivered"
+							block
 							large
 							@click="updateOrder"
 						>
@@ -806,7 +818,7 @@ export default {
 	}
 }
 </script>
-<style lang="scss" scoped>
+<style scoped lang="scss">
 .divider-search-inset {
 	height: 40px;
 	width: 2px;
@@ -828,6 +840,17 @@ export default {
 	}
 	.v-list-item__subtitle {
 		color: white;
+	}
+}
+.v-menu__content {
+	.v-select-list {
+		background: #443a3a !important;
+		::v-deep.v-list-item:not(.v-list-item--active):not(.v-list-item--disabled) {
+			color: white !important;
+		}
+		::v-deep.v-subheader {
+			color: white;
+		}
 	}
 }
 </style>
