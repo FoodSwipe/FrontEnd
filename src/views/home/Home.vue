@@ -3,19 +3,10 @@
 		<swiper />
 		<order-now />
 		<hot-items />
-		<v-divider inset
-			class="mb-2"
-		/>
+		<!--		<v-divider inset-->
+		<!--			class="mb-2"-->
+		<!--		/>-->
 		<v-row class="ma-0 pa-0">
-			<v-col cols="12">
-				<div class="text-center pa-2">
-					<v-avatar size="120"
-						tile
-					>
-						<v-img :src="logo" />
-					</v-avatar>
-				</div>
-			</v-col>
 			<v-col
 				cols="12"
 				xl="8"
@@ -60,8 +51,5 @@ export default {
 		HowWeServe: () => import("@/views/home/components/HowWeServe"),
 		FoodSwipeFacebook: () => import("@/views/home/components/Facebook")
 	},
-	data: () => ({
-		logo: require("@/assets/food_swipe_logo.png"),
-	})
 }
 </script>
