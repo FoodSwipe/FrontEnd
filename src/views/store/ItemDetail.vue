@@ -1,5 +1,8 @@
 <template>
-	<div class="mt-16">
+	<div
+		id="product-detail"
+		class="mt-16"
+	>
 		<v-card max-width="615"
 			class="mx-auto px-2"
 			flat
@@ -226,7 +229,12 @@
 			<hot-items />
 		</v-card>
 		<div class="relative">
-			<div class="refill-space" />
+			<div class="refill-space">
+				<v-img contain
+					src="https://synapsiscreative.com/wp-content/uploads/2018/02/interactive-content1.png"
+					max-height="350"
+				/>
+			</div>
 			<div class="custom-shape-divider-top-1608750235">
 				<svg data-name="Layer 1"
 					xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120"
@@ -244,7 +252,7 @@
 				</svg>
 			</div>
 			<v-card-text class="review-sec">
-				<div class="d-flex align-center">
+				<div class="d-flex align-center justify-center">
 					<v-subheader>
 						<v-avatar
 							color="lightblue"
@@ -252,7 +260,7 @@
 							style="border: 3px solid rgb(19 74 92);"
 							:size="
 								$vuetify.breakpoint.width > 600
-									? '70'
+									? '50'
 									: $vuetify.breakpoint.width < 400
 										? '30'
 										: '45'
@@ -261,7 +269,7 @@
 							<v-icon
 								:size="
 									$vuetify.breakpoint.width > 600
-										? '25'
+										? '20'
 										: $vuetify.breakpoint.width < 400
 											? '12'
 											: '16'
@@ -272,7 +280,6 @@
 						</v-avatar><span class="pl-2 reviews">reviews</span>
 					</v-subheader>
 					<v-text-field
-						id="my-review"
 						v-model="myReview"
 						class="review-field"
 						color="black"
@@ -420,7 +427,6 @@ export default {
 		},
 		async initialize() {
 			this.isLoading = true
-			await this.$vuetify.goTo(0)
 			await this.$store.dispatch("menuItem/getDetail", {id: this.$route.params.id})
 			if (this.$helper.getCookingOrderId()) {
 				await this.$store.dispatch("order/withCartItems", {
@@ -433,6 +439,7 @@ export default {
 				}
 			}
 			this.isLoading = false
+			await this.$vuetify.goTo("#product-detail")
 		},
 		beforeEnter(el) {
 			el.style.opacity = 0
@@ -466,14 +473,14 @@ export default {
 .refill-space {
 	position: absolute;
 	top:0;
-	height: 550px;
+	height: 350px;
 	width: 100%;
 	overflow: hidden;
-	background: #3ebae7 url("https://synapsiscreative.com/wp-content/uploads/2018/02/interactive-content1.png") center center no-repeat;
+	background-color: #3ebae7
 }
 .custom-shape-divider-top-1608750235 {
 	position: absolute;
-	top: 550px;
+	top: 350px;
 	left: 0;
 	width: 100%;
 	overflow: hidden;
@@ -521,17 +528,17 @@ export default {
 }
 .reviews {
 	transition: all .3s;
-	font-size: 4.5rem;
-	line-height: 4.5rem;
+	font-size: 3.5rem;
+	line-height: 3.5rem;
 	text-transform: capitalize;
 	font-family: 'Sacramento', cursive;
 	@media only screen and (max-width: 700px) {
-		font-size: 3.5rem;
-		line-height: 3.5rem;
-	}
-	@media only screen and (max-width: 599px) {
 		font-size: 3rem;
 		line-height: 3rem;
+	}
+	@media only screen and (max-width: 599px) {
+		font-size: 2.1rem;
+		line-height: 2.1rem;
 	}
 	@media only screen and (max-width: 400px) {
 		font-size: 2rem;
@@ -548,8 +555,8 @@ export default {
 	font-size: 1rem
 	line-height: 1rem
 .review-sec
-	position: relative !important
-	padding-top: 450px
+	position: absolute !important
+	top: 320px
 .ingredients
 	font-size: .75rem
 .bar-image
