@@ -208,15 +208,13 @@ export default {
 </style>
 <style scoped lang="scss">
 .hot-items-card {
-	border-radius: 25px;
-	//border: 4px solid goldenrod;
-	//background: linear-gradient(to top right, #ffffef, #f8e1b5);
+	border-radius: 25px !important;
 }
 .to-cart-btn {
 	border-radius: 25px;
 }
 .swiper-slide {
-	border-radius: 25px;
+	border-radius: 25px !important;
 	background: linear-gradient(to bottom, #ffdba1, transparent);
 }
 .item-price {
