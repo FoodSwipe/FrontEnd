@@ -103,7 +103,9 @@
 						size="120"
 						class="admin-profile-avatar"
 					>
-						<v-img src="https://randomuser.me/api/portraits/women/85.jpg" />
+						<div class="display-2">
+							{{ $helper.getCurrentUser().username[0].toUpperCase() }}
+						</div>
 					</v-avatar>
 				</v-col>
 			</v-row>
@@ -111,9 +113,11 @@
 				<v-list-item link>
 					<v-list-item-content class="py-0">
 						<v-list-item-title class="title">
-							Sandra Adams
+							{{ $helper.getCurrentUser().profile.full_name }}
 						</v-list-item-title>
-						<v-list-item-subtitle>sandra_a88@gmail.com</v-list-item-subtitle>
+						<v-list-item-subtitle>
+							{{ $helper.getCurrentUser().email }}
+						</v-list-item-subtitle>
 					</v-list-item-content>
 				</v-list-item>
 			</v-list>
@@ -211,6 +215,11 @@ export default {
 <style lang="scss" scoped>
 .admin-profile-avatar {
 	border: 4px solid white; margin-top: -55px;
+	background-color: #b67b0f;
+	div {
+		color: white;
+		font-family: "Open Sans Condensed", Serif !important;
+	}
 }
 .admin-layout-main {
 	background: #2d2d2d;
