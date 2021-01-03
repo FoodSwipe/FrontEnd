@@ -85,4 +85,13 @@ export default {
 		color: grey !important;
 	}
 }
+.home-breadcrumb-item {
+	font-family: 'Righteous', cursive;
+	a {
+		color: darkslategrey !important;
+	}
+	.v-breadcrumbs__item--disabled {
+		color: slategray !important;
+	}
+}
 </style>
