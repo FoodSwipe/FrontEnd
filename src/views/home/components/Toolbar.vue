@@ -104,11 +104,13 @@
 						</v-btn>
 					</template>
 					<v-list color="orange lighten-4">
-						<v-list-item class="cursor">
+						<v-list-item>
 							<v-list-item-icon class="mr-2">
 								<v-icon>account_circle</v-icon>
 							</v-list-item-icon>
-							<v-list-item-title @click="toProfile()">
+							<v-list-item-title class="cursor"
+								@click="toProfile()"
+							>
 								Profile
 							</v-list-item-title>
 						</v-list-item>
@@ -216,45 +218,27 @@
 			app
 			temporary
 			right
-			width="400"
+			width="500"
+			class="px-4"
 		>
 			<v-toolbar dark dense
 				color="transparent"
-				height="50"
-				class="nav-toolbar"
+				height="60"
+				class="nav-toolbar mt-6"
+				flat
 			>
 				<v-spacer />
 				<v-btn icon
 					small
-					color="blue"
-					class="nav-close"
+					color="black"
+					large
 					@click.stop="drawer = false"
 				>
-					<v-icon size="16">
+					<v-icon>
 						close
 					</v-icon>
 				</v-btn>
 			</v-toolbar>
-			<v-img :src="loginBanner"
-				dark
-				height="30vh"
-				max-height="240"
-				gradient="to top, rgb(0 0 0 / 80%), rgb(0 0 0 / 40%), rgb(0 0 0 / 10%)"
-				class="login-image"
-			>
-				<v-row class="fill-height ma-0 pa-0"
-					justify="center"
-					align="end"
-				>
-					<v-col class="text-center">
-						<div class="display-1 text-center">
-							<v-icon>
-								input
-							</v-icon>
-						</div>
-					</v-col>
-				</v-row>
-			</v-img>
 			<v-form class="login-form">
 				<v-row class="ma-0 pa-0"
 					justify="center" align="center"
@@ -263,15 +247,13 @@
 						<p class="organization-title text-center">
 							Food Swipe Online Pvt. Ltd.
 						</p>
-						<p class="login-to-proceed">
-							Login to proceed
-						</p>
+						<v-divider class="mx-6" />
 					</v-col>
 					<v-col cols="12">
 						<v-text-field
 							id="login-username"
 							v-model="login.username"
-							filled
+							solo
 							label="Username"
 							clearable
 							prepend-inner-icon="account_circle"
@@ -284,7 +266,7 @@
 							id="login-password"
 							v-model="login.password"
 							background-color="white"
-							filled
+							solo
 							clearable
 							label="Password"
 							prepend-inner-icon="lock"
@@ -737,19 +719,14 @@ export default {
 	font-family: "MainframeBB"
 	src: url("../../../../src/assets/MAINBRG_.TTF")
 .organization-title
-	transition: all .3s
+	transition: font-size .3s ease
 	text-transform: uppercase
 	font-family: MainframeBB, serif
-	::v-deep.org-name
-		@media only screen and (max-width: 600px)
-		font-size: 1.3rem !important
-		line-height: 1.3rem !important
-		@media only screen and (max-width: 400px)
-			font-size: 1.1rem !important
-			line-height: 1.1rem !important
-		@media only screen and (max-width: 220px)
-			font-size: .8rem !important
-			line-height: .8rem !important
+	font-size: 1.4rem
+	line-height: 2rem
+	@media only screen and (max-width: 320px)
+		font-size: 1.2rem
+		line-height: 1.5rem
 .profile-avatar
 	border: 2px solid white
 .login-terms
