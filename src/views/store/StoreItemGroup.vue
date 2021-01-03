@@ -85,8 +85,11 @@ export default {
 .panel-header{
 	transition: all .3s;
 	background-color: aliceblue;
-	font-size: 1.4rem;
-	line-height: 1.4rem;
+	font-family: "Open Sans Condensed", sans-serif;
+	font-weight: 500;
+	font-size: 1.6rem;
+	line-height: 1.6rem;
+	color: #3c3c3c;
 	@media only screen and (max-width: 1200px) {
 		font-size: 1.2rem;
 		line-height: 1.2rem;

@@ -20,34 +20,36 @@
 			@click="routeToItemDetail(item)"
 		/>
 
-		<v-card-text class="py-0">
-			<div class="text-center item-name">
-				{{ item.name }}
-			</div>
-		</v-card-text>
-		<v-card-subtitle class="text-center py-0">
-			<span
-				v-for="(type, index) in item.item_type"
-				:key="index"
-				class="px-1"
-			>
-				<v-tooltip bottom>
-					<template #activator="{on, attrs}">
-						<v-avatar
-							class="elevation-1"
-							size="20"
-							v-bind="attrs"
-							v-on="on"
-						>
-							<v-img
-								:src="type.badge"
-							/>
-						</v-avatar>
-					</template>
-					<span>{{ type.name }}</span>
-				</v-tooltip>
-			</span>
-		</v-card-subtitle>
+		<div class="name-type-group">
+			<v-card-text class="py-0">
+				<div class="text-center item-name">
+					{{ item.name }}
+				</div>
+			</v-card-text>
+			<v-card-subtitle class="text-center py-0">
+				<span
+					v-for="(type, index) in item.item_type"
+					:key="index"
+					class="px-1"
+				>
+					<v-tooltip bottom>
+						<template #activator="{on, attrs}">
+							<v-avatar
+								class="elevation-1"
+								size="20"
+								v-bind="attrs"
+								v-on="on"
+							>
+								<v-img
+									:src="type.badge"
+								/>
+							</v-avatar>
+						</template>
+						<span>{{ type.name }}</span>
+					</v-tooltip>
+				</span>
+			</v-card-subtitle>
+		</div>
 
 		<v-card-text class="item-details text-center">
 			<v-row
@@ -178,17 +180,6 @@ export default {
 }
 </script>
 <style scoped lang="scss">
-.item-name {
-	font-size: 1rem;
-	line-height: 1rem;
-	font-weight: 500;
-	padding: 10px 5px 0;
-	transition: all .3s ease;
-	@media only screen and (max-width: 600px) {
-		font-size: .875rem;
-		line-height: .875rem;
-	}
-}
 .item-details {
 	padding: 2px 17px 0;
 }
@@ -211,22 +202,39 @@ export default {
 .item-type-row {
 	width: 100%;
 }
-
-.store-item-image {
-	transition: transform .5s ease;
-}
-
 .store-item-card {
 	overflow: hidden;
 	&:hover {
 		.store-item-image {
-			transform: scale(1.1);
+			-webkit-transform:scale(1.1); /* Safari and Chrome */
+			-moz-transform:scale(1.1); /* Firefox */
+			-ms-transform:scale(1.1); /* IE 9 */
+			-o-transform:scale(1.1); /* Opera */
+			transform:scale(1.1);
 		}
 		.item-name {
 			padding-top: 20px;
-			font-size: 1rem;
-			line-height: 1rem;
 		}
+	}
+}
+.store-item-image {
+	transition: transform .25s ease-in-out;
+}
+.item-name {
+	transition: padding-top .25s ease;
+	font-size: 1rem;
+	line-height: 1rem;
+	font-weight: 500;
+	padding: 10px 5px 0;
+	color: #2d2d2d;
+	@media only screen and (max-width: 600px) {
+		font-size: .875rem;
+		line-height: .875rem;
+	}
+}
+.name-type-group {
+	@media only screen and (min-width: 600px) {
+		height: 64px;
 	}
 }
 .add-to-cart-button {
