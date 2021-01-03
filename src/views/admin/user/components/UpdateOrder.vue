@@ -57,7 +57,7 @@
 						<template #activator="{on, attrs}">
 							<v-btn icon
 								color="green"
-								:disabled="order.is_delivered"
+								:disabled="order.is_delivered || !order.delivery_started"
 								v-bind="attrs"
 								@click.prevent="completeDelivery()"
 								v-on="on"
@@ -68,6 +68,7 @@
 						<span>Complete Order</span>
 					</v-tooltip>
 					<v-btn icon
+						:disabled="!order.delivery_started || !order.is_delivered"
 						color="purple lighten-2"
 						@click="generatePDF()"
 					>
@@ -430,25 +431,6 @@ export default {
 			{ text: "Sub Total (NRs)", value: "subTotal" },
 		],
 		doc: null,
-		document: {
-			heading: "Food Swipe and Online Market Company Pvt. Ltd.",
-			location: "New-road, Pokhara",
-			vat: "2525252525",
-			invoiceText: "ABBREVIATED TAX INVOICE",
-			billID: "123-456-789",
-			transactionTimestamp: "2020-12-02 05:30 PM",
-			invoiceDate: "2020-12-02 05:30 PM",
-			paymentMode: "Cash",
-			items: [
-				{ id: 555, particular: "Buff Chowmein", quantity: 2, rate: 500, amount: 1000 },
-				{ id: 555, particular: "Chicken Momo", quantity: 2, rate: 500, amount: 1000 },
-				{ id: 555, particular: "Old Durbar", quantity: 2, rate: 500, amount: 1000 },
-				{ id: 555, particular: "Chicken Korma", quantity: 2, rate: 500, amount: 1000 },
-			],
-			tel: "9843530425/9856000000/9874000000",
-			counter: "TELLER 1 (05:30:19 PM)",
-			cashier: "Kiran Parajuli"
-		},
 		LOYALTY_DISCOUNT: 10,
 		DELIVERY_START_PM: 17,
 		DELIVERY_START_AM: 4,
@@ -479,7 +461,37 @@ export default {
 					disabled: true,
 				}
 			]
-		}
+		},
+		document() {
+			let particulars = []
+			this.order.cart_items.forEach(item => {
+				particulars.push({
+					id: item.item.id,
+					particular: item.item.name,
+					quantity: item.quantity,
+					rate: item.item.price,
+					amount: parseInt(item.item.price) * parseInt(item.quantity)
+				})
+			})
+			return {
+				heading: "Food Swipe and Online Market Company Pvt. Ltd.",
+				location: "New-road, Pokhara",
+				billID: "#" + this.order.id,
+				transactionTimestamp: this.order.created_at,
+				invoiceDate: this.order.delivered_at,
+				paymentMode: this.order.payment_type,
+				items: particulars,
+				tel: "+9779802801073/+9779802801077",
+				counter: "TELLER 1 (" + this.order.delivered_at + ")",
+				cashier: this.$helper.getCurrentUser().username,
+				netAmount: this.order.total_price,
+				grandTotal: this.order.grandTotal,
+				deliveryCharge: this.order.delivery_charge,
+				loyaltyDiscount: this.order.loyalty_discount,
+				totalNoOfQuantities: this.order.total_items,
+				orderCreator: this.order.custom_contact
+			}
+		},
 	},
 	async created() {
 		this.$bus.on("load-order", this.initialize)
@@ -559,149 +571,136 @@ export default {
 			this.doc = new jsPDF({
 				orientation: "portrait",
 				uint: "in",
-				format: "letter",
+				format: "dl",
 			})
-			var img = require("@/assets/food_swipe_logo.png")
-			this.doc.addImage(img, "png", 30,25,35,32)
 			this.doc
-				.setFontSize(14)
+				.setFontSize(12)
 				.text(
 					this.document.heading,
-					60 + 5,
-					29,
+					8,
+					7,
 				)
 			this.doc
 				.setFontSize(10)
 				.text(
 					this.document.location,
-					95 + 5,
-					34,
-				)
-			this.doc
-				.setFontSize(10)
-				.text(
-					"VAT No.: " + this.document.vat,
-					92 + 5,
 					38,
+					11,
 				)
 			this.doc
 				.setFontSize(10)
 				.text(
-					this.document.invoiceText,
-					85 + 5,
-					44,
-				)
-			this.doc
-				.setFontSize(10)
-				.text(
-					"Bill #: " + this.document.billID,
-					70,
-					50,
+					"Bill ID: " + this.document.billID,
+					5,
+					15+2,
 				)
 			this.doc
 				.setFontSize(10)
 				.text(
 					"Transaction Date: " + this.document.transactionTimestamp,
-					70,
-					54,
+					5,
+					20+2,
 				)
 			this.doc
 				.setFontSize(10)
 				.text(
 					"Invoice Date: " + this.document.invoiceDate,
-					70,
-					58,
+					5,
+					25+2,
 				)
 			this.doc
 				.setFontSize(10)
 				.text(
 					"Payment Mode: " + this.document.paymentMode,
-					70,
-					62,
+					5,
+					30+2,
 				)
 			this.doc.autoTable({
 				columns,
 				styles: {
 					fillColor: [128, 128, 128],
-					cellPadding: 2.1,
-					fontSize: 10,
-					cellWidth: 31
+					cellPadding: 1.6,
+					fontSize: 8,
+					cellWidth: 20
 				},
 				body: this.document.items,
-				margin: {left: 30, top: 66},
+				margin: {left: 5, top: 37},
 				tableWidth: "wrap",
 			})
 			this.doc
 				.setFontSize(10)
 				.text(
-					"Net Amount: 255.00",
-					110+30,
-					this.doc.lastAutoTable.finalY + 7,
+					"Net Amount: " + this.document.netAmount,
+					5,
+					this.doc.lastAutoTable.finalY + 9,
 				)
 			this.doc
 				.setFontSize(10)
 				.text(
 					"Tender: 300",
-					110+30,
+					5,
 					this.doc.lastAutoTable.finalY + 13,
 				)
 			this.doc
 				.setFontSize(10)
 				.text(
 					"Change: 45",
-					110+30,
+					5,
 					this.doc.lastAutoTable.finalY + 18,
 				)
 			this.doc
 				.setFontSize(10)
 				.text(
-					"Total Qty: 4",
-					30,
+					"Total Qty: " + this.document.totalNoOfQuantities,
+					5,
 					this.doc.lastAutoTable.finalY + 23,
 				)
 
 			this.doc
 				.setFontSize(10)
 				.text(
-					"Customer: 9893000000",
-					30,
-					this.doc.lastAutoTable.finalY + 7,
+					"Customer: " + this.document.orderCreator,
+					105,
+					this.doc.lastAutoTable.finalY + 9,
+					{"align": "right"}
 				)
 			this.doc
 				.setFontSize(10)
 				.text(
 					"Delivery Charge: NRs 80.00",
-					30,
+					105,
 					this.doc.lastAutoTable.finalY + 13,
+					{"align": "right"}
 				)
 			this.doc
 				.setFontSize(10)
 				.text(
 					"Loyalty Discount: 5%",
-					30,
+					105,
 					this.doc.lastAutoTable.finalY + 18,
+					{"align": "right"}
 				)
 
 			this.doc
 				.setFontSize(10)
 				.text(
 					"Tel: " + this.document.tel,
-					30,
-					this.doc.lastAutoTable.finalY + 30+4,
+					5,
+					this.doc.lastAutoTable.finalY + 34,
 				)
 			this.doc
 				.setFontSize(10)
 				.text(
 					"Counter: " + this.document.counter,
-					30,
-					this.doc.lastAutoTable.finalY + 34+4,
+					5,
+					this.doc.lastAutoTable.finalY + 38,
 				)
 			this.doc
 				.setFontSize(10)
 				.text(
 					"Cashier: " + this.document.cashier,
-					30,
-					this.doc.lastAutoTable.finalY + 38+4,
+					5,
+					this.doc.lastAutoTable.finalY + 42,
 				)
 			this.doc.save("hello.pdf")
 			this.doc.autoPrint()
