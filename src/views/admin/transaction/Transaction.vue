@@ -21,8 +21,8 @@
 			v-model:expanded="expanded"
 			:loading="isLoading"
 			dark
-			:headers="dessertHeaders"
-			:items="desserts"
+			:headers="transactionTableHeaders"
+			:items="transactions"
 			:search="searchTransactions"
 			:single-expand="true"
 			show-expand
@@ -115,7 +115,7 @@
 						>
 							<v-icon>add_circle</v-icon>
 							<span class="px-2">Created by</span>
-							<b>{{ item.created_by }}</b>
+							<b>{{ item.created_by.username }}</b>
 							<span class="px-1">on</span>
 							<b>{{ item.created_at }}</b>
 						</v-col>
@@ -126,24 +126,11 @@
 							sm="6"
 							class="py-1"
 						>
-							<v-icon>history</v-icon>
-							<span class="px-2">Last modified by</span>
-							<b>{{ item.updated_by }}</b>
-							<span class="px-1">on</span>
-							<b>{{ item.updated_at }}</b>
-						</v-col>
-						<v-col cols="12"
-							xl="6"
-							lg="6"
-							md="6"
-							sm="6"
-							class="py-1"
-						>
 							<v-icon>person_pin</v-icon>
 							<span class="px-2">On behalf of</span>
-							<b>{{ item.order.created_by }}</b>
+							<b>{{ item.order.created_by.username }}</b>
 							<span class="px-1">from</span>
-							<b>{{ item.order.delivery_location }}</b>
+							<b>{{ item.order.custom_location }}</b>
 						</v-col>
 						<v-col cols="12"
 							xl="6"
@@ -163,6 +150,8 @@
 	</div>
 </template>
 <script>
+import { mapGetters } from "vuex"
+
 export default {
 	name: "TransactionAdministration",
 	components: {
@@ -175,71 +164,18 @@ export default {
 			expanded: [],
 			singleExpand: false,
 			searchTransactions: "",
-			dessertHeaders: [
-				{text: "Actions", align: "center", value: "actions"},
-				{ text: "Order Id", value: "order.id" },
-				{ text: "Items", value: "order.total_items" },
-				{ text: "Total", value: "order.sub_total" },
-				{ text: "Loyalty (%)", value: "order.loyalty_discount" },
-				{ text: "Delivery Charge", value: "order.delivery_charge" },
-				{ text: "Grand Total", value: "grand_total" },
-				{ text: "Cashier", value: "created_by" },
+			transactionTableHeaders: [
+				{text: "ACTIONS", align: "center", value: "actions"},
+				{ text: "OID", value: "order.id" },
+				{ text: "ITEMS", value: "order.total_items" },
+				{ text: "S. TOTAL (NRS)", value: "order.total_price" },
+				{ text: "LOYALTY (%)", value: "order.loyalty_discount" },
+				{ text: "DEL. CHARGE", value: "order.delivery_charge" },
+				{ text: "G. TOTAL (NRS)", value: "grand_total" },
+				{ text: "CASHIER", value: "created_by.username" },
 				{ text: "", value: "data-table-expand" },
 			],
-			desserts: [
-				{
-					order: {
-						id: 55896,
-						created_by: "John Doe",
-						created_at: "Dec 26, 2020 T 5:45 PM",
-						updated_by: "Mark Williams",
-						updated_at: "Dec 30, 2020 T 5:45 PM",
-						delivery_location: "Lorem ipsum -16, Sed",
-						delivery_charge: 150,
-						is_delivered: false,
-						total_items: 18,
-						sub_total: 1500,
-						grand_total: 1400,
-						loyalty_discount: 10,
-						items: [
-							{id: 5, name: "Veg Momo", quantity: 1},
-							{id: 6, name: "Buff Momo", quantity: 2},
-							{id: 7, name: "Chicken Chowmein", quantity: 3},
-						]
-					},
-					grand_total: 159,
-					created_by: "Kyle Walker",
-					created_at: "Dec 26, 2020 T 5:45 PM",
-					updated_by: "Sans Sheriff",
-					updated_at: "Dec 30, 2020 T 5:45 PM",
-				},
-				{
-					order: {
-						id: 55899,
-						created_by: "Alan Ramsey",
-						created_at: "Dec 26, 2020 T 5:45 PM",
-						updated_by: "Sergio Ramos",
-						updated_at: "Dec 30, 2020 T 5:45 PM",
-						delivery_location: "Lorem sed -16, lyf",
-						delivery_charge: 0,
-						is_delivered: true,
-						total_items: 18,
-						loyalty_discount: 10,
-						sub_total: 1600,
-						grand_total: 1800,
-						items: [
-							{id: 5, name: "Veg Momo", quantity: 1},
-							{id: 6, name: "Buff Momo", quantity: 2},
-							{id: 7, name: "Chicken Chowmein", quantity: 3},
-						]
-					},
-					grand_total: 260,
-					created_by: "Paul Hymen",
-					created_at: "Dec 26, 2020 T 5:45 PM",
-					updated_by: "Babu Bogati",
-					updated_at: "Dec 30, 2020 T 5:45 PM",
-				},
-			],
+			transactions: [],
 			filterTransactionsOptions: [
 				{icon: "history", title: "Recent First"},
 				{icon: "stars", title: "Top Transactions"},
@@ -257,7 +193,30 @@ export default {
 			]
 		}
 	},
+	computed: {
+		...mapGetters({
+			allTransactions: "transaction/allTransactions"
+		})
+	},
+	async created() {
+		await this.initialize()
+	},
 	methods: {
+		async openSnack(text, color="error") {
+			await this.$store.dispatch("snack/setSnackState", true)
+			await this.$store.dispatch("snack/setSnackColor", color)
+			await this.$store.dispatch("snack/setSnackText", text)
+		},
+		async initialize() {
+			this.isLoading = true
+			const fetched = await this.$store.dispatch("transaction/fetchAllTransactions")
+			if (!fetched) {
+				await this.openSnack("Internal server error. Please try again.")
+			} else {
+				this.transactions = this.allTransactions
+			}
+			this.isLoading = false
+		},
 		deleteTransaction() {
 		},
 	}

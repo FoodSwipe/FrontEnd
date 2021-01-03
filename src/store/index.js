@@ -12,6 +12,7 @@ import cart from "@/store/modules/cart"
 import order from "@/store/modules/order"
 import review from "@/store/modules/review"
 import log from "@/store/modules/logs"
+import transaction from "@/store/modules/transaction"
 
 Vue.use(Vuex)
 
@@ -28,6 +29,7 @@ export default new Vuex.Store({
 		order,
 		cart,
 		review,
-		log
+		log,
+		transaction
 	}
 })
