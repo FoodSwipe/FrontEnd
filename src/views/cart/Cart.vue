@@ -2,6 +2,37 @@
 	<v-card flat
 		class="rounded-0 mt-4 mx-auto" width="1200"
 	>
+		<v-row class="ma-0 pa-0 px-3"
+			justify="center"
+		>
+			<v-breadcrumbs v-if="!isLoading"
+				:items="cartBreadcrumbs"
+				class="px-1"
+			>
+				<template #item="{ item }">
+					<v-breadcrumbs-item
+						class="home-breadcrumb-item"
+						:href="item.href"
+						:disabled="item.disabled"
+					>
+						{{ item.text.toUpperCase() }}
+					</v-breadcrumbs-item>
+				</template>
+			</v-breadcrumbs>
+			<v-spacer />
+			<v-tooltip bottom>
+				<template #activator="{on, attrs}">
+					<v-btn icon
+						v-bind="attrs"
+						v-on="on"
+						@click="$router.go(-1)"
+					>
+						<v-icon>arrow_back</v-icon>
+					</v-btn>
+				</template>
+				<span>Go Back</span>
+			</v-tooltip>
+		</v-row>
 		<v-row class="ma-0 pa-0">
 			<v-col v-if="cartItemsList.length === 0"
 				cols="12"
@@ -291,7 +322,19 @@ export default {
 				item: {
 					name: ""
 				}
-			}] // do not show empty card while loading (just a workaround)
+			}], // do not show empty card while loading (just a workaround),
+			cartBreadcrumbs: [
+				{
+					text: "> Home",
+					disabled: false,
+					href: "/",
+				},
+				{
+					text: "Cart",
+					disabled: true,
+					href: "",
+				}
+			]
 		}
 	},
 	computed: {
