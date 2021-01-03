@@ -101,7 +101,6 @@ export default {
 			await this.$store.dispatch("snack/setSnackText", text)
 		},
 		async addItemToCart(item) {
-			console.log(item)
 			if (this.$helper.isAuthenticated()) {
 				const currentUser = this.$helper.getCurrentUser()
 				this.$bus.emit("start-order-prefill", {
