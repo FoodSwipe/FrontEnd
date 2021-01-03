@@ -1,64 +1,105 @@
 <template>
-	<v-card
-		:loading="isLoading"
-		flat
-		class="rounded-0 pa-4"
-	>
-		<v-card-title class="hot-items">
-			<u>Hot Items</u>
-		</v-card-title>
-		<v-card class="pa-0 mx-auto"
-			flat max-width="1000"
-			color="transparent"
+	<div class="pa-2">
+		<v-card
+			:loading="isLoading"
+			class="pa-4 mx-auto hot-items-card elevation-1"
+			max-width="1300"
 		>
-			<div class="swiper-container pa-1">
-				<div class="swiper-wrapper">
-					<v-card
-						v-for="(item, index) in topItemsSet"
-						:key="index"
-						flat
-						class="swiper-slide"
-						max-width="140"
-					>
-						<!-- eslint-disable-next-line vue/no-v-for-template-key-on-child-->
-						<v-badge
-							avatar
-							bordered
-							overlap
-							bottom
-							offset-x="30"
-							offset-y="20"
-							color="white"
+			<v-card-title class="hot-items">
+				<u>Hot Items</u>
+			</v-card-title>
+			<v-card class="pa-0 mx-auto"
+				flat max-width="1000"
+				color="transparent"
+			>
+				<div class="swiper-container pa-1">
+					<div class="swiper-wrapper">
+						<v-card
+							v-for="(item, index) in topItemsSet"
+							:key="index"
+							class="swiper-slide"
+							max-width="140"
+							color="transparent elevation-1"
+							:class="
+								(index+1) === topItemsSet.length ? '' : 'mr-3'
+							"
 						>
-							<template #badge>
-								<v-avatar size="25"
-									color="transparent"
-								>
-									<v-img :src="item.menu_item.item_type[0].badge" />
-								</v-avatar>
-							</template>
-
-							<v-avatar size="100"
-								color="white"
+							<v-row class="ma-0 pa-0"
+								justify="center" align="center"
 							>
-								<v-img
-									class="car-image"
-									:src="item.menu_item.image"
-									max-width="100%"
-								/>
-							</v-avatar>
-						</v-badge>
+								<v-col cols="12"
+									class="d-flex justify-center"
+								>
+									<!-- eslint-disable-next-line vue/no-v-for-template-key-on-child-->
+									<v-badge
+										avatar
+										bordered
+										overlap
+										bottom
+										offset-x="30"
+										offset-y="20"
+										color="white"
+									>
+										<template #badge>
+											<v-avatar size="25"
+												color="transparent"
+												class="elevation-4"
+											>
+												<v-img :src="item.menu_item.item_type[0].badge" />
+											</v-avatar>
+										</template>
 
-						<p class="mb-0 text-center item-name">
-							{{ item.menu_item.name }}
-						</p>
-					</v-card>
+										<v-avatar size="100"
+											color="white"
+											class="item-image-avatar"
+										>
+											<v-img
+												class="car-image"
+												:src="item.menu_item.image"
+												max-width="100%"
+											/>
+										</v-avatar>
+									</v-badge>
+								</v-col>
+								<v-col cols="12"
+									class="d-flex justify-center"
+								>
+									<p class="mb-0 text-center item-name">
+										{{ item.menu_item.name }}
+									</p>
+								</v-col>
+								<v-col cols="12"
+									class="d-flex justify-center"
+								>
+									<p class="mb-0 text-center">
+										<span class="nrs">NRs</span><span class="number-font item-price">
+											{{ item.menu_item.price }}
+										</span>
+									</p>
+								</v-col>
+								<v-col cols="12"
+									class="d-flex justify-center"
+								>
+									<v-btn dark
+										class="to-cart-btn"
+										color="orange"
+										min-width="25"
+										@click.prevent="addItemToCart(item.menu_item)"
+									>
+										<v-icon>
+											add_shopping_cart
+										</v-icon>
+									</v-btn>
+								</v-col>
+							</v-row>
+						</v-card>
+					</div>
+					<div class="swiper-button-next" />
+					<div class="swiper-button-prev" />
 				</div>
-				<div class="swiper-button-next" />
-				<div class="swiper-button-prev" />
-			</div>
+			</v-card>
 		</v-card>
-	</v-card>
+	</div>
 </template>
 <script>
 import Swiper, { Navigation } from "swiper"
@@ -95,6 +136,44 @@ export default {
 		})
 	},
 	methods: {
+		async addItemToCart(item) {
+			if (this.$helper.isAuthenticated()) {
+				const currentUser = this.$helper.getCurrentUser()
+				this.$bus.emit("start-order-prefill", {
+					order: {
+						custom_location: currentUser.profile.address,
+						custom_contact: (currentUser.profile.contact)
+							? currentUser.profile.contact.replace(/\D/g, "")
+							: null
+					}
+				})
+			}
+			if (this.$helper.getCookingOrderId()) {
+				const addedToCart = await this.$store.dispatch("cart/addToCart", {
+					order: parseInt(this.$helper.getCookingOrderId()),
+					item: item.id
+				})
+				if (addedToCart === true) {
+					await this.openSnack(`Cheers! ${item.name} is added to cart.`, "success")
+					this.$bus.emit("add-cart-count-by-one")
+					await this.$store.dispatch("order/withCartItems", {
+						id: this.$helper.getCookingOrderId()
+					})
+				} else {
+					if (addedToCart.non_field_errors !== undefined) {
+						if (Array.isArray(addedToCart.non_field_errors)) {
+							if (addedToCart.non_field_errors[0] === "The fields order, item must make a unique set.") {
+								await this.openSnack("Item already added to cart.")
+							}
+						}
+					}
+				}
+			} else {
+				this.$bus.emit("start-order", {
+					withItem: item
+				})
+			}
+		},
 		async initialize() {
 			this.isLoading = true
 			const fetched = await this.$store.dispatch("menuItem/fetchTopItems")
@@ -114,6 +193,8 @@ export default {
 
 <style scoped lang="sass">
 .hot-items
+	display: flex
+	justify-content: center
 	text-transform: uppercase
 	font-size: 1.5rem
 	line-height: 1.5rem
@@ -124,4 +205,42 @@ export default {
 	font-size: .87rem
 	line-height: .87rem
 	font-weight: 500
+</style>
+<style scoped lang="scss">
+.hot-items-card {
+	border-radius: 25px;
+	//border: 4px solid goldenrod;
+	//background: linear-gradient(to top right, #ffffef, #f8e1b5);
+}
+.to-cart-btn {
+	border-radius: 25px;
+}
+.swiper-slide {
+	border-radius: 25px;
+	background: linear-gradient(to bottom, #ffdba1, transparent);
+}
+.item-price {
+	color: green;
+	font-size: 1.3rem;
+}
+.nrs {
+	color: red;
+	font-size: .875rem;
+	font-weight: bold;
+}
+.item-image-avatar {
+	max-width: 100%;
+	-webkit-transition: all .4s ease; /* Safari and Chrome */
+	-moz-transition: all .4s ease; /* Firefox */
+	-ms-transition: all .4s ease; /* IE 9 */
+	-o-transition: all .4s ease; /* Opera */
+	transition: all .4s ease;
+	&:hover {
+		-webkit-transform:scale(1.2); /* Safari and Chrome */
+		-moz-transform:scale(1.2); /* Firefox */
+		-ms-transform:scale(1.2); /* IE 9 */
+		-o-transform:scale(1.2); /* Opera */
+		transform:scale(1.2);
+	}
+}
 </style>
