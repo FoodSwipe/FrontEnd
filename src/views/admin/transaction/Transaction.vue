@@ -38,7 +38,7 @@
 						<v-avatar size="32"
 							class="elevation-4 golden-rod-border-2" color="orange"
 						>
-							<v-img src="https://banner2.cleanpng.com/20180427/zle/kisspng-financial-transaction-finance-money-credit-card-co-e-commerce-5ae3503a9e8fc2.5425949615248466506495.jpg" />
+							<v-img :src="require('@/assets/transaction_icon.jpg')" />
 						</v-avatar>
 						<v-fade-transition mode="out-in">
 							<span v-if="$vuetify.breakpoint.width > 600"

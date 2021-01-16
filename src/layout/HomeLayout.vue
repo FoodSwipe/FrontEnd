@@ -62,14 +62,13 @@ export default {
 </script>
 <style scoped lang="scss">
 .home-layout {
-	min-height: calc(100vh + 2rem);
-	margin-top: -80px;
-	padding-top: 60px;
+	padding-top: 6.5rem !important;
+	min-height: calc(100vh - 3rem);
+	@media only screen and (max-width: 528px) {
+		padding-top: 7.6rem !important;
+	}
 }
 .home-snack {
 	margin-top: -60px;
-}
-.top-padding {
-	padding-top: 4rem !important;
 }
 </style>

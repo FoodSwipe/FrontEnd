@@ -15,7 +15,9 @@
 				{{ subtitle }}
 			</v-card-subtitle>
 			<v-card-actions>
-				<v-btn :color="buttonColor">
+				<v-btn :color="buttonColor"
+					:to="routerLink"
+				>
 					<v-icon size="24">
 						{{ buttonIcon }}
 					</v-icon>
@@ -48,6 +50,10 @@ export default {
 			required: true
 		},
 		buttonColor: {
+			type: String,
+			required: true
+		},
+		routerLink: {
 			type: String,
 			required: true
 		}

@@ -33,6 +33,22 @@
 								</v-toolbar-title>
 							</v-fade-transition>
 							<v-spacer />
+							<v-tooltip bottom>
+								<template #activator="{on, attrs}">
+									<v-btn fab
+										class="refresh-order-btn"
+										v-bind="attrs"
+										v-on="on"
+										@click="initialize"
+									>
+										<v-icon large>
+											refresh
+										</v-icon>
+									</v-btn>
+								</template>
+								<span>Refresh Orders</span>
+							</v-tooltip>
+							<v-spacer />
 							<div class="px-1">
 								<v-menu
 									offset-y
@@ -400,5 +416,8 @@ export default {
 }
 .cart-item-name {
 	font-size: .8rem; font-weight: normal;
+}
+.refresh-order-btn {
+	border: 3px solid #343434
 }
 </style>

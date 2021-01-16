@@ -7,6 +7,7 @@
 		<v-card-text>
 			<v-sheet color="rgba(0, 0, 0, .12)">
 				<v-sparkline
+					class="item-summary-sparkline"
 					:value="itemSummary"
 					:labels="itemSummaryLabels"
 					:smooth="16"
@@ -16,6 +17,7 @@
 					auto-draw-easing="ease"
 					height="100"
 					padding="24"
+					label-size="4"
 					stroke-linecap="round"
 				/>
 			</v-sheet>
@@ -62,7 +64,7 @@ export default {
 			this.itemSummary = []
 			this.saleSummary.forEach(item => {
 				this.itemSummary.push(item["sale_count"])
-				this.itemSummaryLabels.push(item["menu_item"].slice(0,6))
+				this.itemSummaryLabels.push(item["menu_item"])
 			})
 		},
 		async initialize() {
@@ -79,3 +81,5 @@ export default {
 	},
 }
 </script>
+<style lang="scss" scoped>
+</style>

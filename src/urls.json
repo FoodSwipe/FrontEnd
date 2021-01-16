@@ -40,8 +40,9 @@
     "withItems": "item-group-with-items"
   },
   "cart": {
-    "list": "cart-item/",
-    "detail": "cart-item/%s/"
+    "list": "cart/",
+    "detail": "cart/%s/",
+    "filterKOT": "kot?order=%s&batch=%s&timestamp=%s"
   },
   "order": {
     "list": "order/",

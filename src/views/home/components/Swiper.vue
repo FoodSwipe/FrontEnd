@@ -19,6 +19,7 @@
 							:button-icon="item.button_icon"
 							:button-text="item.button_text"
 							:button-color="colors[index % colors.length]"
+							:router-link="item.button_to"
 						/>
 					</v-img>
 				</div>

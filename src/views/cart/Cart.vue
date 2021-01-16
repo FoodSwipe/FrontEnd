@@ -51,7 +51,7 @@
 					<v-img
 						height="200"
 						contain
-						src="https://cdn.dribbble.com/users/218750/screenshots/2781808/_food.gif "
+						:src="require('@/assets/empty_cart.gif')"
 					/>
 					<v-card-actions class="d-flex justify-center">
 						<v-btn color="blue-gradient"
@@ -317,6 +317,7 @@ export default {
 	name: "CartView",
 	data() {
 		return {
+			isLoading: false,
 			showSummary: true,
 			cartItemsList: [{
 				item: {
@@ -412,6 +413,7 @@ export default {
 			}
 		},
 		async initialize() {
+			this.isLoading = true
 			const cookingOrder = this.$helper.getCookingOrderId()
 			if (cookingOrder) {
 				if (cookingOrder) {
@@ -423,6 +425,7 @@ export default {
 			} else {
 				this.cartItemsList = []
 			}
+			this.isLoading = false
 		},
 		beforeEnter(el) {
 			el.style.opacity = 0

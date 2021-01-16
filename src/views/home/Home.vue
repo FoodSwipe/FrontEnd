@@ -2,10 +2,8 @@
 	<div class="home">
 		<swiper />
 		<order-now />
+		<rhombus-divider />
 		<hot-items />
-		<!--		<v-divider inset-->
-		<!--			class="mb-2"-->
-		<!--		/>-->
 		<v-row class="ma-0 pa-0">
 			<v-col
 				cols="12"
@@ -23,18 +21,9 @@
 				<recommended-items />
 			</v-col>
 		</v-row>
+		<rhombus-divider />
 		<how-we-serve />
-		<v-row class="ma-0 pa-0 px-4"
-			align="center"
-		>
-			<v-avatar size="20">
-				<v-img src="https://cdn1.iconfinder.com/data/icons/materia-arrows-symbols-vol-9/24/018_338_insignia_badge_shape-512.png" />
-			</v-avatar>
-			<v-divider />
-			<v-avatar size="20">
-				<v-img src="https://cdn1.iconfinder.com/data/icons/materia-arrows-symbols-vol-9/24/018_338_insignia_badge_shape-512.png" />
-			</v-avatar>
-		</v-row>
+		<rhombus-divider />
 		<food-swipe-facebook />
 	</div>
 </template>
@@ -49,7 +38,8 @@ export default {
 		OurMenu: () => import("@/views/home/components/OurMenu"),
 		RecommendedItems: () => import("@/views/home/components/Recommendations"),
 		HowWeServe: () => import("@/views/home/components/HowWeServe"),
-		FoodSwipeFacebook: () => import("@/views/home/components/Facebook")
-	},
+		FoodSwipeFacebook: () => import("@/views/home/components/Facebook"),
+		RhombusDivider: () => import("@/views/home/components/RhombusDivider"),
+	}
 }
 </script>

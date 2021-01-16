@@ -181,6 +181,7 @@ export default {
 	color: black;
 }
 .order-now-card {
+	border-radius: 15px;
 	position: relative;
 
 }
@@ -189,7 +190,7 @@ export default {
 }
 .custom-shape-divider-top-1609674495 {
 	position: absolute;
-	top: 0;
+	top: .01rem;
 	left: 0;
 	width: 100%;
 	overflow: hidden;
@@ -197,9 +198,10 @@ export default {
 }
 
 .custom-shape-divider-top-1609674495 svg {
+	border-radius: 15px;
 	position: relative;
 	display: block;
-	width: calc(100% + 1.3px);
+	width: calc(100% + 2px);
 	height: 115px;
 }
 

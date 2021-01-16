@@ -69,7 +69,7 @@
 					<v-img
 						height="100"
 						width="100%"
-						src="https://t3.ftcdn.net/jpg/02/94/99/24/360_F_294992494_kPG2PgIe6Jn9sU4OcSw6Th6SvZD4OfWy.jpg"
+						:src="require('@/assets/admin_cover.jpg')"
 					>
 						<v-row class="ma-0 pa-0 setting-nav-action">
 							<v-toolbar class="text-center"

@@ -136,6 +136,11 @@ export default {
 		})
 	},
 	methods: {
+		async openSnack(text, color="error") {
+			await this.$store.dispatch("snack/setSnackState", true)
+			await this.$store.dispatch("snack/setSnackColor", color)
+			await this.$store.dispatch("snack/setSnackText", text)
+		},
 		async addItemToCart(item) {
 			if (this.$helper.isAuthenticated()) {
 				const currentUser = this.$helper.getCurrentUser()

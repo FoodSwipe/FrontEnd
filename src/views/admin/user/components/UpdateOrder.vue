@@ -37,12 +37,15 @@
 						#{{ order.id }}
 					</v-toolbar-title>
 					<v-spacer />
+					<order-k-o-t-menu :order-id="order.id"
+						:done-from-customer="order.done_from_customer"
+					/>
 					<v-tooltip bottom>
 						<template #activator="{on, attrs}">
 							<v-btn icon
 								color="orange"
 								v-bind="attrs"
-								:disabled="order.delivery_started"
+								:disabled="order.delivery_started || !order.done_from_customer"
 								@click="startDelivery()"
 								v-on="on"
 							>
@@ -70,7 +73,7 @@
 					<v-btn icon
 						:disabled="!order.delivery_started || !order.is_delivered"
 						color="purple lighten-2"
-						@click="generatePDF()"
+						@click="generateOrderBillPDF()"
 					>
 						<v-icon>print</v-icon>
 					</v-btn>
@@ -114,7 +117,7 @@
 									height="auto"
 								>
 									<template #default>
-										<v-row class="ma-0 pa-0"
+										<v-row class="ma-0 pa-0 pb-2"
 											align="center"
 											no-gutters
 										>
@@ -132,6 +135,7 @@
 													hide-details
 													prepend-inner-icon="search"
 													placeholder="Search order items"
+													:class="($vuetify.breakpoint.width < 600) ? 'mb-2' : ''"
 												/>
 											</v-col>
 											<v-fade-transition>
@@ -155,7 +159,7 @@
 													:disabled="isUpdating"
 													:readonly="order.is_delivered"
 													:items="orderNowRefinedList"
-													filled
+													solo
 													chips
 													deletable-chips
 													color="orange"
@@ -429,6 +433,9 @@ import { mapGetters } from "vuex"
 
 export default {
 	name: "UpdateUserOrderByAdminComponent",
+	components: {
+		OrderKOTMenu: () => import("@/views/admin/components/OrderKOTMenu")
+	},
 	data: () => ({
 		overlay: false,
 		isLoading: false,
@@ -443,11 +450,6 @@ export default {
 			{ text: "Sub Total (NRs)", value: "subTotal" },
 		],
 		doc: null,
-		LOYALTY_DISCOUNT: 10,
-		DELIVERY_START_PM: 17,
-		DELIVERY_START_AM: 4,
-		DELIVERY_CHARGE: 50,
-		LOYALTY_STARTS_AT: 10000,
 		order: null,
 	}),
 	computed: {
@@ -571,7 +573,7 @@ export default {
 				} else await this.openSnack("Internal server error. Please try again.")
 			}
 		},
-		generatePDF() {
+		generateOrderBillPDF() {
 			this.overlay = true
 			const columns = [
 				{title: "ID", dataKey: "id"},

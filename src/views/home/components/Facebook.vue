@@ -10,15 +10,15 @@
 				sm="6"
 			>
 				<div class="fb-page"
-					data-href="https://www.facebook.com/foodswipeonline" data-tabs="timeline, events, messages"
+					:data-href="$constants.facebookUrl" data-tabs="timeline, events, messages"
 					data-width="500" data-height=""
 					data-small-header="false" data-adapt-container-width="true"
 					data-hide-cover="false" data-show-facepile="true"
 				>
-					<blockquote cite="https://www.facebook.com/foodswipeonline"
+					<blockquote :cite="$constants.facebookUrl"
 						class="fb-xfbml-parse-ignore"
 					>
-						<a href="https://www.facebook.com/foodswipeonline">Foodswipe food delivery</a>
+						<a :href="$constants.facebookUrl">Foodswipe food delivery</a>
 					</blockquote>
 				</div>
 			</v-col>
@@ -32,7 +32,7 @@
 				<v-card flat>
 					<v-img
 						contain
-						src="https://darvideo.tv/wp-content/uploads/2019/10/1-6.jpg"
+						:src="require('@/assets/social_networking.jpg')"
 						height="250"
 					/>
 					<div class="text-center">
@@ -44,14 +44,14 @@
 								color="transparent" class="elevation-4 mx-1 cursor"
 								@click="routeToFoodSwipeFacebookPage()"
 							>
-								<v-img src="https://www.citypng.com/public/uploads/preview/-11595350772sbfvlr5j7k.png" />
+								<v-img :src="require('@/assets/fb_splash_logo.png')" />
 							</v-avatar>
 							<v-avatar size="40"
 								color="transparent"
 								class="elevation-4 mx-1 cursor" @click="routeToFoodSwipeInstaPage()"
 							>
 								<v-img contain
-									src="https://langley.bigbrothersbigsisters.ca/wp-content/uploads/sites/145/2019/04/Instagram-Splash-Social-media-icon-01.jpg"
+									:src="require('@/assets/insta_splash_logo.jpg')"
 								/>
 							</v-avatar>
 						</v-card-subtitle>
@@ -65,10 +65,10 @@
 export default {
 	methods: {
 		routeToFoodSwipeFacebookPage() {
-			window.open("https://www.facebook.com/foodswipeonline", "_blank")
+			window.open(this.$constants.facebookUrl, "_blank")
 		},
 		routeToFoodSwipeInstaPage() {
-			window.open("https://www.instagram.com/foodswipeonlinefood/?hl=en", "_blank")
+			window.open(this.$constants.facebookUrl, "_blank")
 		},
 	}
 }

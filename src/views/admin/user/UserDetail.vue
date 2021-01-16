@@ -6,29 +6,43 @@
 		color="transparent"
 	>
 		<v-row class="ma-0 pa-0">
-			<v-breadcrumbs v-if="!isLoading"
-				dark
-				:items="userDetailBreadcrumbs"
-				class="px-1 pt-3"
+			<v-col cols="10">
+				<v-breadcrumbs v-if="!isLoading"
+					dark
+					:items="userDetailBreadcrumbs"
+					class="px-1 pt-3"
+				>
+					<template #item="{ item }">
+						<v-breadcrumbs-item
+							class="admin-breadcrumb-item"
+							:href="item.href"
+							:disabled="item.disabled"
+						>
+							{{ item.text.toUpperCase() }}
+						</v-breadcrumbs-item>
+					</template>
+				</v-breadcrumbs>
+			</v-col>
+			<v-col cols="2"
+				class="d-flex justify-end align-center"
 			>
-				<template #item="{ item }">
-					<v-breadcrumbs-item
-						class="admin-breadcrumb-item"
-						:href="item.href"
-						:disabled="item.disabled"
-					>
-						{{ item.text.toUpperCase() }}
-					</v-breadcrumbs-item>
-				</template>
-			</v-breadcrumbs>
+				<v-btn icon
+					@click="$router.go(-1)"
+				>
+					<v-icon>arrow_back</v-icon>
+				</v-btn>
+			</v-col>
 		</v-row>
-		<v-card-title v-if="user"
+		<v-card-title v-if="!isLoading"
 			class="py-1 d-flex justify-center"
 		>
 			<v-avatar size="60"
 				class="golden-rod-border-3"
 			>
-				<v-img src="https://image.freepik.com/free-vector/beard-man-barber-shop-logo-vector-illustration_56473-434.jpg" />
+				<v-img v-if="user.profile.image !== null"
+					:src="user.profile.image"
+				/>
+				<span v-else>{{ user.username[0] }}</span>
 			</v-avatar><span class="ml-4">
 				{{ user.username }}
 			</span>
