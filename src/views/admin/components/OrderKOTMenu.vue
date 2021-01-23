@@ -154,32 +154,7 @@ export default {
 			await this.$store.dispatch("cart/fetchOrderKOT", {
 				orderId: this.orderId
 			})
-			let tempKOTBatchArray = []
-			this.orderKOTItems.forEach(item => {
-				if (!tempKOTBatchArray.includes(item.batch)) {
-					this.batchGroupedKOTItems.push({
-						id: item.id,
-						batch: item.batch,
-						cartItems: [
-							{
-								itemName: item["cart_item"].item.name,
-								quantity: item["cart_item"].quantity,
-								quantityDiff: item["quantity_diff"]
-							}
-						],
-						timestamp: item.timestamp,
-					})
-					tempKOTBatchArray.push(item.batch)
-				} else {
-					const objIndex = this.batchGroupedKOTItems.findIndex((obj => obj.batch === item.batch))
-					this.batchGroupedKOTItems[objIndex].cartItems.push({
-						itemName: item["cart_item"].item.name,
-						quantity: item["cart_item"].quantity,
-						quantityDiff: item["quantity_diff"]
-					})
-				}
-			})
-			console.log(this.batchGroupedKOTItems)
+			this.batchGroupedKOTItems = this.$helper.groupOrderKOTByBatch(this.orderKOTItems)
 			this.isLoading = false
 		},
 		show(e) {
@@ -193,67 +168,12 @@ export default {
 		},
 		generateKOTPDF(kotItem) {
 			this.overlay = true
-			const columns = [
-				{title: "ID", dataKey: "id"},
-				{title: "Particulars", dataKey: "particular"},
-				{title: "Qty", dataKey: "quantity"},
-			]
-			let itemsForDocument = []
-			kotItem.cartItems.forEach((item, index) => {
-				itemsForDocument.push({
-					id: index +1,
-					particular: item.itemName,
-					quantity: item.quantityDiff
-				})
-			})
-
 			this.doc = new jsPDF({
 				orientation: "portrait",
 				uint: "in",
 				format: "dl",
 			})
-			this.doc
-				.setFontSize(10)
-				.text(
-					"Order ID: " + this.orderId,
-					7,
-					11,
-				)
-			this.doc
-				.setFontSize(9)
-				.text(
-					"KOT ID: " + kotItem.id,
-					7,
-					17,
-				)
-			this.doc
-				.setFontSize(9)
-				.text(
-					"KOT Batch Number: " + kotItem.batch,
-					7,
-					22,
-				)
-			this.doc
-				.setFontSize(9)
-				.text(
-					"Timestamp: " + kotItem.timestamp,
-					7,
-					27,
-				)
-			this.doc.autoTable({
-				columns,
-				styles: {
-					fillColor: [128, 128, 128],
-					cellPadding: 1.6,
-					fontSize: 10,
-					cellWidth: 32
-				},
-				body: itemsForDocument,
-				margin: {left: 7, top: 30},
-				tableWidth: "wrap",
-			})
-			this.doc.save(`KOT#${kotItem.id}.pdf`)
-			this.doc.autoPrint()
+			this.$helper.generateKOTPDF(kotItem, this.doc, this.orderId)
 			this.overlay = false
 		},
 		removeFromKotMenu(cartItem) {

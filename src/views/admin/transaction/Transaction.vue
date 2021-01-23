@@ -162,7 +162,6 @@ export default {
 		return {
 			isLoading: false,
 			expanded: [],
-			singleExpand: false,
 			searchTransactions: "",
 			transactionTableHeaders: [
 				{text: "ACTIONS", align: "center", value: "actions"},

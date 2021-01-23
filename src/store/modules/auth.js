@@ -57,9 +57,7 @@ const actions = {
 	async logout({}, payload) {
 		try {
 			await $api.post(authUrls.logout, payload)
-			localStorage.removeItem("token")
-			localStorage.removeItem("currentUser")
-			localStorage.removeItem("cookingOrder")
+			localStorage.clear()
 			return true
 		} catch(err) {
 			return err.response.data
