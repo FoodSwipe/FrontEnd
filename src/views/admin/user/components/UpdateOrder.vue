@@ -539,7 +539,7 @@ export default {
 		},
 		async completeDelivery() {
 			this.order.order_completed = false
-			const reaction = confirm("Are you the order is delivered? You will not be able to modify" +
+			const reaction = confirm("Are you sure the order is delivered? You will not be able to modify" +
 				" this order further after setting it to done.");
 			if (reaction === true) {
 				const patched = await this.$store.dispatch("order/patch", {
@@ -757,18 +757,21 @@ export default {
 			if (index >= 0) this.selectedItems.splice(index, 1)
 		},
 		async updateQuantity(item) {
-			const patched = await this.$store.dispatch("cart/patch", {
-				id: item.id,
+			const patched = await this.$store.dispatch("cart/adminUpdateCartItemQuantity", {
+				cartId: item.id,
 				body: {
 					quantity: item.quantity
 				}
 			})
-			if (patched === true) {
-				await this.openSnack("Cart item quantity updated successfully.", "success")
-			} else if (patched === 500) {
+			if (patched === 500) {
 				await this.openSnack("Internal Server Error.")
 			} else {
-				await this.openSnack(patched.quantity[0])
+				if (typeof(patched) === "string") {
+					await this.openSnack(patched, "success")
+					this.$bus.emit("refresh-kot-menu")
+				} else {
+					await this.openSnack(patched.quantity[0])
+				}
 			}
 			await this.initialize({
 				id: this.order.id

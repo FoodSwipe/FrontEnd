@@ -90,8 +90,8 @@
 					v-else
 					close-on-content-click
 					offset-y
-					transition="scale-transition"
-					nudge-left="45"
+					transition="fab-transition"
+					nudge-left="10"
 					nudge-bottom="5"
 				>
 					<template #activator="{on, attrs}">
@@ -131,7 +131,7 @@
 								<v-icon>settings_applications</v-icon>
 							</v-list-item-icon>
 							<v-list-item-title @click="toAdminPanel()">
-								Administration
+								Settings
 							</v-list-item-title>
 						</v-list-item>
 						<v-divider class="ml-4" />
@@ -286,9 +286,10 @@ export default {
 				this.showAdminButton = false
 				this.$bus.emit("refresh-order-now")
 			} else {
-				this.openSnack(isLoggedOut, "error")
+				this.openSnack(isLoggedOut.detail, "error")
+				localStorage.clear()
 			}
-
+			await this.initialize()
 		},
 	}
 }

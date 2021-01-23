@@ -105,6 +105,26 @@ const actions = {
 			}
 			return 500
 		}
+	},
+	/**
+	 *
+	 * @param commit
+	 * @param {Object} payload
+	 * @param {Number} payload.cartId
+	 * @param {Object} payload.body
+	 *
+	 * @return {Promise<void>|int|boolean}
+	 */
+	async adminUpdateCartItemQuantity({commit}, payload) {
+		try {
+			const resp = await $api.post(util.format(cartUrls.adminUpdateQuantity, payload.cartId), payload.body)
+			return resp.detail
+		} catch (e) {
+			if (parseInt(e.response.status.toString()) === 400) {
+				return e.response.data
+			}
+			return 500
+		}
 	}
 }
 

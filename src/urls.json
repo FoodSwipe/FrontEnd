@@ -42,7 +42,8 @@
   "cart": {
     "list": "cart/",
     "detail": "cart/%s/",
-    "filterKOT": "kot?order=%s&batch=%s&timestamp=%s"
+    "filterKOT": "kot?order=%s&batch=%s&timestamp=%s",
+    "adminUpdateQuantity": "cart-item/%s/quantity-update"
   },
   "order": {
     "list": "order/",
@@ -55,6 +56,10 @@
     "userStoreSummary": "user/%s/store-summary",
     "saleSummary": "sales-report",
     "doneFromCustomer": "done-from-customer/%s"
+  },
+  "kot": {
+    "list": "order-kot/",
+    "detail": "order-kot/%s/"
   },
   "review": {
     "list": "review/",

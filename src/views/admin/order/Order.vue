@@ -117,6 +117,7 @@
 			</v-toolbar>
 			<v-divider />
 			<v-row
+				v-if="orders.length > 0"
 				justify="start"
 				align="center"
 				class="ma-0 pa-4 pb-0"
@@ -325,6 +326,15 @@
 					</v-card>
 				</v-col>
 			</v-row>
+			<div v-else
+				class="pa-2 text-center"
+			>
+				<v-btn color="primary"
+					@click="initialize()"
+				>
+					RESET
+				</v-btn>
+			</div>
 		</v-card>
 		<start-order-form-dialog />
 	</div>

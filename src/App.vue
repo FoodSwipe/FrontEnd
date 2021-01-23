@@ -11,6 +11,13 @@ export default {
 </script>
 <!--global css variables-->
 <style lang="scss">
+.one-rem {
+	font-size: 1rem !important;
+	line-height: 1.2rem;
+}
+.one-point-two-rem {
+	font-size: 1.2rem !important;
+}
 .dark-slate-border-2 {
 	border: 2px solid darkslategrey !important;
 }

@@ -24,17 +24,14 @@
 			offset-y
 			class="elevation-4"
 			:close-on-content-click="false"
-			transition="fab-transition"
+			transition="scale-transition"
 		>
 			<v-list
 				dense
 				dark
 				min-width="200"
 			>
-				<v-list-item-group
-					v-for="(item, index) in batchGroupedKOTItems"
-					:key="index"
-				>
+				<v-list-item>
 					<div class="kot-sub-header">
 						<v-icon size="16"
 							class="star-icon"
@@ -42,6 +39,18 @@
 							star
 						</v-icon>
 						<span>KOT PRINTER</span>
+					</div>
+					<div class="hint-for-kot">
+						Cheers! First KOT has been already printed.<br>
+						For another one, be sure you've updated cart item quantities.
+					</div>
+				</v-list-item>
+				<v-divider />
+				<v-list-item-group
+					v-for="(item, index) in batchGroupedKOTItems"
+					:key="index"
+				>
+					<v-subheader>
 						<v-tooltip bottom>
 							<template #activator="{on, attrs}">
 								<v-btn
@@ -60,17 +69,25 @@
 							</template>
 							<span>Print KOT</span>
 						</v-tooltip>
-					</div>
-					<v-divider />
+						<span>Batch: {{ item.batch }}</span>
+					</v-subheader>
 					<v-list-item v-for="(cartItem, counter) in item.cartItems"
 						:key="counter+5*37"
 					>
+						<v-list-item-avatar>
+							<v-avatar color="red"
+								size="30"
+								@click="removeFromKotMenu(cartItem)"
+							>
+								<v-icon>close</v-icon>
+							</v-avatar>
+						</v-list-item-avatar>
 						<v-list-item-content>
 							<v-list-item-title>{{ cartItem.itemName }}</v-list-item-title>
 						</v-list-item-content>
 						<v-list-item-action>
 							<v-text-field
-								v-model="cartItem.quantity"
+								v-model="cartItem.quantityDiff"
 								class="kot-item-quantity"
 								solo
 								hide-details="auto"
@@ -78,6 +95,13 @@
 						</v-list-item-action>
 					</v-list-item>
 				</v-list-item-group>
+				<v-list-item>
+					<v-list-item-content>
+						<v-list-item-subtitle>
+							Note: By clicking close will remove the menu item just from the <strong>KOT</strong> menu
+						</v-list-item-subtitle>
+					</v-list-item-content>
+				</v-list-item>
 			</v-list>
 		</v-menu>
 	</div>
@@ -117,17 +141,22 @@ export default {
 		},
 	},
 	async created(){
+		this.$bus.on("refresh-kot-menu", this.initialize)
 		await this.initialize()
+	},
+	beforeUnmount() {
+		this.$bus.off("refresh-kot-menu", this.initialize)
 	},
 	methods: {
 		async initialize() {
 			this.isLoading = true
+			this.batchGroupedKOTItems = []
 			await this.$store.dispatch("cart/fetchOrderKOT", {
 				orderId: this.orderId
 			})
-			let tempKOTBatch
+			let tempKOTBatchArray = []
 			this.orderKOTItems.forEach(item => {
-				if (tempKOTBatch !== item.batch) {
+				if (!tempKOTBatchArray.includes(item.batch)) {
 					this.batchGroupedKOTItems.push({
 						id: item.id,
 						batch: item.batch,
@@ -135,19 +164,22 @@ export default {
 							{
 								itemName: item["cart_item"].item.name,
 								quantity: item["cart_item"].quantity,
+								quantityDiff: item["quantity_diff"]
 							}
 						],
-						timestamp: item.timestamp
+						timestamp: item.timestamp,
 					})
+					tempKOTBatchArray.push(item.batch)
 				} else {
-					const objIndex = this.batchGroupedKOTItems.findIndex((obj => obj.batch === tempKOTBatch))
+					const objIndex = this.batchGroupedKOTItems.findIndex((obj => obj.batch === item.batch))
 					this.batchGroupedKOTItems[objIndex].cartItems.push({
 						itemName: item["cart_item"].item.name,
 						quantity: item["cart_item"].quantity,
+						quantityDiff: item["quantity_diff"]
 					})
 				}
-				tempKOTBatch = item.batch
 			})
+			console.log(this.batchGroupedKOTItems)
 			this.isLoading = false
 		},
 		show(e) {
@@ -171,7 +203,7 @@ export default {
 				itemsForDocument.push({
 					id: index +1,
 					particular: item.itemName,
-					quantity: item.quantity
+					quantity: item.quantityDiff
 				})
 			})
 
@@ -181,17 +213,10 @@ export default {
 				format: "dl",
 			})
 			this.doc
-				.setFontSize(12)
-				.text(
-					this.document.heading,
-					8,
-					7,
-				)
-			this.doc
 				.setFontSize(10)
 				.text(
-					this.document.location,
-					40,
+					"Order ID: " + this.orderId,
+					7,
 					11,
 				)
 			this.doc
@@ -231,6 +256,9 @@ export default {
 			this.doc.autoPrint()
 			this.overlay = false
 		},
+		removeFromKotMenu(cartItem) {
+			console.log(cartItem)
+		}
 	},
 }
 </script>
@@ -252,5 +280,11 @@ export default {
 .kot-item-quantity {
 	max-width: 5rem;
 	width: 5rem;
+}
+.hint-for-kot {
+	padding: .5rem;
+	font-size: .75rem;
+	line-height: .75rem;
+	color: #aaaaaa;
 }
 </style>

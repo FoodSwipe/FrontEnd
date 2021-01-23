@@ -456,8 +456,4 @@ export default {
 	border: 2px solid #d6931f;
 	border-radius: 10px;
 }
-.one-rem {
-	font-size: 1.2rem !important;
-	line-height: 1.4rem;
-}
 </style>

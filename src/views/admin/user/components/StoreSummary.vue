@@ -137,11 +137,3 @@ export default {
 	}
 }
 </script>
-<style lang="scss" scoped>
-.one-rem {
-	font-size: 1rem;
-}
-.one-point-two-rem {
-	font-size: 1.2rem;
-}
-</style>

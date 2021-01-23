@@ -161,14 +161,15 @@ export default {
 		drawer: true,
 		drawerItems: [
 			{ title: "Home", icon: "home", to: "/admin/home" },
-			{ title: "Users", icon: "group", to: "/admin/user" },
-			{ title: "Menu Item Types", icon: "group_work", to: "/admin/item-type" },
-			{ title: "Menu Items", icon: "local_bar", to: "/admin/menu-item" },
-			{ title: "Menu Item Groups", icon: "bubble_chart", to: "/admin/menu-item-group" },
-			{ title: "Top / Recommend", icon: "assistant", to: "/admin/top-recommended-items" },
 			{ title: "Orders", icon: "view_list", to: "/admin/order" },
+			{ title: "KOT", icon: "view_list", to: "/admin/kot" },
+			{ title: "Users", icon: "group", to: "/admin/user" },
+			{ title: "Menu Items", icon: "local_bar", to: "/admin/menu-item" },
+			{ title: "Item Types", icon: "group_work", to: "/admin/item-type" },
+			{ title: "Item Groups", icon: "bubble_chart", to: "/admin/menu-item-group" },
 			{ title: "Transactions", icon: "payment", to: "/admin/transaction" },
-			{ title: "Utilities", icon: "stars", to: "/admin/utilities" },
+			{ title: "Top / Recommend", icon: "assistant", to: "/admin/top-recommended-items" },
+			{ title: "Site Utilities", icon: "stars", to: "/admin/utilities" },
 		],
 		items: [
 			{

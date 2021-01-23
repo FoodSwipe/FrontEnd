@@ -118,7 +118,7 @@
 				/>
 			</template>
 			<!-- eslint-disable-next-line vue/valid-v-slot-->
-			<template #item.is_bar_item="{ item }">
+			<template #item#.is_bar_item="{ item }">
 				<v-checkbox v-model="item.is_bar_item"
 					color="orange"
 					@change="updateIsBarItem(item)"
