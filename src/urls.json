@@ -33,7 +33,7 @@
     "topRecommendedMenuItemDetail": "top-recommended-items/%s/",
     "topItems": "top-items",
     "recommendedItems": "recommended-items",
-    "filter": "api/menu-item/?name__contains=%s&ingredients__contains=%s"
+    "filter": "menu-item/?name__contains=%s&ingredients__contains="
   },
   "menuItemGroup": {
     "list": "menu-item-group/",

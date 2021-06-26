@@ -185,6 +185,15 @@ const actions = {
 			return 500
 		}
 	},
+	async filter({commit}, payload) {
+		try {
+			const res = await $api.get(util.format(menuItemUrls.filter, payload.name))
+			commit("SET_MENU_ITEMS", res)
+			return true
+		} catch (e) {
+			return false
+		}
+	}
 }
 
 export default {

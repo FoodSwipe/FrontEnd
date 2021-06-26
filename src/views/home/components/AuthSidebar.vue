@@ -70,6 +70,7 @@
 							autocomplete="on"
 							hide-details="auto"
 							:error-messages="loginFieldErrors.password"
+							@keydown="submitLoginIfEnter"
 						/>
 					</v-col>
 				</v-row>
@@ -389,6 +390,9 @@ export default {
 			this.$store.dispatch("user/clearRegisterErrorMessages")
 			this.registerDialog = true
 		},
+		submitLoginIfEnter(e) {
+			if (e.key === "Enter") this.submitLogin()
+		}
 	}
 }
 </script>

@@ -47,7 +47,6 @@
 						prepend-inner-icon="email" label="Email address"
 						hint="Fill accessible email address to track your order"
 						clearable hide-details="auto"
-						:error-messages="orderFormErrors.custom_email"
 					/>
 				</v-col>
 			</v-row>

@@ -25,9 +25,9 @@
 			:items="orderKOTs"
 			:search="searchKOT"
 			:single-expand="true"
-			:show-expand="true"
-			item-key="id"
+			show-expand
 			class="elevation-4 kot-table"
+			item-key="id"
 		>
 			<template #top>
 				<v-toolbar flat>
@@ -137,30 +137,32 @@ import router from "@/router"
 import jsPDF from "jspdf"
 
 export default {
-	data: () => ({
-		doc: null,
-		isLoading: false,
-		searchKOT: null,
-		expanded: [],
-		dessertHeaders: [
-			{ text: "ORDER ID", value: "orderId" },
-			{ text: "CART ITEMS", value: "cart_items", align: "start" },
-			{ text: "TIMESTAMP", value: "timestamp" },
-			{ text: "", value: "data-table-expand" },
-		],
-		orderKOTs: [],
-		transactionPageBreadcrumbs: [
-			{
-				text: "> Home",
-				disabled: false,
-				href: "/admin/home",
-			},
-			{
-				text: "Order KOT(s)",
-				disabled: true,
-			}
-		]
-	}),
+	data() {
+		return {
+			doc: null,
+			isLoading: false,
+			searchKOT: null,
+			expanded: [],
+			dessertHeaders: [
+				{ text: "ORDER ID", value: "orderId" },
+				{ text: "CART ITEMS", value: "cart_items", align: "start" },
+				{ text: "TIMESTAMP", value: "timestamp" },
+				{ text: "", value: "data-table-expand" },
+			],
+			orderKOTs: [],
+			transactionPageBreadcrumbs: [
+				{
+					text: "> Home",
+					disabled: false,
+					href: "/admin/home",
+				},
+				{
+					text: "Order KOT(s)",
+					disabled: true,
+				}
+			]
+		}
+	},
 	computed: {
 		...mapGetters({
 			desserts: "kot/allKots",

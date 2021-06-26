@@ -61,6 +61,7 @@
 				<!--						Store-->
 				<!--					</v-btn>-->
 				<!--				</div>-->
+				<menu-item-search-bar />
 				<v-spacer />
 				<v-tooltip v-if="currentUser === null"
 					bottom
@@ -193,7 +194,10 @@ import AuthSidebar from "@/views/home/components/AuthSidebar"
 
 export default {
 	name: "HomeToolbarComponent",
-	components: { AuthSidebar },
+	components: {
+		AuthSidebar,
+		MenuItemSearchBar: () =>  import("@/views/home/components/MenuItemSearchBar")
+	},
 	data: () => ({
 		showAdminButton: false,
 		loginBanner: require("@/assets/banner_1.jpg"),
