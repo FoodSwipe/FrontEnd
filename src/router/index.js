@@ -64,11 +64,12 @@ const routes = [
 	},
 	{
 		path: "/admin",
+		name: "Administration",
 		component: () => import("@/layout/AdminLayout"),
 		children: [
 			{
 				path: "home",
-				name: "Administration",
+				name: "Administration Home",
 				component: () => import("@/views/admin/Home")
 			},
 			{

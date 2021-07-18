@@ -11,6 +11,10 @@ import api from "@/handler/axios"
 import helper from "@/Helper"
 import constants from "@/constants"
 
+import vueScrollBehavior from "vue-scroll-behavior"
+
+Vue.use(vueScrollBehavior, { router: router })
+
 Vue.config.productionTip = false
 Vue.prototype.$api = api
 Vue.prototype.$helper = helper

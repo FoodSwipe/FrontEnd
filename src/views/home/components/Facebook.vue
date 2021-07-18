@@ -10,15 +10,17 @@
 				sm="6"
 			>
 				<div class="fb-page"
-					:data-href="$constants.facebookUrl" data-tabs="timeline, events, messages"
-					data-width="500" data-height=""
+					data-href="https://www.facebook.com/foodswipeonline" data-tabs="timeline"
+					data-width="" data-height=""
 					data-small-header="false" data-adapt-container-width="true"
 					data-hide-cover="false" data-show-facepile="true"
 				>
-					<blockquote :cite="$constants.facebookUrl"
+					<blockquote cite="https://www.facebook.com/foodswipeonline"
 						class="fb-xfbml-parse-ignore"
 					>
-						<a :href="$constants.facebookUrl">Foodswipe food delivery</a>
+						<a href="https://www.facebook.com/foodswipeonline"
+							target="_blank"
+						>FoodSwipe Delivery</a>
 					</blockquote>
 				</div>
 			</v-col>
