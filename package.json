@@ -9,6 +9,7 @@
     "deploy": "node ghPageDeploy.js"
   },
   "dependencies": {
+    "axios": "^0.21.1",
     "core-js": "^3.6.5",
     "jspdf": "^2.2.0",
     "jspdf-autotable": "^3.5.13",
