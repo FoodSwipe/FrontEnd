@@ -1,137 +1,152 @@
 <template>
 	<v-card min-height="100vh"
-
 		width="100vw"
 		flat
 		tile
 		color="#fff0f0"
+		class="pa-4 d-flex justify-center align-center"
+		style="position: relative;"
 	>
-		<div style="width: 100vw; position: relative;">
-			<v-chip
-				style="position: absolute; right: 2px; top: 2px;"
-				color="rgb(255 217 217)"
+		<div class="custom-shape-divider-top-1626805339">
+			<svg data-name="Layer 1"
+				xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120"
+				preserveAspectRatio="none"
 			>
-				Menu
-			</v-chip>
+				<path d="M1200 0L0 0 598.97 114.72 1200 0z"
+					class="shape-fill"
+				/>
+			</svg>
 		</div>
-		<v-row>
-			<v-col cols="12"
-				xl="6" lg="6"
-				md="6"
-			>
-				<v-list max-width="600"
-					color="transparent"
-					class="mx-auto"
+		<v-card flat
+			tile
+			color="transparent"
+		>
+			<div style="position: relative;">
+				<v-chip
+					style="position: absolute; left: 2px; top: 10px;"
+					color="rgb(255 217 217)"
 				>
-					<v-list-item>
-						<v-list-item-avatar size="200">
-							<v-img
-								:src="require('@/assets/premiumQuality.png')"
-								height="200"
-								contain
-							/>
-						</v-list-item-avatar>
-						<v-list-item-content>
-							<v-list-item-title>
-								Get Premium Quality Food Only
-							</v-list-item-title>
-							<v-list-item-subtitle>
-								Your appetite is our first priority
-							</v-list-item-subtitle>
-						</v-list-item-content>
-					</v-list-item>
-					<v-list-item>
-						<v-list-item-avatar size="200">
-							<v-img
-								:src="require('@/assets/moreChoices.png')"
-								height="200"
-								contain
-							/>
-						</v-list-item-avatar>
-						<v-list-item-content>
-							More choices
-							<v-list-item-subtitle>
-								We have large variety of food and beverage items. Just swipe our menu and order your preference.
-							</v-list-item-subtitle>
-						</v-list-item-content>
-					</v-list-item>
-					<v-list-item>
-						<v-list-item-avatar size="200"
-							color="transparent"
-						>
-							<v-img
-								:src="require('@/assets/fastDelivery.png')"
-								height="200"
-								width="250"
-								contain
-							/>
-						</v-list-item-avatar>
-						<v-list-item-content>
-							<v-list-item-title>
-								Gain Time
-							</v-list-item-title>
-							<v-list-item-subtitle>
-								Life can be complicated but ordering food doesn't have to be. Let us take care of the details while you focus on what really matters.
-							</v-list-item-subtitle>
-						</v-list-item-content>
-					</v-list-item>
-				</v-list>
-			</v-col>
-			<v-col cols="12"
-				xl="6" lg="6"
-				md="6"
-			>
-				<v-expansion-panels
-					focusable
-					popout
-					dark
-					class="mx-auto"
-					style="max-width: 600px;"
+					Menu
+				</v-chip>
+			</div>
+			<v-row class="ma-0 pa-0">
+				<v-col cols="12"
+					xl="6" lg="6"
+					md="6"
 				>
-					<v-expansion-panel v-for="(menuItemGroup, index) of menuItemGroups"
-						:key="index"
-						class="menu-list"
+					<v-list max-width="600"
+						color="transparent"
+						class="mx-auto"
 					>
-						<v-expansion-panel-header class="menu-item-group-name">
-							{{ menuItemGroup.name }}
-						</v-expansion-panel-header>
-						<v-expansion-panel-content>
-							<v-row class="ma-0 pa-0">
-								<v-col v-for="(menuItem, i) of menuItemGroup.items"
-									:key="(i + 1) * 21"
-									cols="12"
-									xl="6"
-									lg="6"
-									md="6"
-									sm="12"
-									class="ma-0 pa-0"
-								>
-									<v-list color="transparent">
-										<v-list-item>
-											<v-list-item-icon>
-												<v-avatar size="30"
-													color="grey darken-3"
-													class="slight-up"
-												>
-													{{ menuItem.name[0] }}
-												</v-avatar>
-											</v-list-item-icon>
-											<v-list-item-content>
-												<v-list-item-title>{{ menuItem.name }}</v-list-item-title>
-											</v-list-item-content>
-											<v-list-item-action-text class="menu-item-price">
-												{{ menuItem.price }}
-											</v-list-item-action-text>
-										</v-list-item>
-									</v-list>
-								</v-col>
-							</v-row>
-						</v-expansion-panel-content>
-					</v-expansion-panel>
-				</v-expansion-panels>
-			</v-col>
-		</v-row>
-		<div class="py-4" />
+						<v-list-item>
+							<v-list-item-avatar size="200">
+								<v-img
+									:src="require('@/assets/premiumQuality.png')"
+									height="200"
+									contain
+								/>
+							</v-list-item-avatar>
+							<v-list-item-content>
+								<v-list-item-title>
+									Get Premium Quality Food Only
+								</v-list-item-title>
+								<v-list-item-subtitle>
+									Your appetite is our first priority
+								</v-list-item-subtitle>
+							</v-list-item-content>
+						</v-list-item>
+						<v-list-item>
+							<v-list-item-avatar size="200">
+								<v-img
+									:src="require('@/assets/moreChoices.png')"
+									height="200"
+									contain
+								/>
+							</v-list-item-avatar>
+							<v-list-item-content>
+								More choices
+								<v-list-item-subtitle>
+									We have large variety of food and beverage items. Just swipe our menu and order your preference.
+								</v-list-item-subtitle>
+							</v-list-item-content>
+						</v-list-item>
+						<v-list-item>
+							<v-list-item-avatar size="200"
+								color="transparent"
+							>
+								<v-img
+									:src="require('@/assets/fastDelivery.png')"
+									height="200"
+									width="250"
+									contain
+								/>
+							</v-list-item-avatar>
+							<v-list-item-content>
+								<v-list-item-title>
+									Gain Time
+								</v-list-item-title>
+								<v-list-item-subtitle>
+									Life can be complicated but ordering food doesn't have to be. Let us take care of the details while you focus on what really matters.
+								</v-list-item-subtitle>
+							</v-list-item-content>
+						</v-list-item>
+					</v-list>
+				</v-col>
+				<v-col cols="12"
+					xl="6" lg="6"
+					md="6"
+					class="px-0"
+				>
+					<v-expansion-panels
+						focusable
+						popout
+						dark
+					>
+						<v-expansion-panel v-for="(menuItemGroup, index) of menuItemGroups"
+							:key="index"
+							class="menu-list"
+						>
+							<v-expansion-panel-header class="menu-item-group-name">
+								{{ menuItemGroup.name }}
+							</v-expansion-panel-header>
+							<v-expansion-panel-content>
+								<v-row class="ma-0 pa-0">
+									<v-col v-for="(menuItem, i) of menuItemGroup.items"
+										:key="(i + 1) * 21"
+										cols="12"
+										xl="6"
+										lg="6"
+										md="6"
+										sm="12"
+										class="ma-0 pa-0"
+									>
+										<v-list color="transparent">
+											<v-list-item>
+												<v-list-item-icon>
+													<v-avatar size="30"
+														color="grey darken-3"
+														class="slight-up"
+													>
+														{{ menuItem.name[0] }}
+													</v-avatar>
+												</v-list-item-icon>
+												<v-list-item-content>
+													<v-list-item-title>{{ menuItem.name }}</v-list-item-title>
+												</v-list-item-content>
+												<v-list-item-action-text class="menu-item-price">
+													{{ menuItem.price }}
+												</v-list-item-action-text>
+											</v-list-item>
+										</v-list>
+									</v-col>
+								</v-row>
+							</v-expansion-panel-content>
+						</v-expansion-panel>
+					</v-expansion-panels>
+				</v-col>
+			</v-row>
+			<div class="py-4" />
+		</v-card>
 	</v-card>
 </template>
 <script>
@@ -580,5 +595,24 @@ export default {
 }
 .divider-menu {
 	margin: 2px 0;
+}
+.custom-shape-divider-top-1626805339 {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	overflow: hidden;
+	line-height: 0;
+}
+
+.custom-shape-divider-top-1626805339 svg {
+	position: relative;
+	display: block;
+	width: calc(237% + 1.3px);
+	height: 500px;
+}
+
+.custom-shape-divider-top-1626805339 .shape-fill {
+	fill: #ffe7e7;
 }
 </style>

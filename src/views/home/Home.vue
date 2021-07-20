@@ -1,7 +1,7 @@
 <template>
 	<v-main>
-		<v-container class="pa-0"
-			style="max-width: 100vw;"
+		<v-container class="ma-0 pa-0"
+			fluid
 		>
 			<the-snack-bar />
 			<swiper />
