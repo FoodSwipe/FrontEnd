@@ -32,18 +32,6 @@
 								{{ item.field }}
 							</v-list-item-subtitle>
 						</v-list-item-content>
-						<v-list-item-action>
-							<v-btn
-								color="grey darken-3"
-								icon
-							>
-								<v-icon small
-									color="blue darken-2"
-								>
-									edit
-								</v-icon>
-							</v-btn>
-						</v-list-item-action>
 					</v-list-item>
 				</v-list-item-group>
 			</v-list>
@@ -75,18 +63,6 @@
 								{{ item.field }}
 							</v-list-item-subtitle>
 						</v-list-item-content>
-						<v-list-item-action>
-							<v-btn
-								color="grey darken-3"
-								icon
-							>
-								<v-icon small
-									color="blue darken-2"
-								>
-									edit
-								</v-icon>
-							</v-btn>
-						</v-list-item-action>
 					</v-list-item>
 				</v-list-item-group>
 			</v-list>
@@ -97,25 +73,55 @@
 export default {
 	name: "AboutUserView",
 	data: () => ({
-		profileTabItems: [
-			{icon: "account_circle", title: "Personal"},
-			{icon: "history", title: "History"},
-			{icon: "settings", title: "Settings"}
-		],
-		personalItems1: [
-			{icon: "dns", field: "Full Name", value: "Kiran Parajuli"},
-			{icon: "contact_phone", field: "Phone number", value: "9856256325"},
-			{icon: "contacts", field: "Username", value: "kiranparajuli589"},
-			{icon: "contact_mail", field: "Email address", value: "kiranparajuli589@gmail.com"},
-			{icon: "cake", field: "Birthday", value: "2055-55-5"}
-		],
-		personalItems2: [
-			{icon: "my_location", field: "Current City", value: "Lamachaur-16, Pokhara"},
-			{icon: "explore", field: "Address", value: "Tinpiple-5, Panchkhal"},
-			{icon: "toggle_on", field: "Status", value: "Active"},
-			{icon: "event_note", field: "Date Joined", value: "Dec 12, 2015"},
-		]
-	})
+		currentUser: null,
+		isLoading: false,
+	}),
+	computed: {
+		profileTabItems() {
+			return [
+				{
+					icon: "account_circle",
+					title: "Personal"
+				},
+				{
+					icon: "history",
+					title: "History"
+				},
+				{
+					icon: "settings",
+					title: "Settings"
+				}
+			]
+		},
+		personalItems1() {
+			if (!this.currentUser) return []
+			else return [
+				{icon: "dns", field: "Full Name", value: this.currentUser.profile.full_name},
+				{icon: "contact_phone", field: "Phone number", value: this.currentUser.profile.contact},
+				{icon: "contacts", field: "Username", value: this.currentUser.username},
+				{icon: "contact_mail", field: "Email address", value: this.currentUser.email},
+			]
+		},
+		personalItems2() {
+			if (!this.currentUser) return []
+			else return [
+				{icon: "cake", field: "Birthday", value: this.currentUser.profile.birth_date},
+				{icon: "explore", field: "Address", value: this.currentUser.profile.address},
+				{icon: "toggle_on", field: "Status", value: true},
+				{icon: "event_note", field: "Date Joined", value: this.currentUser.date_joined},
+			]
+		}
+	},
+	created() {
+		this.initialize()
+	},
+	methods: {
+		initialize() {
+			this.isLoading = true
+			this.currentUser = this.$helper.getCurrentUser()
+			this.isLoading = false
+		},
+	}
 }
 </script>
 <style lang="scss" scoped>

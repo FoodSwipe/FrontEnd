@@ -1,0 +1,82 @@
+{
+  "user": {
+    "listProfiles": "profiles",
+    "register": "register",
+    "addUser": "add-user",
+    "updateUserWithProfile": "user-update/%s",
+    "listUsers": "user",
+    "userDetail": "user/%s",
+    "userProfile": "user/%s/profile",
+    "profileDetail": "profile/%s",
+    "toggleSuperUserStatus": "user/%s/toggle-superuser-status",
+    "toggleStaffStatus": "user/%s/toggle-staff-status",
+    "registrationSummary": "registration-summary",
+    "searchProfileByContact": "user-profiles?contact=%s",
+    "listProfileContacts": "list-user-contacts"
+  },
+  "auth": {
+    "login": "login",
+    "logout": "logout",
+    "updatePassword": "user/update-password",
+    "requestResetPassword": "user/reset-password",
+    "resetPassword": "user/reset-password/%s/"
+  },
+  "itemType": {
+    "list": "item-type/",
+    "detail": "item-type/%s/"
+  },
+  "menuItem": {
+    "list": "menu-item/",
+    "detail": "menu-item/%s/",
+    "orderNowList": "order-now-list",
+    "topRecommendedMenuItem": "top-recommended-items/",
+    "topRecommendedMenuItemDetail": "top-recommended-items/%s/",
+    "topItems": "top-items",
+    "recommendedItems": "recommended-items",
+    "filter": "menu-item/?name__contains=%s&ingredients__contains="
+  },
+  "menuItemGroup": {
+    "list": "menu-item-group/",
+    "detail": "menu-item-group/%s/",
+    "withItems": "item-group-with-items"
+  },
+  "cart": {
+    "list": "cart/",
+    "detail": "cart/%s/",
+    "filterKOT": "kot?order=%s&batch=%s&timestamp=%s",
+    "adminUpdateQuantity": "cart-item/%s/quantity-update"
+  },
+  "order": {
+    "list": "order/",
+    "listAuthenticated": "orders",
+    "detail": "order/%s/",
+    "userOrders": "user/%s/orders",
+    "unAuthUpdateOrder": "update-order/%s",
+    "initializeOrder": "init-order",
+    "withCartItems": "order/%s/cart",
+    "userStoreSummary": "user/%s/store-summary",
+    "saleSummary": "sales-report",
+    "doneFromCustomer": "done-from-customer/%s",
+    "timestampFilter": "order/?created_at_after=%s&created_at_before=%s"
+  },
+  "kot": {
+    "list": "order-kot/",
+    "detail": "order-kot/%s/"
+  },
+  "review": {
+    "list": "review/",
+    "detail": "review/%s/"
+  },
+  "homePageContent": {
+    "list": "homepage-content/",
+    "detail": "homepage-content/%s/",
+    "unAuthList": "home-page-contents"
+  },
+  "log": {
+    "list": "log"
+  },
+  "transaction": {
+    "list": "transaction/",
+    "detail": "transaction/%s/"
+  }
+}

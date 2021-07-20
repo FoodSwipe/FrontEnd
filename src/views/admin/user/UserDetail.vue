@@ -1,27 +1,69 @@
 <template>
 	<v-card flat
+		:loading="isLoading"
+		dark
 		class="rounded-0" width="100vw"
 		color="transparent"
 	>
-		<v-card-title class="py-1 d-flex justify-center">
+		<v-row class="ma-0 pa-0">
+			<v-col cols="10">
+				<v-breadcrumbs v-if="!isLoading"
+					dark
+					:items="userDetailBreadcrumbs"
+					class="px-1 pt-3"
+				>
+					<template #item="{ item }">
+						<v-breadcrumbs-item
+							class="admin-breadcrumb-item"
+							:href="item.href"
+							:disabled="item.disabled"
+						>
+							{{ item.text.toUpperCase() }}
+						</v-breadcrumbs-item>
+					</template>
+				</v-breadcrumbs>
+			</v-col>
+			<v-col cols="2"
+				class="d-flex justify-end align-center"
+			>
+				<v-btn icon
+					@click="$router.go(-1)"
+				>
+					<v-icon>arrow_back</v-icon>
+				</v-btn>
+			</v-col>
+		</v-row>
+		<v-card-title v-if="!isLoading"
+			class="py-1 d-flex justify-center"
+		>
 			<v-avatar size="60"
 				class="golden-rod-border-3"
 			>
-				<v-img src="https://image.freepik.com/free-vector/beard-man-barber-shop-logo-vector-illustration_56473-434.jpg" />
-			</v-avatar><span class="ml-4">John Doe</span>
+				<v-img v-if="user.profile.image !== null"
+					:src="user.profile.image"
+				/>
+				<span v-else>{{ user.username[0] }}</span>
+			</v-avatar><span class="ml-4">
+				{{ user.username }}
+			</span>
 		</v-card-title>
 		<v-row class="ma-0 pa-0">
-			<v-col xl="3"
-				lg="3"
-				md="3"
+			<v-col
+				:xl="(!show) ? 9 : 3"
+				:lg="(!show) ? 9 : 3"
+				:md="(!show) ? 9 : 3"
+				:sm="(!show) ? 12 : 5"
 				cols="12"
-				class="overflow-y"
+				:class="(show) ? 'overflow-y' : ''"
 			>
 				<user-orders />
 			</v-col>
-			<v-col xl="6"
+			<v-col
+				v-if="show"
+				xl="6"
 				lg="6"
 				md="6"
+				sm="7"
 				cols="12"
 			>
 				<update-order />
@@ -29,6 +71,7 @@
 			<v-col xl="3"
 				lg="3"
 				md="3"
+				sm="12"
 				cols="12"
 			>
 				<user-store-summary />
@@ -37,6 +80,8 @@
 	</v-card>
 </template>
 <script>
+import { mapGetters } from "vuex"
+
 export default {
 	components: {
 		UserOrders: () => import("./components/UserOrders"),
@@ -44,60 +89,52 @@ export default {
 		UserStoreSummary: () => import("./components/StoreSummary"),
 	},
 	data: () => ({
-		colors: [
-			"red-gradient",
-			"blue-gradient",
-			"orange-gradient",
-			"deep-blue-gradient",
-			"teal-gradient",
-			"green-gradient",
-			"dark-purple-gradient",
-			"brown-gradient",
-		],
-		orders: [
-			{
-				id: 55896,
-				items: [
-					{id: 5, name: "Veg Momo", quality: 1},
-					{id: 6, name: "Buff Momo", quality: 2},
-					{id: 7, name: "Chicken Chowmein", quality: 3},
-				]
-			},
-			{
-				id: 55897,
-				items: [
-					{id: 8, name: "Ham Burger", quality: 3},
-					{id: 9, name: "Chicken Tikka", quality: 3},
-					{id: 10, name: "Buff Chowmein", quality: 3},
-				]
-			},
-			{
-				id: 55898,
-				items: [
-					{id: 11, name: "Chicken Popcorn", quality: 2},
-					{id: 12, name: "Crispy Chicken", quality: 2},
-					{id: 13, name: "Pork Tawa", quality: 2},
-				]
-			},
-			{
-				id: 55899,
-				items: [
-					{id: 14, name: "Steam MoMo (Chicken)", quality: 6},
-					{id: 15, name: "Buff Chilly", quality: 7},
-					{id: 16, name: "Crispy Chicken Burger", quality: 1},
-				]
-			},
-			{
-				id: 55900,
-				items: [
-					{id: 17, name: "Food swipe combo (Veg)", quality: 1},
-					{id: 18, name: "Biryani", quality: 3},
-					{id: 19, name: "Fried Rice Chowmein", quality: 2},
-				]
-			}
-		]
-	})
-
+		show: true,
+		isLoading: false,
+	}),
+	computed: {
+		...mapGetters({
+			user: "user/user"
+		}),
+		userDetailBreadcrumbs() {
+			return [
+				{
+					text: "> Home",
+					disabled: false,
+					href: "/admin/home",
+				},
+				{
+					text: "Users",
+					disabled: false,
+					href: "/admin/user",
+				},
+				{
+					text: this.user.username,
+					disabled: true,
+					href: "breadcrumbs_link_2",
+				},
+			]
+		}
+	},
+	async created() {
+		this.$bus.on("hide-update-order-box", this.hideUpdateOrderBox)
+		await this.initialize()
+	},
+	beforeUnmount() {
+		this.$bus.off("hide-update-order-box", this.hideUpdateOrderBox)
+	},
+	methods: {
+		hideUpdateOrderBox() {
+			this.show = false
+		},
+		async initialize() {
+			this.isLoading = true
+			await this.$store.dispatch("user/getSingle", {
+				id: this.$route.params.id
+			})
+			this.isLoading = false
+		}
+	}
 }
 </script>
 <style lang="sass" scoped>

@@ -1,8 +1,8 @@
 <template>
 	<div>
-		<div class="bg">
-			<div class="headline text-center py-16 grey--text text--lighten-3 rounded-0">
-				<v-row class="ma-0 pa-0"
+		<div class="bg pt-12 pt-xl-16 pt-lg-16">
+			<div class="headline text-center py-16 grey--text text--lighten-3 rounded-0 my-auto">
+				<v-row class="ma-0 pa-0 pt-12 pt-xl-10 pt-lg-10"
 					justify="center"
 					align="center"
 					no-gutters
@@ -65,13 +65,13 @@
 						radio_button_checked
 					</v-icon>
 				</v-row>
-				<span class="top-text cursor"
+				<span class="top-text"
 					@click="routeToOrderShipping()"
 				>Shipping</span>
-				<span class="mid-padding top-text cursor"
+				<span class="mid-padding top-text"
 					@click="routeToOrderPayment()"
 				>Payment</span>
-				<span class="top-text cursor"
+				<span class="top-text"
 					@click="routeToOrderReview()"
 				>Review</span>
 			</div>
@@ -105,13 +105,13 @@ export default {
 	}),
 	methods: {
 		routeToOrderShipping() {
-			router.push({name: "Confirm Order"})
+			// router.push({name: "Confirm Order"})
 		},
 		routeToOrderPayment() {
-			router.push({name: "Confirm Payment"})
+			// router.push({name: "Confirm Payment"})
 		},
 		routeToOrderReview() {
-			router.push({name: "Review Order"})
+			// router.push({name: "Review Order"})
 		}
 	}
 }
@@ -153,9 +153,9 @@ export default {
 	transition: all .3s ease;
 	background: #cba125;
 	position: relative;
-	min-height: 40vh;
-	@media only screen and (max-width: 475px) {
-		min-height: 30vh;
+	min-height: 45vh;
+	@media only screen and (max-width: 528px) {
+		min-height: 50vh;
 	}
 }
 .slight-left {
@@ -170,7 +170,7 @@ export default {
 		font-size: .875rem;
 	}
 	&:hover {
-		color: #1c3e81;
+		color: #3479e2;
 	}
 }
 .custom-shape-divider-bottom-1607775812 {

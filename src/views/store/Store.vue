@@ -5,7 +5,7 @@
 		<v-col cols="12">
 			<v-img
 				class="store-image"
-				src="https://static.winenews.it/2018/08/CiboVarioSicuro.jpg"
+				:src="require('@/assets/store.jpg')"
 				gradient="to top right, rgba(0,0,0,.33), rgba(0,0,0,.5)"
 				dark
 				height="45vh"
@@ -24,13 +24,15 @@
 				<store-item-group />
 			</v-col>
 		</v-col>
+		<start-order-dialog />
 	</v-row>
 </template>
 <script>
 export default {
 	name: "ItemStoreView",
 	components: {
-		StoreItemGroup: () => import("./StoreItemGroup")
+		StoreItemGroup: () => import("./StoreItemGroup"),
+		StartOrderDialog: () => import("@/components/StartOrder")
 	}
 }
 </script>

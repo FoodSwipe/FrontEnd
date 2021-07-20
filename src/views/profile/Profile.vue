@@ -1,6 +1,7 @@
 <template>
 	<v-card flat
 		class="rounded-0"
+		:loading="isLoading"
 	>
 		<v-row
 			id="top-row"
@@ -23,17 +24,19 @@
 					<v-img src="https://image.freepik.com/free-vector/beard-man-barber-shop-logo-vector-illustration_56473-434.jpg" />
 				</v-avatar>
 				<v-card-title class="profile-name">
-					Kiran Parajuli
+					{{ currentUser.profile.full_name }}
 				</v-card-title>
 				<v-card-subtitle class="pb-0 profile-location">
 					<v-icon small>
 						room
-					</v-icon>Amarsingh-7, Pokhara
+					</v-icon>
+					{{ currentUser.profile.address }}
 				</v-card-subtitle>
 				<v-card-subtitle class="pt-0 profile-phone">
 					<v-icon small>
 						call
-					</v-icon>9840000000
+					</v-icon>
+					{{ currentUser.profile.contact }}
 				</v-card-subtitle>
 			</v-col>
 			<v-col cols="12"
@@ -56,6 +59,20 @@ export default {
 		AboutUser: () => import("@/views/profile/AboutUser"),
 		ProfileTimeline: () => import("@/views/profile/ProfileTimeline")
 	},
+	data: () => ({
+		currentUser: null,
+		isLoading: false,
+	}),
+	created() {
+		this.initialize()
+	},
+	methods: {
+		initialize() {
+			this.isLoading = true
+			this.currentUser = this.$helper.getCurrentUser()
+			this.isLoading = false
+		},
+	}
 }
 </script>
 <style lang="sass" scoped>

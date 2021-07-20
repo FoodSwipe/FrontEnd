@@ -11,6 +11,13 @@ export default {
 </script>
 <!--global css variables-->
 <style lang="scss">
+.one-rem {
+	font-size: 1rem !important;
+	line-height: 1.2rem;
+}
+.one-point-two-rem {
+	font-size: 1.2rem !important;
+}
 .dark-slate-border-2 {
 	border: 2px solid darkslategrey !important;
 }
@@ -30,6 +37,11 @@ export default {
 	cursor: pointer;
 }
 
+.order-card-header {
+	background-color: #ffc107a8;
+	border-radius: 20px !important;
+}
+
 // gradient backgrounds
 
 .green-gradient-rgba {
@@ -43,6 +55,12 @@ export default {
 }
 .orange-gradient {
 	background: linear-gradient(45deg, #582104, #c66c3c)
+}
+.light-orange-gradient {
+	background: linear-gradient(45deg, #c85c09, #eac290)
+}
+.light-orange-gradient-x {
+	background: linear-gradient(90deg, #ecb063, #c85c09, #ea9d72)
 }
 .teal-gradient {
 	background: linear-gradient(45deg, #505804, #a2ac56)
@@ -58,5 +76,29 @@ export default {
 }
 .deep-blue-gradient {
 	background: linear-gradient(45deg, #2c1079, #7c60cd)
+}
+.tilt {
+	transform: rotate(305deg);
+}
+.number-font {
+	font-family: 'Yeon Sung', cursive;
+}
+.admin-breadcrumb-item {
+	font-family: 'Righteous', cursive;
+	a {
+		color: white !important;
+	}
+	.v-breadcrumbs__item--disabled {
+		color: grey !important;
+	}
+}
+.home-breadcrumb-item {
+	font-family: 'Righteous', cursive;
+	a {
+		color: darkslategrey !important;
+	}
+	.v-breadcrumbs__item--disabled {
+		color: slategray !important;
+	}
 }
 </style>

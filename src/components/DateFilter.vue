@@ -1,5 +1,6 @@
 <template>
 	<v-menu
+		v-model="menu"
 		dark
 		transition="scale-transition"
 		offset-y
@@ -40,7 +41,7 @@
 			<v-btn
 				text
 				color="primary"
-				@click="$refs.menu.save(date)"
+				@click="saveDate()"
 			>
 				OK
 			</v-btn>
@@ -61,6 +62,11 @@ export default {
 		menu: false,
 		modal: false,
 		date: []
-	})
+	}),
+	methods: {
+		saveDate() {
+			this.menu=false
+		}
+	}
 }
 </script>

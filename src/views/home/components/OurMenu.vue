@@ -1,81 +1,158 @@
 <template>
-	<div>
-		<div class="text-center pa-2">
-			<v-avatar size="120"
-				tile
+	<v-card min-height="100vh"
+		width="100vw"
+		flat
+		tile
+		color="#fff0f0"
+		class="pa-4 d-flex justify-center align-center"
+		style="position: relative;"
+	>
+		<div class="custom-shape-divider-top-1626805339">
+			<svg data-name="Layer 1"
+				xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120"
+				preserveAspectRatio="none"
 			>
-				<v-img :src="logo" />
-			</v-avatar>
-			<p class="our-menu">
-				Our Menu
-			</p>
+				<path d="M1200 0L0 0 598.97 114.72 1200 0z"
+					class="shape-fill"
+				/>
+			</svg>
 		</div>
-		<v-card max-width="800"
-			class="mx-auto my-2 py-4"
-			dark
-			style="background: rgb(223 133 0);"
+		<v-card flat
+			tile
+			color="transparent"
 		>
-			<v-card-text class="py-0">
-				<v-list
-					class="py-0"
-					dense
-					style="background: #362000;"
+			<div style="position: relative;">
+				<v-chip
+					style="position: absolute; left: 2px; top: 10px;"
+					color="rgb(255 217 217)"
 				>
-					<v-list-item-group
-						v-for="(menuItemGroup, index) of menuItemGroups"
-						:key="index"
+					Menu
+				</v-chip>
+			</div>
+			<v-row class="ma-0 pa-0">
+				<v-col cols="12"
+					xl="6" lg="6"
+					md="6"
+				>
+					<v-list max-width="600"
+						color="transparent"
+						class="mx-auto"
 					>
-						<v-subheader
-							class="pt-2 menu-item-group-name"
-							:class="
-								index !== 0 ? 'mt-6' : ''
-							"
-						>
-							{{ menuItemGroup.name }}
-						</v-subheader>
-						<v-divider
-							style="margin: 2px 0;"
-						/>
-						<v-row class="ma-0 pa-0"
-							no-gutters
-						>
-							<v-col v-for="(menuItem, i) of menuItemGroup.items"
-								:key="(i + 1) * 21"
-								cols="12"
-								xl="6"
-								lg="6"
-								md="6"
-								sm="6"
+						<v-list-item>
+							<v-list-item-avatar size="200">
+								<v-img
+									:src="require('@/assets/premiumQuality.png')"
+									height="200"
+									contain
+								/>
+							</v-list-item-avatar>
+							<v-list-item-content>
+								<v-list-item-title>
+									Get Premium Quality Food Only
+								</v-list-item-title>
+								<v-list-item-subtitle>
+									Your appetite is our first priority
+								</v-list-item-subtitle>
+							</v-list-item-content>
+						</v-list-item>
+						<v-list-item>
+							<v-list-item-avatar size="200">
+								<v-img
+									:src="require('@/assets/moreChoices.png')"
+									height="200"
+									contain
+								/>
+							</v-list-item-avatar>
+							<v-list-item-content>
+								More choices
+								<v-list-item-subtitle>
+									We have large variety of food and beverage items. Just swipe our menu and order your preference.
+								</v-list-item-subtitle>
+							</v-list-item-content>
+						</v-list-item>
+						<v-list-item>
+							<v-list-item-avatar size="200"
+								color="transparent"
 							>
-								<v-list-item class="no-hovering-anim">
-									<v-list-item-icon>
-										<v-avatar size="30"
-											color="grey darken-3"
-											style="margin-top: -3px;"
-										>
-											{{ menuItem.name[0] }}
-										</v-avatar>
-									</v-list-item-icon>
-									<v-list-item-content>
-										<v-list-item-title>{{ menuItem.name }}</v-list-item-title>
-									</v-list-item-content>
-									<v-list-item-action-text style="font-size: 1.2rem; color: greenyellow">
-										{{ menuItem.price }}
-									</v-list-item-action-text>
-								</v-list-item>
-							</v-col>
-						</v-row>
-					</v-list-item-group>
-				</v-list>
-			</v-card-text>
+								<v-img
+									:src="require('@/assets/fastDelivery.png')"
+									height="200"
+									width="250"
+									contain
+								/>
+							</v-list-item-avatar>
+							<v-list-item-content>
+								<v-list-item-title>
+									Gain Time
+								</v-list-item-title>
+								<v-list-item-subtitle>
+									Life can be complicated but ordering food doesn't have to be. Let us take care of the details while you focus on what really matters.
+								</v-list-item-subtitle>
+							</v-list-item-content>
+						</v-list-item>
+					</v-list>
+				</v-col>
+				<v-col cols="12"
+					xl="6" lg="6"
+					md="6"
+					class="px-0"
+				>
+					<v-expansion-panels
+						focusable
+						popout
+						dark
+					>
+						<v-expansion-panel v-for="(menuItemGroup, index) of menuItemGroups"
+							:key="index"
+							class="menu-list"
+						>
+							<v-expansion-panel-header class="menu-item-group-name">
+								{{ menuItemGroup.name }}
+							</v-expansion-panel-header>
+							<v-expansion-panel-content>
+								<v-row class="ma-0 pa-0">
+									<v-col v-for="(menuItem, i) of menuItemGroup.items"
+										:key="(i + 1) * 21"
+										cols="12"
+										xl="6"
+										lg="6"
+										md="6"
+										sm="12"
+										class="ma-0 pa-0"
+									>
+										<v-list color="transparent">
+											<v-list-item>
+												<v-list-item-icon>
+													<v-avatar size="30"
+														color="grey darken-3"
+														class="slight-up"
+													>
+														{{ menuItem.name[0] }}
+													</v-avatar>
+												</v-list-item-icon>
+												<v-list-item-content>
+													<v-list-item-title>{{ menuItem.name }}</v-list-item-title>
+												</v-list-item-content>
+												<v-list-item-action-text class="menu-item-price">
+													{{ menuItem.price }}
+												</v-list-item-action-text>
+											</v-list-item>
+										</v-list>
+									</v-col>
+								</v-row>
+							</v-expansion-panel-content>
+						</v-expansion-panel>
+					</v-expansion-panels>
+				</v-col>
+			</v-row>
+			<div class="py-4" />
 		</v-card>
-	</div>
+	</v-card>
 </template>
 <script>
 export default {
 	name: "OurMenu",
 	data: () => ({
-		logo: require("@/assets/food_swipe_logo.png"),
 		menuItemGroups: [
 			{ name: "Salad",
 				image: "",
@@ -459,7 +536,10 @@ export default {
 				]
 			},
 		]
-	})
+	}),
+	created() {
+		// do something
+	}
 }
 </script>
 <style lang="scss" scoped>
@@ -468,7 +548,6 @@ export default {
 	padding: 15px 0 0 0;
 	font-size: 2.5rem;
 	line-height: 2.5rem;
-	font-family: 'Sacramento', cursive;
 }
 .custom-shape-divider-bottom-1608137131 {
 	position: absolute;
@@ -502,8 +581,38 @@ export default {
 	font-size: 1.2rem;
 	font-family: "Crete Round", serif;
 }
+.our-menu-wrapper-card {
+	background: transparent;
+}
+.menu-item-price {
+	font-size: 1.2rem; color: greenyellow !important;
+}
+.slight-up {
+	margin-top: -3px;
+}
+.menu-list {
+	background: #0e3e54 !important;
+}
+.divider-menu {
+	margin: 2px 0;
+}
+.custom-shape-divider-top-1626805339 {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	overflow: hidden;
+	line-height: 0;
+}
 
-.no-hovering-anim {
-	pointer-events: none;
+.custom-shape-divider-top-1626805339 svg {
+	position: relative;
+	display: block;
+	width: calc(237% + 1.3px);
+	height: 500px;
+}
+
+.custom-shape-divider-top-1626805339 .shape-fill {
+	fill: #ffe7e7;
 }
 </style>

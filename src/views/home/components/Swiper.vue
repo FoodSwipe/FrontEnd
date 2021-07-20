@@ -1,107 +1,72 @@
 <template>
-	<div>
-		<flickity ref="flickity"
-			:options="flickityOptions"
+	<v-card :loading="loading"
+		height="100vh"
+		tile
+	>
+		<v-img
+			v-if="homePageContents"
+			:src="homePageContents[0].image"
+			dark
+			height="100vh"
+			style="position: relative"
 		>
-			<template v-for="(item, index) in items">
-				<!-- eslint-disable-next-line vue/no-v-for-template-key-on-child-->
-				<div :key="index"
-					class="carousel-cell"
+			<home-toolbar style="position: absolute; top:0;" />
+			<order-now style="position: absolute; top: 30vh;" />
+			<div
+				style="position: absolute; top: 90vh; width: 100vw; display: flex; justify-content: center"
+			>
+				<v-btn icon
+					large
+					@click="scrollDown"
 				>
-					<v-img class="carousel-image"
-						:src="item.src"
-						dark
-						gradient="to top, rgb(0 0 0 / 0%), rgb(0 0 0 / 60%), rgb(0 0 0 / 20%)"
-					>
-						<slider-image-content
-							:main-heading="item.mainHeading"
-							:subtitle="item.subtitle"
-							:button-icon="item.buttonIcon"
-							:button-text="item.buttonText"
-							:button-color="item.buttonColor"
-						/>
-					</v-img>
-				</div>
-			</template>
-		</flickity>
-	</div>
+					<v-icon x-large>
+						expand_more
+					</v-icon>
+				</v-btn>
+			</div>
+		</v-img>
+	</v-card>
 </template>
 <script>
-import Flickity from "vue-flickity"
+import { mapGetters } from "vuex"
 
 export default {
-	name: "ShowCaseSliderComponent",
+	name: "ShowCaseSlider",
 	components: {
-		Flickity,
-		SliderImageContent: () => import("@/components/SwiperImageContent")
+		HomeToolbar: () => import("@/views/home/components/Toolbar"),
+		OrderNow: () => import("@/views/home/components/OrderNow"),
 	},
 	data: () => ({
 		loading: false,
-		groupMembers: null,
-		leading: null,
-		clapping: null,
-		praying: null,
-		flickityOptions: {
-			initialIndex: 0,
-			autoPlay: 4000,
-			pauseAutoPlayOnHover: true,
-			prevNextButtons: false,
-			pageDots: true,
-			wrapAround: true,
-			selectedAttraction: 0.01,
-			friction: 0.25,
-		},
-		items: [
-			{
-				src: "https://i.ytimg.com/vi/fovrUHwf0e8/maxresdefault.jpg",
-				mainHeading: "Hello Welcome Tasty Momo",
-				subtitle: "Vivamus suscipit tortor eget felis porttitor volutpat." +
-					" Quisque velit nisi, pretium ut lacinia in, elementum id enim.",
-				buttonIcon: "hdr_weak",
-				buttonText: "Get Momo'ed",
-				buttonColor: "peach-gradient-rgba"
-			},
-			{
-				src: "https://i.pinimg.com/originals/6d/79/e6/6d79e62312ae92757667ca1dae5289d9.jpg",
-				mainHeading: "Get Hot & Spicy Foods at your location",
-				subtitle: "Donec molestie malesuada. Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui.",
-				buttonIcon: "local_grocery_store",
-				buttonText: "Order Now",
-				buttonColor: "aqua-gradient-rgba"
-			},
-			{
-				src: "https://s1.1zoom.me/b5050/401/Drinks_Bar_Bottle_468131_1920x1080.jpg",
-				mainHeading: "Enjoy our bar service online",
-				subtitle: "Cras ultricies ligula sed magna dictum porta. Donec sollicitudin molestie malesuada.",
-				buttonIcon: "store",
-				buttonText: "Visit Store",
-				buttonColor: "blue-gradient"
-			},
-			{
-				src: "https://wallpaperaccess.com/full/235960.jpg",
-				mainHeading: "Get booz'ed and oozed with our beverages",
-				subtitle: "Vivamus suscipit tortor eget felis porttitor volutpat. Donec rutrum congue leo eget malesuada.",
-				buttonIcon: "local_bar",
-				buttonText: "Get booz'ed",
-				buttonColor: "green-gradient-rgba"
-			},
+		colors: [
+			"green-gradient-rgba",
+			"peach-gradient-rgba",
+			"blue-gradient",
+			"green-gradient-rgba"
 		],
 	}),
+	computed: {
+		...mapGetters({
+			homePageContents: "homePageContent/allContent",
+		}),
+	},
+	created() {
+		this.initialize()
+	},
+	methods: {
+		async initialize() {
+			this.isLoading = true
+			const fetched = await this.$store.dispatch("homePageContent/fetchAllHomePageContent")
+			if (!fetched) {
+				await this.openSnack("Internal server error. Please try again")
+			} else { this.isLoading = false}
+		},
+		scrollDown() {
+			window.scroll({
+				top: window.innerHeight,
+				behavior: "smooth"
+			})
+		}
+	}
 }
 </script>
-
-<style scoped>
-
-* { box-sizing: border-box; }
-
-.carousel-cell {
-	display: block;
-	height: 55vh;
-	width: 100vw;
-}
-.carousel-image {
-	object-fit: cover;
-	width: 100%;
-	height: 100%;
-}
-</style>

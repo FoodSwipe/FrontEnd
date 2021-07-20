@@ -1,138 +1,195 @@
 <template>
-	<div class="pa-4">
-		<v-card
-			color="brown lighten-4"
-			max-width="100vw"
-			class="mx-auto pa-2 order-now-card"
+	<v-card width="100vw"
+		flat
+		tile
+		color="transparent"
+		class="px-2"
+	>
+		<v-carousel :show-arrows="false"
+			height="100"
+			hide-delimiters
+			cycle
+			continuous
+			interval="3000"
+			touchless
 		>
-			<v-row class="ma-0 pa-0"
+			<v-carousel-item>
+				<v-card-title class="order-heading">
+					Think food think food-swipe
+				</v-card-title>
+			</v-carousel-item>
+			<v-carousel-item>
+				<v-card-title class="order-heading">
+					Quality food simply delivered
+				</v-card-title>
+			</v-carousel-item>
+		</v-carousel>
+		<v-card
+			color="#ffeebcdb"
+			rounded
+			max-width="820"
+			class="mx-auto"
+		>
+			<v-row class="ma-0 pa-1"
 				justify="center"
 				align="center"
 			>
 				<v-col cols="12"
-					class="pa-1"
+					class="pa-2"
 					xl="6"
 					lg="6"
-					md="5"
-					sm="7"
-				>
-					<v-autocomplete
-						v-model="friends"
-						:disabled="isUpdating"
-						:items="people"
-						filled
-						chips
-						color="blue darken-2"
-						placeholder="Select menu item group"
-						item-text="name"
-						item-value="name"
-						multiple
-						prepend-inner-icon="emoji_food_beverage"
-						hide-details="auto"
-						attach=""
-						clearable
-					>
-						<template #selection="data">
-							<v-chip
-								v-bind="data.attrs"
-								:input-value="data.selected"
-								close
-								@click="data.select"
-								@click:close="remove(data.item)"
-							>
-								<v-avatar left>
-									<v-img :src="data.item.avatar" />
-								</v-avatar>
-								{{ data.item.name }}
-							</v-chip>
-						</template>
-						<template #item="data">
-							<template v-if="typeof data.item !== 'object'">
-								<v-list-item-content v-text="data.item" />
-							</template>
-							<template v-else>
-								<v-list-item-avatar>
-									<img :src="data.item.avatar">
-								</v-list-item-avatar>
-								<v-list-item-content>
-									<v-list-item-title v-html="data.item.name" />
-									<v-list-item-subtitle v-html="data.item.group" />
-								</v-list-item-content>
-							</template>
-						</template>
-					</v-autocomplete>
-				</v-col>
-				<v-col cols="12"
-					class="pa-1"
-					xl="4"
-					lg="4"
-					md="4"
-					sm="5"
+					md="6"
+					sm="6"
 				>
 					<v-text-field
-						v-model="order.location"
+						v-model="order.custom_location"
+						light
+						background-color="rgb(255 238 188 / 50%)"
+						color="#f36d00"
 						clearable
 						filled
 						prepend-inner-icon="explore"
-						label="Your location here..."
+						label="Your location here... (*)"
+						hint="Try to be more precise with your location information."
 						hide-details="auto"
+						:error-messages="startOrderFormErrors.custom_location"
 					/>
 				</v-col>
 				<v-col cols="12"
-					xl="2"
-					lg="2"
-					md="3"
-					sm="12"
-					class="d-flex justify-center pa-1"
+					xl="6"
+					lg="6"
+					md="6"
+					sm="6"
+					class="pa-2"
 				>
-					<v-btn depressed
-						class="purple-gradient"
+					<v-text-field
+						v-model="order.custom_contact"
+						color="#f36d00"
+						background-color="rgb(255 238 188 / 50%)"
+						light
+						filled
+						type="number"
+						prepend-inner-icon="call"
+						hide-details="auto"
+						label="Contact number (*)"
+						clearable
+						hint="Please only provide your reachable contact number."
+						:error-messages="startOrderFormErrors.custom_contact"
+					/>
+				</v-col>
+				<v-col cols="12"
+					class="d-flex justify-center pa-2"
+				>
+					<v-btn block
+						color="#f36d00"
+						height="50"
 						dark
+						:disabled="isDisabled"
+						@click="startShopping()"
 					>
 						<v-icon>fastfood</v-icon>
 						<span v-if="$vuetify.breakpoint.width > 255"
 							class="ml-2"
-						>start my order</span>
+						>Start Order</span>
 					</v-btn>
 				</v-col>
 			</v-row>
 		</v-card>
-	</div>
+	</v-card>
 </template>
 <script>
-import helper from "@/Helper"
+import { refineOrderNowList } from "@/Helper"
+import { mapGetters } from "vuex"
+import router from "@/router"
+
 export default {
 	name: "OrderNowComponent",
 	data: () => ({
+		itemsFieldRequiredErrorMessage: null,
+		isDisabled: false,
 		order: {
-			location: ""
+			custom_location: "",
+			custom_contact: ""
 		},
-		friends: [],
 		isUpdating: false,
-		name: "Midnight Crew",
 	}),
 	computed: {
-		people() {
-			return helper.returnMockMenuItems()
-		},
-		srcs() {
-			return helper.returnMockSrcs()
-		}
+		...mapGetters({
+			startOrderFormErrors: "order/orderFormFieldErrors",
+			pendingOrder: "order/detailOrder"
+		}),
+	},
+	async created() {
+		this.$bus.on("refresh-order-now", this.preFillForm)
+
+		await this.initialize()
+		this.preFillForm()
+	},
+	async beforeUnmount() {
+		this.$bus.off("refresh-order-now", this.preFillForm)
 	},
 	methods: {
-		remove(item) {
-			const index = this.friends.indexOf(item.name)
-			if (index >= 0) this.friends.splice(index, 1)
+		async initialize() {
+			this.isDisabled = (this.$helper.getCookingOrderId() !== null)
 		},
+		preFillForm() {
+			if(this.$helper.isAuthenticated()) {
+				const currentUser = this.$helper.getCurrentUser()
+				this.order = {
+					custom_location: currentUser.profile.address,
+					custom_contact: (currentUser.profile.contact) ? currentUser.profile.contact.replace(/\D/g, "") : null,
+				}
+			} else {
+				this.order = {
+					custom_location: "",
+					custom_contact: ""
+				}
+			}
+		},
+		async openSnack(text, color="error") {
+			await this.$store.dispatch("snack/setSnackState", true)
+			await this.$store.dispatch("snack/setSnackColor", color)
+			await this.$store.dispatch("snack/setSnackText", text)
+		},
+		async startShopping() {
+			const started = await this.$store.dispatch("order/startOrder", this.order)
+			if (started === true) {
+				this.order = {
+					custom_location: "",
+					custom_contact: ""
+				}
+				this.isDisabled = true
+				await this.openSnack("Cheers! Lets start shopping now!", "success")
+				await router.push({"name": "Store"})
+			} else if (started === 500) {
+				await this.openSnack("Internal Server Error.")
+			} else if (started === false) {
+				await this.openSnack("Please load a valid form.")
+			} else {
+				await this.$store.dispatch("order/clearFormErrors")
+				await this.openSnack(started[0])
+				await this.$store.dispatch("order/withCartItems", {
+					id: this.$helper.getCookingOrderId()
+				})
+				this.$bus.emit("set-cart-count", this.pendingOrder.total_items)
+			}
+		}
 	},
 }
 </script>
 <style scoped>
 ::v-deep.v-autocomplete:not(.v-input--is-focused).v-select--chips input {
 	max-height: 25px;
+	color: black;
 }
-.order-now-card {
-	/*background: linear-gradient(rgba(248, 249, 250, 0), rgba(246, 242, 248, 0)), url("https://media-cdn.tripadvisor.com/media/photo-s/0b/05/09/21/dessert.jpg") no-repeat fixed center;*/
-	/*background-size: cover;*/
+.order-heading {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	text-transform: uppercase;
+	font-size: 2rem;
+	line-height: 2.2rem;
+	font-weight: bold;
+	text-align: center;
 }
 </style>

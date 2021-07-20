@@ -9,13 +9,15 @@
 			class="mx-auto"
 		>
 			<v-card-title class="display-1 px-3">
-				{{ mainHeading }}
+				{{ heading }}
 			</v-card-title>
 			<v-card-subtitle class="subtitle px-3">
 				{{ subtitle }}
 			</v-card-subtitle>
 			<v-card-actions>
-				<v-btn :color="buttonColor">
+				<v-btn :color="buttonColor"
+					:to="routerLink"
+				>
 					<v-icon size="24">
 						{{ buttonIcon }}
 					</v-icon>
@@ -31,7 +33,7 @@
 export default {
 	name: "SwiperImageContentComponent",
 	props: {
-		mainHeading: {
+		heading: {
 			type: String,
 			required: true
 		},
@@ -48,6 +50,10 @@ export default {
 			required: true
 		},
 		buttonColor: {
+			type: String,
+			required: true
+		},
+		routerLink: {
 			type: String,
 			required: true
 		}

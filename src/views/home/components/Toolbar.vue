@@ -1,517 +1,207 @@
 <template>
-	<div>
-		<v-app-bar
-			app
-			color="#FFC107"
-			height="58"
-			width="100vw"
-			class="ma-0 pr-4"
+	<v-card flat
+		tile
+		width="100vw"
+		color="transparent"
+	>
+		<v-card max-width="1000"
+			color="transparent"
+			class="pr-4 mx-auto"
+			flat tile
 		>
-			<div class="organization-title">
-				{{ $route.name }}
-			</div>
-			<v-spacer />
-			<v-tooltip bottom>
-				<template #activator="{on, attrs}">
-					<v-scale-transition>
-						<v-btn
-							v-show="$route.name !== 'Food Swipe'"
-							icon
-							small
-							class="pr-0 mr-sm-6 mr-md-6 mr-lg-6 mr-xl-6"
-							v-bind="attrs"
-							@click="toHome()"
-							v-on="on"
-						>
-							<v-icon :size="
-								$vuetify.breakpoint.width > 300
-									? ''
-									: '16'
-							"
-							>
-								home
-							</v-icon>
-						</v-btn>
-					</v-scale-transition>
-				</template>
-				<span>Home</span>
-			</v-tooltip>
-			<v-tooltip bottom>
-				<template #activator="{on, attrs}">
-					<v-scale-transition>
-						<!-- v-if not authenticated -->
-
-						<v-btn v-bind="attrs"
-							icon
-							small
-							class="pr-0 mr-sm-6 mr-md-6 mr-lg-6 mr-xl-6 cursor"
-							v-on="on"
-							@click.stop="drawer = !drawer"
-						>
-							<v-icon size="$vuetify.breakpoint.width > 300
-									? ''
-									: '16'"
-							>
-								input
-							</v-icon>
-						</v-btn>
-						<!-- v-if authenticated -->
-						<!--					<v-btn-->
-						<!--						v-show="$route.name !== 'Profile'"-->
-						<!--						icon-->
-						<!--						small-->
-						<!--						class="pr-0 mr-sm-6 mr-md-6 mr-lg-6 mr-xl-6 profile-avatar cursor"-->
-						<!--						v-bind="attrs"-->
-						<!--						@click="toProfile()"-->
-						<!--						v-on="on"-->
-						<!--					>-->
-						<!--						<v-icon :size="-->
-						<!--							$vuetify.breakpoint.width > 300-->
-						<!--								? ''-->
-						<!--								: '16'-->
-						<!--						"-->
-						<!--						>-->
-						<!--							account_circle-->
-						<!--						</v-icon>-->
-						<!--					</v-btn>-->
-					</v-scale-transition>
-				</template>
-				<span>Login</span>
-			</v-tooltip>
-			<v-tooltip bottom>
-				<template #activator="{on, attrs}">
-					<v-slide-x-transition>
-						<v-btn
-							v-show="$route.name !== 'Store'"
-							icon
-							small
-							class="pr-0 mr-sm-6 mr-md-6 mr-lg-6 mr-xl-6"
-							v-bind="attrs"
-							@click="toStore()"
-							v-on="on"
-						>
-							<v-icon :size="
-								$vuetify.breakpoint.width > 300
-									? ''
-									: '16'
-							"
-							>
-								store
-							</v-icon>
-						</v-btn>
-					</v-slide-x-transition>
-				</template>
-				<span>Store</span>
-			</v-tooltip>
-			<v-tooltip bottom>
-				<template #activator="{on, attrs}">
-					<v-slide-x-transition>
-						<v-btn
-							icon
-							small
-							class="pr-0 mr-sm-6 mr-md-6 mr-lg-6 mr-xl-6"
-							v-bind="attrs"
-							@click="toAdminPanel()"
-							v-on="on"
-						>
-							<v-icon :size="
-								$vuetify.breakpoint.width > 300
-									? ''
-									: '16'
-							"
-							>
-								settings_applications
-							</v-icon>
-						</v-btn>
-					</v-slide-x-transition>
-				</template>
-				<span>Administration</span>
-			</v-tooltip>
-
-			<v-fade-transition>
-				<v-badge
-					v-show="$route.name !== 'Cart'"
-					dark
-					color="black"
-					content="5"
-					offset-x="10"
-					offset-y="15"
+			<div class="d-flex align-center justify-space-between"
+				style="width: 100%"
+			>
+				<v-card-title class="organization-title"
+					:class="($route.name !== 'Food Swipe') ? 'cursor': ''"
+					@click="toHome"
 				>
-					<v-tooltip bottom>
+					Food Swipe
+				</v-card-title>
+				<div class="d-flex align-center justify-space-between">
+					<v-tooltip v-if="currentUser === null"
+						bottom
+					>
 						<template #activator="{on, attrs}">
 							<v-btn
-								light
+								v-bind="attrs"
 								icon
 								small
-								class="mr-2"
-								v-bind="attrs"
-								@click="toCart()"
+								class="cursor"
 								v-on="on"
+								@click.stop="toggleDrawerState()"
 							>
-								<v-icon
-									:size="
-										$vuetify.breakpoint.width > 300
-											? ''
-											: '16'
-									"
-								>
-									add_shopping_cart
+								<v-icon size="26">
+									input
 								</v-icon>
 							</v-btn>
 						</template>
-						<span>Cart</span>
+						<span>Login</span>
 					</v-tooltip>
-				</v-badge>
-			</v-fade-transition>
-		</v-app-bar>
-		<v-navigation-drawer
-			v-model="drawer"
-			app
-			temporary
-			right
-			width="400"
-		>
-			<v-toolbar dark dense
-				color="transparent"
-				height="50"
-				class="nav-toolbar"
-			>
-				<v-spacer />
-				<v-btn icon
-					small
-					color="blue"
-					class="nav-close"
-					@click.stop="drawer = false"
-				>
-					<v-icon size="16">
-						close
-					</v-icon>
-				</v-btn>
-			</v-toolbar>
-			<v-img :src="loginBanner"
-				dark
-				height="30vh"
-				max-height="240"
-				gradient="to top, rgb(0 0 0 / 80%), rgb(0 0 0 / 40%), rgb(0 0 0 / 10%)"
-				class="login-image"
-			>
-				<v-row class="fill-height ma-0 pa-0"
-					justify="center"
-					align="end"
-				>
-					<v-col class="text-center">
-						<div class="display-1 text-center">
-							<v-icon>
-								input
-							</v-icon>
-						</div>
-					</v-col>
-				</v-row>
-			</v-img>
-			<v-form>
-				<v-row class="ma-0 pa-0"
-					justify="center" align="center"
-				>
-					<v-col cols="12">
-						<p class="organization-title text-center">
-							Food Swipe Online Pvt. Ltd.
-						</p>
-						<p class="login-to-proceed">
-							Login to proceed
-						</p>
-					</v-col>
-					<v-col cols="12">
-						<v-text-field
-							id="login-username"
-							v-model="login.username"
-							filled
-							label="Username"
-							prepend-inner-icon="account_circle"
-							hide-details="auto"
-						/>
-					</v-col>
-					<v-col cols="12">
-						<v-text-field
-							id="login-password"
-							v-model="login.password"
-							filled
-							label="Password"
-							prepend-inner-icon="lock"
-							type="password"
-							autocomplete="on"
-							hide-details="auto"
-						/>
-					</v-col>
-				</v-row>
-			</v-form>
-			<v-row class="ma-0 pa-0"
-				align="center"
-			>
-				<v-col cols="6">
-					<v-dialog
-						id="reset-password-dialog"
-						v-model="resetPasswordDialog"
-						width="500"
+					<v-menu
+						v-else
+						close-on-content-click
+						offset-y
+						transition="fab-transition"
+						nudge-left="10"
+						nudge-bottom="5"
 					>
-						<template #activator="{ on, attrs }">
-							<v-btn text
-								color="error"
+						<template #activator="{on, attrs}">
+							<v-btn
+								icon
+								small
+								class="cursor"
 								v-bind="attrs"
 								v-on="on"
 							>
-								Forget password?
+								<v-icon size="26">
+									account_circle
+								</v-icon>
 							</v-btn>
 						</template>
-
-						<v-card>
-							<v-card-title class="headline grey lighten-2">
-								Reset your password
-							</v-card-title>
-
-							<v-card-text class="pt-4">
-								<v-text-field
-									id="reset-email"
-									v-model="resetPassword.email"
-									type="email"
-									filled
-									hide-details="auto"
-									prepend-inner-icon="email"
-									placeholder="Email Address"
-									hint="Reset password link will be sent to the provided email address."
-									persistent-hint
-								/>
-							</v-card-text>
-
-							<v-divider />
-
-							<v-card-actions class="d-flex justify-center">
-								<v-btn
-									dark
-									color="orange"
-									@click="submitResetPasswordForm()"
+						<v-list color="orange lighten-4">
+							<v-list-item>
+								<v-list-item-icon class="mr-2">
+									<v-icon>account_circle</v-icon>
+								</v-list-item-icon>
+								<v-list-item-title class="cursor"
+									@click="toProfile()"
 								>
-									<v-icon>update</v-icon><span class="pl-2">Reset Password</span>
-								</v-btn>
-							</v-card-actions>
-						</v-card>
-					</v-dialog>
-				</v-col>
-				<v-col cols="6"
-					class="text-right"
-				>
-					<v-dialog
-						id="register-dialog"
-						v-model="registerDialog"
-						max-width="500"
-					>
-						<template #activator="{ on, attrs }">
-							<v-btn text
-								color="primary"
-								v-bind="attrs"
-								v-on="on"
+									Profile
+								</v-list-item-title>
+							</v-list-item>
+							<v-divider class="ml-4" />
+							<v-list-item v-if="showAdminButton"
+								class="cursor"
 							>
-								Register
-							</v-btn>
-						</template>
-
-						<v-card>
-							<v-card-title class="grey lighten-2">
-								<v-icon size="30">
-									person_add
-								</v-icon><span class="pl-3">Register Now</span>
-							</v-card-title>
-
-							<v-form>
-								<v-row class="ma-0 pa-0"
-									align="center"
-								>
-									<v-col cols="12"
-										xl="6" lg="6"
-										md="6" sm="6"
-									>
-										<v-text-field
-											id="first-name"
-											v-model="register.f_name"
-											dense
-											filled
-											clearable
-											prepend-inner-icon="face"
-											hide-details="auto"
-											label="First name"
-										/>
-									</v-col>
-									<v-col cols="12"
-										xl="6" lg="6"
-										md="6" sm="6"
-									>
-										<v-text-field
-											id="last-name"
-											v-model="register.l_name"
-											dense
-											filled
-											clearable
-											prepend-inner-icon="face"
-											hide-details="auto"
-											label="Last name"
-										/>
-									</v-col>
-									<v-col cols="12"
-										xl="6" lg="6"
-										md="6" sm="6"
-									>
-										<v-text-field
-											id="username"
-											v-model="register.username"
-											dense
-											filled
-											clearable
-											prepend-inner-icon="account_circle"
-											hide-details="auto"
-											label="Username"
-										/>
-									</v-col>
-									<v-col cols="12"
-										xl="6" lg="6"
-										md="6" sm="6"
-									>
-										<v-text-field
-											id="phone"
-											v-model="register.phone"
-											dense
-											filled
-											clearable
-											type="number"
-											prepend-inner-icon="call"
-											hide-details="auto"
-											label="Phone number"
-										/>
-									</v-col>
-									<v-col cols="12">
-										<v-text-field
-											id="email"
-											v-model="register.email"
-											dense
-											filled
-											clearable
-											prepend-inner-icon="email"
-											hide-details="auto"
-											label="Email address"
-										/>
-									</v-col>
-									<v-col cols="12">
-										<v-text-field
-											id="password"
-											v-model="register.password"
-											dense
-											filled
-											clearable
-											prepend-inner-icon="lock"
-											hide-details="auto"
-											label="Password"
-										/>
-									</v-col>
-									<v-col cols="12">
-										<v-text-field
-											id="address"
-											v-model="register.address"
-											dense
-											filled
-											clearable
-											prepend-inner-icon="room"
-											hide-details="auto"
-											label="Address"
-										/>
-									</v-col>
-								</v-row>
-							</v-form>
-
-							<v-divider />
-							<v-card-text class="d-flex align-center">
-								<v-checkbox v-model="agree"
-									hide-details
-								>
-									<template #label>
-										<div class="login-terms">
-											By clicking <code>Register</code>, you agree to our <code>Terms</code>, <code>Data Policy</code> and <code>Cookies Policy</code>.
-											We will track your last <code>Orders</code>, <code>Locations</code> and try to serve you more better.
-										</div>
-									</template>
-								</v-checkbox>
-							</v-card-text>
-
-							<v-card-actions class="d-flex justify-center pt-0 pb-4">
-								<v-btn color="orange lighten-3"
-									@click="submitRegister()"
-								>
-									<v-icon>add_circle</v-icon>
-									<span class="pl-2">Register</span>
-								</v-btn>
-							</v-card-actions>
-						</v-card>
-					</v-dialog>
-				</v-col>
-				<v-col cols="12">
-					<v-btn
-						id="submit-login"
-						block
+								<v-list-item-icon class="mr-2">
+									<v-icon>settings_applications</v-icon>
+								</v-list-item-icon>
+								<v-list-item-title @click="toAdminPanel()">
+									Settings
+								</v-list-item-title>
+							</v-list-item>
+							<v-divider class="ml-4" />
+							<v-list-item class="cursor">
+								<v-list-item-icon class="mr-2">
+									<v-icon>input</v-icon>
+								</v-list-item-icon>
+								<v-list-item-title @click="logOut()">
+									Logout
+								</v-list-item-title>
+							</v-list-item>
+						</v-list>
+					</v-menu>
+					<div class="px-2" />
+					<v-badge
 						dark
-						class="peach-gradient"
-						@click="submitLogin()"
+						color="orange"
+						:content="cartCount"
+						offset-x="10"
+						offset-y="15"
 					>
-						<v-icon>input</v-icon><span class="pl-3">Login</span>
-					</v-btn>
-				</v-col>
-				<v-col cols="12">
-					<div class="login-terms">
-						By clicking <code>Login</code>, you agree to our <code>Terms</code>, <code>Data Policy</code> and <code>Cookies Policy</code>.
-						You may receive <i>Email Notifications</i> from us and can opt out any time. We will track your last <code>Orders</code>, <code>Locations</code> and try to serve you more better.
-					</div>
-				</v-col>
-			</v-row>
-		</v-navigation-drawer>
-	</div>
+						<v-tooltip bottom>
+							<template #activator="{on, attrs}">
+								<v-btn
+									:disabled="$route.name === 'Cart'"
+									icon
+									small
+									class="mr-2"
+									v-bind="attrs"
+									@click="toCart()"
+									v-on="on"
+								>
+									<v-icon size="26">
+										shopping_cart
+									</v-icon>
+								</v-btn>
+							</template>
+							<span>Cart</span>
+						</v-tooltip>
+					</v-badge>
+				</div>
+			</div>
+			<auth-sidebar />
+		</v-card>
+	</v-card>
 </template>
 
 <script>
 import router from "@/router"
+import { mapGetters } from "vuex"
+import AuthSidebar from "@/views/home/components/AuthSidebar"
+import Snack from "@/mixin/Snack."
 
 export default {
 	name: "HomeToolbarComponent",
+	components: {
+		AuthSidebar,
+	},
+	mixins: [Snack],
 	data: () => ({
-		agree: false,
-		drawer: null,
-		resetPasswordDialog: false,
-		registerDialog: false,
+		showAdminButton: false,
 		loginBanner: require("@/assets/banner_1.jpg"),
-		items: [
-			{ title: "Home", icon: "mdi-view-dashboard" },
-			{ title: "About", icon: "mdi-forum" },
-		],
-		resetPassword: {
-			email: ""
-		},
-		login: {
-			username: "",
-			password: ""
-		},
-		register: {
-			f_name: "",
-			l_name: "",
-			username: "",
-			email: "",
-			phone: null,
-			address: "",
-			password: ""
-		}
+		currentUser: null,
+		cartCount: "0",
 	}),
+	computed: {
+		...mapGetters({
+			alreadyCookingOrder: "order/detailOrder"
+		}),
+	},
+	async created() {
+		this.$bus.on("set-cart-count", this.setCartCount)
+		this.$bus.on("add-cart-count-by-one", this.addCartCountByOne)
+		this.$bus.on("subtract-cart-count", this.subtractCartCount)
+		this.$bus.on("update-cart-count", this.updateCartCount)
+		this.$bus.on("refresh-profile", this.refreshProfile)
+
+		await this.initialize()
+	},
+	beforeUnmount() {
+		this.$bus.off("set-cart-count", this.setCartCount)
+		this.$bus.off("add-cart-count-by-one", this.addCartCountByOne)
+		this.$bus.off("subtract-cart-count", this.subtractCartCount)
+		this.$bus.off("refresh-profile", this.refreshProfile)
+	},
 	methods: {
-		openSnack(text, color="success") {
-			this.$store.dispatch("snack/setSnackState", true)
-			this.$store.dispatch("snack/setSnackColor", color)
-			this.$store.dispatch("snack/setSnackText", text)
+		async initialize() {
+			this.currentUser = this.$helper.getCurrentUser()
+			this.showAdminButton = this.$helper.isAdminUser()
+			const cookingOrder = this.$helper.getCookingOrderId()
+			if (cookingOrder) {
+				await this.$store.dispatch("order/withCartItems", {
+					id: cookingOrder
+				})
+				this.cartCount = this.alreadyCookingOrder.total_items.toString()
+			}
+		},
+		refreshProfile() {
+			this.initialize()
+		},
+		routeToFoodSwipeFacebookPage() {
+			window.open(this.$constants.facebookUrl, "_blank")
+		},
+		routeToFoodSwipeInstaPage() {
+			window.open(this.$constants.instagramUrl, "_blank")
+		},
+		subtractCartCount(value) {
+			this.cartCount = (parseInt(this.cartCount) - parseInt(value)).toString()
+		},
+		addCartCountByOne() {
+			this.cartCount = (parseInt(this.cartCount) + 1).toString()
+		},
+		setCartCount(count) {
+			this.cartCount = count.toString()
+		},
+		updateCartCount(expression) {
+			this.cartCount = (parseInt(this.cartCount) + expression).toString()
+		},
+		toggleDrawerState() {
+			this.$bus.emit("open-auth-sidebar")
 		},
 		toCart() {
-			router.push({name: "Cart"})
+			router.push({ name: "Cart" })
 		},
 		toProfile() {
 			router.push({name: "Profile"})
@@ -520,27 +210,30 @@ export default {
 			router.push({name: "Store"})
 		},
 		toHome() {
-			router.push({name: "Food Swipe"})
+			if (this.$route.name !== "Food Swipe") {
+				router.push({ name: "Food Swipe" })
+			}
 		},
 		toAdminPanel() {
-			router.push({name: "Administration"})
+			router.push({name: "Administration Home"})
 		},
-		submitLogin() {
-			this.openSnack("Logged in successfully.")
-			this.drawer = false
+		async logOut() {
+			const isLoggedOut = await this.$store.dispatch("auth/logout", { username: this.currentUser.username })
+			if (isLoggedOut === true) {
+				await this.openSnack("Logged out successfully.")
+				this.currentUser = null
+				this.showAdminButton = false
+				this.$bus.emit("refresh-order-now")
+			} else {
+				await this.openSnack(isLoggedOut.detail, "error")
+				localStorage.clear()
+			}
+			await this.initialize()
 		},
-		submitRegister() {
-			this.openSnack("New user added successfully.")
-			this.registerDialog = false
-		},
-		submitResetPasswordForm() {
-			this.openSnack("Email address sent to email successfully.")
-			this.resetPasswordDialog = false
-		}
 	}
 }
 </script>
-<style>
+<style lang="scss">
 .v-badge__badge {
 	height: 18px;
 	padding-top: .21rem;
@@ -555,41 +248,80 @@ export default {
 .flickity-page-dots .dot {
 	background: white !important;
 }
+.food-swipe-toolbar {
+	height: 6.5rem !important;
+	@media only screen and (max-width: 528px) {
+		height: 7.6rem !important;
+	}
+	.v-toolbar__content {
+		/*Animation*/
+		-webkit-transition: height 1s ease;
+		-moz-transition: height 1s ease;
+		-o-transition: height 1s ease;
+		-ms-transition: height 1s ease;
+		transition: height 1s ease;
+		height: 2rem !important;
+		background: #e2ab06;
+		align-items: start;
+		@media only screen and (max-width: 528px) {
+			height: 3.1rem !important;
+		}
+	}
+	.v-toolbar__extension {
+		transition: margin-top .3s ease;
+		height: 4.5rem !important;
+		background: #FFC107 !important;
+		padding: 0 2rem 0 0;
+		border-radius: 0 0 5px 5px;
+		box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12) !important;
+	}
+}
+.public-contact-icon {
+	height: 100%;
+	display: flex;
+	align-items: center;
+	padding-right: 6px;
+}
 </style>
 <style lang="sass" scoped>
 @font-face
 	font-family: "MainframeBB"
 	src: url("../../../../src/assets/MAINBRG_.TTF")
 .organization-title
-	transition: all .3s
+	transition: font-size .3s ease
 	text-transform: uppercase
-	font-size: 1.5rem
-	line-height: 1.5rem
 	font-family: MainframeBB, serif
-	@media only screen and (max-width: 600px)
-		font-size: 1.3rem
-		line-height: 1.3rem
+	font-size: 20px
+	line-height: 22px
+	letter-spacing: 0
 	@media only screen and (max-width: 320px)
-		font-size: 1.1rem
-		line-height: 1.1rem
-	@media only screen and (max-width: 220px)
-		font-size: .8rem
-		line-height: .8rem
+		font-size: 1.2rem
+		line-height: 1.5rem
 .profile-avatar
 	border: 2px solid white
-.login-terms
-	font-size: .65rem
-.login-to-proceed
-	text-align: center
-	text-transform: capitalize
-	margin: 0
-	font-size: 2rem
-	font-family: 'Sacramento', cursive
-	color: green
-.login-image
-	margin-top: -50px
-.nav-toolbar
-	z-index: 1
-.nav-close
-	border: 2px solid #6db6de
+.public-contact
+	-webkit-transition: height .5s ease
+	-moz-transition: height .5s ease
+	-o-transition: height .5s ease
+	-ms-transition: height .5s ease
+	color: white
+	font-size: .8rem
+	font-weight: bold
+	display: flex
+	align-items: center
+	justify-items: center
+	width: 13.5rem
+	@media only screen and (max-width: 528px)
+		width: 6rem
+.social-networks
+	height: 100%
+	display: flex
+	align-items: center
+.welcome
+	height: 100%
+	display: flex
+	align-items: center
+.nav-btn
+	font-size: 1.2rem
+	font-family: 'Teko', sans-serif
 </style>

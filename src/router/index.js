@@ -5,14 +5,14 @@ Vue.use(VueRouter)
 
 const routes = [
 	{
-		path: "/",
+		path: "",
+		name: "Food Swipe",
+		component: () => import("@/views/home/Home"),
+	},
+	{
+		path: "/home",
 		component: () => import("@/layout/HomeLayout"),
 		children: [
-			{
-				path: "",
-				name: "Food Swipe",
-				component: () => import("@/views/home/Home"),
-			},
 			{
 				path: "store",
 				name: "Store",
@@ -34,6 +34,11 @@ const routes = [
 				component: () => import("@/views/cart/Cart"),
 			},
 			{
+				path: "search?name=:name",
+				name: "Search",
+				component: () => import("@/views/search/Search"),
+			},
+			{
 				path: "order",
 				name: "Order",
 				component: () => import("@/layout/OrderLayout"),
@@ -50,7 +55,7 @@ const routes = [
 					},
 					{
 						name: "Review Order",
-						path: "review-order",
+						path: "review-order/:id",
 						component: () => import("@/views/cart/ReviewOrder")
 					}
 				]
@@ -59,11 +64,12 @@ const routes = [
 	},
 	{
 		path: "/admin",
+		name: "Administration",
 		component: () => import("@/layout/AdminLayout"),
 		children: [
 			{
 				path: "home",
-				name: "Administration",
+				name: "Administration Home",
 				component: () => import("@/views/admin/Home")
 			},
 			{
@@ -82,6 +88,11 @@ const routes = [
 				component: () => import("@/views/admin/order/Order")
 			},
 			{
+				path: "kot",
+				name: "KOT Administration",
+				component: () => import("@/views/admin/kot/KOT")
+			},
+			{
 				path: "order/:id",
 				name: "Order Detail",
 				component: () => import("@/views/admin/order/OrderDetail")
@@ -97,6 +108,11 @@ const routes = [
 				component: () =>import("@/views/admin/menu/MenuItem")
 			},
 			{
+				path: "item-type",
+				name: "Item Type",
+				component: () =>import("@/views/admin/menu/ItemType")
+			},
+			{
 				path: "menu-item-group",
 				name: "Menu Item Group",
 				component: () =>import("@/views/admin/menu/MenuItemGroup")
@@ -105,6 +121,11 @@ const routes = [
 				path: "utilities",
 				name: "Utilities",
 				component: () =>import("@/views/admin/utility/Utilities")
+			},
+			{
+				path: "top-recommended-items",
+				name: "Top / Recommended",
+				component: () =>import("@/views/admin/menu/TopRecommendedItems")
 			},
 		]
 	}

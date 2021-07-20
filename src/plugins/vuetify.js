@@ -7,11 +7,11 @@ export default new Vuetify({
 	icons: {
 		iconfont: "md"
 	},
-	css: {
-		loaderOptions: {
-			sass: {
-				data: () => import("@/styles/variables.scss"),
-			}
-		}
-	},
+	// css: {
+	// 	loaderOptions: {
+	// 		sass: {
+	// 			// data: () => import("@/styles/variables.scss"),
+	// 		}
+	// 	}
+	// },
 })

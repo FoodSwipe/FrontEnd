@@ -2,8 +2,74 @@
 	<v-card flat
 		class="rounded-0 mt-4 mx-auto" width="1200"
 	>
+		<v-row class="ma-0 pa-0 px-3"
+			justify="center"
+		>
+			<v-breadcrumbs v-if="!isLoading"
+				:items="cartBreadcrumbs"
+				class="px-1"
+			>
+				<template #item="{ item }">
+					<v-breadcrumbs-item
+						class="home-breadcrumb-item"
+						:href="item.href"
+						:disabled="item.disabled"
+					>
+						{{ item.text.toUpperCase() }}
+					</v-breadcrumbs-item>
+				</template>
+			</v-breadcrumbs>
+			<v-spacer />
+			<v-tooltip bottom>
+				<template #activator="{on, attrs}">
+					<v-btn icon
+						v-bind="attrs"
+						v-on="on"
+						@click="$router.go(-1)"
+					>
+						<v-icon>arrow_back</v-icon>
+					</v-btn>
+				</template>
+				<span>Go Back</span>
+			</v-tooltip>
+		</v-row>
 		<v-row class="ma-0 pa-0">
-			<v-col cols="12"
+			<v-col v-if="cartItemsList.length === 0"
+				cols="12"
+			>
+				<v-card
+					color="#f9f2ed"
+				>
+					<v-card-title class="d-flex justify-center align-center">
+						<v-icon>shopping_cart</v-icon><span class="ml-3">Your cart is empty!</span>
+					</v-card-title>
+					<v-card-subtitle class="text-center">
+						Add our fantastic menu items to your cart and start shopping.
+					</v-card-subtitle>
+					<v-divider />
+
+					<v-img
+						height="200"
+						contain
+						:src="require('@/assets/empty_cart.gif')"
+					/>
+					<v-card-actions class="d-flex justify-center">
+						<v-btn color="blue-gradient"
+							dark
+							to="/store"
+						>
+							<v-icon size="24">
+								store
+							</v-icon>
+							<span v-if="$vuetify.breakpoint.width > 165"
+								class="ml-2"
+							>Visit Store</span>
+						</v-btn>
+					</v-card-actions>
+				</v-card>
+			</v-col>
+			<v-col v-else
+				cols="12"
 				xl="8"
 				lg="8"
 				md="8"
@@ -13,73 +79,92 @@
 					:css="false"
 					@before-enter="beforeEnter"
 					@enter="enter"
-					@leave="leave"
 				>
 					<v-card
-						v-for="(item, index) in desserts"
-						:key="index"
-						class="mb-4 cart-item-card"
+						v-for="(item, index) in cartItemsList"
+						:key="index + 1 * 17"
+						class="cart-item-card pa-0"
+						:class="
+							(index+1 === cartItemsList.length) ? '' : 'mb-4'
+						"
 					>
 						<v-row class="ma-0 pa-0"
 							align="center"
 						>
-							<v-col cols="6"
+							<!-- image column-->
+							<v-col cols="12"
 								xl="3"
 								lg="3"
 								md="3"
 								sm="3"
 							>
 								<v-img
-									src="https://i.ndtvimg.com/i/2017-10/spicy-chicken-recipe_620x330_71508233435.jpg"
-									max-width="200"
-									min-width="50"
-									height="100"
+									:src="(item.item !== undefined) ? item.item.image : ''"
+									width="100%"
+									height="100%"
+									max-height="150"
 								/>
 							</v-col>
-							<v-col cols="6"
+							<v-col cols="12"
 								xl="3"
 								lg="3"
 								md="3"
 								sm="3"
 							>
-								{{ item.name }}
-								<p class="subtitle-2">
-									<v-avatar tile
-										size="16"
-									>
-										<v-img
-											src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Indian-vegetarian-mark.svg/1200px-Indian-vegetarian-mark.svg.png"
-										/>
-									</v-avatar>
-									<v-avatar
-										color="white"
-										max-width="20"
-										max-height="22"
-										tile
-										class="ml-2"
-									>
-										<v-img
-											src="https://cdna.artstation.com/p/assets/images/images/022/547/676/large/dinh-trang-bui-spicy.jpg?1575846866"
-										/>
-									</v-avatar>
+								<p>
+									{{ item.item.name }}
+									<span class="subtitle-2">
+										<v-avatar v-for="(typeOfItem, indic) in item.item.item_type"
+											:key="typeOfItem.id +55 *37"
+											tile
+											size="20"
+											:class="
+												(indic +1 === item.item.item_type.length) ? '' : 'pr-2'
+											"
+											class="slight-up"
+										>
+											<v-img
+												:src="typeOfItem.badge"
+											/>
+										</v-avatar>
+									</span>
 								</p>
-								<p class="d-flex">
+								<div class="d-flex mb-0 align-center">
 									<v-btn icon
 										color="error"
+										:x-small="$vuetify.breakpoint.width < 280"
 										@click="removeItemFromCart(item)"
 									>
 										<v-icon>delete</v-icon>
 									</v-btn>
-									<v-icon class="pl-2">
-										favorite
-									</v-icon>
-								</p>
+									<v-btn v-if="$vuetify.breakpoint.width > 205"
+										icon
+										disabled
+										:x-small="$vuetify.breakpoint.width < 280"
+									>
+										<v-icon class="pl-2">
+											favorite
+										</v-icon>
+									</v-btn>
+									<v-spacer />
+									<div v-if="$vuetify.breakpoint.xsOnly"
+										class="py-2 d-flex align-center mb-0"
+									>
+										<v-icon v-if="$vuetify.breakpoint.width > 255"
+											size="18"
+											class="today-icon"
+										>
+											today
+										</v-icon>
+										<span class="pl-2 cart-item-created-at">{{ item.created_at }}</span>
+									</div>
+								</div>
 							</v-col>
-							<v-col cols="8"
+							<v-col cols="7"
 								xl="4"
 								lg="4"
 								md="4"
-								sm="4"
+								sm="3"
 							>
 								<div class="d-flex align-center">
 									<v-btn
@@ -87,16 +172,18 @@
 										color="error"
 										height="56"
 										class="rounded-0"
-										:disabled="item.quantity === 1"
+										:disabled="item.quantity <= 1"
 										@click="subtractQuantity(item)"
 									>
 										<v-icon>remove</v-icon>
 									</v-btn>
 									<v-text-field v-model="item.quantity"
+										class="cart-item-quantity"
 										filled
 										type="number"
 										hide-details="auto"
 										persistent-hint
+										@change="quantityChanged(item)"
 									/>
 									<v-btn icon
 										height="56"
@@ -108,31 +195,44 @@
 									</v-btn>
 								</div>
 							</v-col>
-							<v-col cols="4"
+							<v-col cols="5"
 								xl="2"
 								lg="2"
 								md="2"
-								sm="2"
+								sm="3"
 							>
-								<div class="item-sub-total">
-									Rs {{ item.quantity * item.price }}
+								<p
+									v-if="$vuetify.breakpoint.smAndUp"
+									class="py-2 d-flex align-center cart-item-created-at"
+								>
+									<span><v-icon size="18">
+										history
+									</v-icon></span>
+									<span class="pl-2">{{ item.created_at }}</span>
+								</p>
+								<div class="item-sub-total py-2">
+									NRs {{ item.quantity * item.item.price }}
 								</div>
 							</v-col>
 						</v-row>
 					</v-card>
 				</transition-group>
 			</v-col>
-			<v-scale-transition mode="out-in">
+			<v-scale-transition
+				mode="out-in"
+			>
 				<v-col
+					v-if="cartItemsList.length > 0"
 					cols="12"
 					xl="4"
 					lg="4"
 					md="4"
 				>
-					<v-card class="mx-auto"
+					<v-card id="cart-summary"
+						class="mx-auto"
 						max-width="960"
 					>
-						<v-toolbar class="px-4 orange-gradient"
+						<v-toolbar class="px-4 light-orange-gradient"
 							dark
 						>
 							<v-app-bar-nav-icon>
@@ -147,28 +247,56 @@
 							<v-toolbar-title class="font-weight-bold">
 								Cart Summary
 							</v-toolbar-title>
-						</v-toolbar>
-						<v-list two-line>
-							<v-list-item
-								v-for="(summaryItem, summaryIndex) of getCartSummary"
-								:key="summaryIndex"
+							<v-spacer />
+							<v-btn fab
+								elevation="1"
+								color="transparent"
+								small @click="showSummary = !showSummary"
 							>
-								<v-list-item-icon>
-									<v-icon>{{ summaryItem.icon }}</v-icon>
-								</v-list-item-icon>
-								<v-list-item-content>
-									<v-list-item-title class="summary-item-value">
+								<v-fade-transition>
+									<v-icon
+										v-if="!showSummary"
+										color="grey lighten-4"
+									>
+										keyboard_arrow_down
+									</v-icon>
+									<v-icon
+										v-if="showSummary"
+										color="grey lighten-4"
+									>
+										keyboard_arrow_up
+									</v-icon>
+								</v-fade-transition>
+							</v-btn>
+						</v-toolbar>
+						<v-expand-transition mode="ease">
+							<v-list v-if="showSummary"
+								two-line
+							>
+								<v-list-item
+									v-for="(summaryItem, summaryIndex) of getCartSummary"
+									:key="summaryIndex"
+								>
+									<v-list-item-icon class="fill-height my-auto">
+										<v-icon>{{ summaryItem.icon }}</v-icon>
+									</v-list-item-icon>
+									<v-list-item-content>
+										<v-list-item-title class="summary-title">
+											{{ summaryItem.field }}
+										</v-list-item-title>
+									</v-list-item-content>
+									<v-list-item-action-text class="summary-item-value">
 										{{ summaryItem.value }}
-									</v-list-item-title>
-									<v-list-item-subtitle>{{ summaryItem.field }}</v-list-item-subtitle>
-								</v-list-item-content>
-							</v-list-item>
-						</v-list>
+									</v-list-item-action-text>
+								</v-list-item>
+							</v-list>
+						</v-expand-transition>
 						<v-card-actions>
-							<v-btn class="brown-gradient"
+							<v-btn class="light-orange-gradient-x"
 								block
 								large
 								dark
+								:disabled="cartItemsList.length === 0"
 								@click="routeToOrderConfirmation()"
 							>
 								Proceed
@@ -183,78 +311,122 @@
 <script>
 import router from "@/router"
 import Velocity from "velocity-animate"
+import { mapGetters } from "vuex"
 
 export default {
 	name: "CartView",
 	data() {
 		return {
-			snack: false,
-			snackText: "",
-			search: "",
-			pagination: {},
-			headers: [
-				{ text: "ACTION", value: "actions", sortable: false},
-				{ text: "CART ITEM", value: "name", },
-				{ text: "QUANTITY", value: "quantity" },
-				{ text: "SUB TOTAL (Rs)", value: "totalPrice" },
-			],
-			desserts: [
+			isLoading: false,
+			showSummary: true,
+			cartItemsList: [{
+				item: {
+					name: ""
+				}
+			}], // do not show empty card while loading (just a workaround),
+			cartBreadcrumbs: [
 				{
-					name: "Frozen Yogurt",
-					quantity: 5,
-					price: 200,
+					text: "> Home",
+					disabled: false,
+					href: "/",
 				},
 				{
-					name: "Ice cream sandwich",
-					quantity: 3,
-					price: 300,
-				},
-				{
-					name: "Eclair",
-					quantity: 2,
-					price: 20,
-				},
-				{
-					name: "Cupcake",
-					quantity: 3,
-					price: 50,
-				},
-			],
-		}
-	},
-	computed: {
-		getCartSummary() {
-			return [
-				{
-					icon: "location_on",
-					field: "Delivery Location",
-					value: "Amarsingh-7, Pokhara"
-				},
-				{
-					icon: "shopping_cart",
-					field: "Total items in cart.",
-					value: this.desserts.length
-				},
-				{
-					icon: "title",
-					field: "Sub-Total (Rs)",
-					value: 15000
-				},
-				{
-					icon: "card_giftcard",
-					field: "Loyalty Discount Awarded",
-					value: "5%",
-				},
-				{
-					icon: "text_fields",
-					field: "Grand Total (Rs)",
-					value: 565656,
-					divider: true
+					text: "Cart",
+					disabled: true,
+					href: "",
 				}
 			]
 		}
 	},
+	computed: {
+		getCartSummary() {
+			if (!this.currentOrder) return []
+			const summary = this.$helper.getCartSummary(
+				this.currentOrder,
+				this.cartItemsList
+			)
+
+			return [
+				{
+					icon: "call",
+					field: "Contact Number",
+					value: this.currentOrder.custom_contact
+				},
+				{
+					icon: "shopping_cart",
+					field: "Total Items",
+					value: summary.totalItems,
+				},
+				{
+					icon: "title",
+					field: "Sub-Total (NRs)",
+					value: summary.totalPrice
+				},
+				{
+					icon: "location_on",
+					field: "Delivery To",
+					value: this.currentOrder.custom_location
+				},
+				{
+					icon: "two_wheeler",
+					field: "Delivery Charge (NRs)",
+					value: summary.deliveryCharge
+				},
+				{
+					icon: "card_giftcard",
+					field: "Loyalty Discount Awarded",
+					value: summary.loyaltyDiscount + "%",
+				},
+				{
+					icon: "money",
+					field: "Grand Total (NRs)",
+					value: summary.grandTotal,
+					divider: true
+				}
+			]
+		},
+		...mapGetters({
+			currentOrder: "order/detailOrder",
+			cartItemDetail: "cart/detailCartItem"
+		})
+	},
+	created() {
+		this.$bus.on("refresh-cart", this.initialize)
+		this.initialize()
+	},
+	beforeUnmount() {
+		this.$bus.off("refresh-cart", this.initialize)
+	},
 	methods: {
+		async quantityChanged(item) {
+			await this.$store.dispatch("cart/fetchParticular", {id: item.id})
+			const previousCartQuantity = this.cartItemDetail.quantity
+
+			const patched = await this.$store.dispatch("cart/patch", {
+				id: item.id,
+				body: {
+					quantity: item.quantity
+				}
+			})
+			if (patched === true) {
+				this.$bus.emit("update-cart-count", parseInt(item.quantity)-previousCartQuantity)
+			}
+		},
+		async initialize() {
+			this.isLoading = true
+			const cookingOrder = this.$helper.getCookingOrderId()
+			if (cookingOrder) {
+				if (cookingOrder) {
+					await this.$store.dispatch("order/withCartItems", {
+						id: cookingOrder
+					})
+				}
+				this.cartItemsList = this.currentOrder.cart_items
+			} else {
+				this.cartItemsList = []
+			}
+			this.isLoading = false
+		},
 		beforeEnter(el) {
 			el.style.opacity = 0
 			el.style.width = "0em"
@@ -277,22 +449,47 @@ export default {
 			)
 		},
 
+		emitCartQuantityUpdate() {
+			let totalItems = 0
+			this.cartItemsList.forEach(item => {
+				totalItems += item.quantity
+			})
+			this.$bus.emit("set-cart-count", totalItems)
+		},
+
 		addQuantity(item) {
 			item.quantity += 1
+			this.$store.dispatch("cart/patch", {
+				id: item.id,
+				body: {
+					quantity: item.quantity
+				}
+			})
+			this.emitCartQuantityUpdate()
 		},
 		subtractQuantity(item) {
 			if (item.quantity === 1) return
 			item.quantity -=1
+			this.$store.dispatch("cart/patch", {
+				id: item.id,
+				body: {
+					quantity: item.quantity
+				}
+			})
+			this.emitCartQuantityUpdate()
 		},
 		openSnack(text, color) {
 			this.$store.dispatch("snack/setSnackState", true)
 			this.$store.dispatch("snack/setSnackColor", color)
 			this.$store.dispatch("snack/setSnackText", text)
 		},
-		removeItemFromCart(item) {
-			const indexOfItemToRemove = this.desserts.indexOf(item)
-			this.desserts.splice(indexOfItemToRemove, 1)
-			this.openSnack(item.name + " removed from cart.", "error")
+		async removeItemFromCart(item) {
+			await this.$store.dispatch("cart/removeFromCart", {
+				id: item.id
+			})
+			this.$bus.emit("subtract-cart-count", item.quantity)
+			this.openSnack(item.item.name + " removed from cart.", "success")
+			await this.initialize()
 		},
 		routeToOrderConfirmation() {
 			router.push({name: "Confirm Order"})
@@ -325,10 +522,6 @@ export default {
 	color: green;
 	font-weight: bold;
 	font-family: Lato, serif;
-	@media only screen and (max-width: 640px) and (min-width: 600px) {
-		font-size: 1rem;
-		line-height: 1rem;
-	}
 	@media only screen and (max-width: 300px) {
 		font-size: 1.2rem;
 		line-height: 1.2rem;
@@ -336,11 +529,34 @@ export default {
 }
 .cart-item-card {
 	background-color: #e5e5e5 !important;
-	:hover {
+	&:hover {
 		background-color: #fff7e3 !important;
 	}
 }
 .summary-item-value {
 	font-size: 1rem; font-weight: 500;
+}
+.cart-item-quantity input {
+	text-align: center;
+	font-weight: 500;
+	color: darkslategrey !important;
+	font-size: 1.2rem;
+}
+.slight-up {
+	margin-top: -4px;
+}
+.cart-item-created-at {
+	font-size: .8rem; line-height: .8rem; letter-spacing: .01rem;
+	color: #ea9c68;
+	font-weight: 450;
+}
+.today-icon {
+	margin-top:-2px;
+}
+.cart-item-quantity {
+	max-width: 100px;
+}
+.summary-title {
+	font-size: .875rem; line-height: .84rem;
 }
 </style>
