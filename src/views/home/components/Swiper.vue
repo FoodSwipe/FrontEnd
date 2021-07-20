@@ -4,21 +4,26 @@
 		tile
 	>
 		<v-img
+			v-if="homePageContents"
 			:src="homePageContents[0].image"
 			dark
 			height="100vh"
+			style="position: relative"
 		>
-			<home-toolbar-component />
+			<home-toolbar style="position: absolute; top:0;" />
+			<order-now style="position: absolute; top: 40vh;" />
 		</v-img>
 	</v-card>
 </template>
 <script>
 import { mapGetters } from "vuex"
-import HomeToolbarComponent from "@/views/home/components/Toolbar"
 
 export default {
-	name: "ShowCaseSliderComponent",
-	components: { HomeToolbarComponent },
+	name: "ShowCaseSlider",
+	components: {
+		HomeToolbar: () => import("@/views/home/components/Toolbar"),
+		OrderNow: () => import("@/views/home/components/OrderNow"),
+	},
 	data: () => ({
 		loading: false,
 		colors: [

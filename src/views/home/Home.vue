@@ -2,8 +2,6 @@
 	<div class="home">
 		<the-snack-bar />
 		<swiper />
-		<order-now />
-		<rhombus-divider />
 		<hot-items />
 		<v-row class="ma-0 pa-0">
 			<v-col
@@ -37,7 +35,6 @@ export default {
 	components: {
 		TheSnackBar,
 		Swiper: () => import("@/views/home/components/Swiper"),
-		OrderNow: () => import("@/views/home/components/OrderNow"),
 		HotItems: () => import("@/views/home/components/HotItems"),
 		OurMenu: () => import("@/views/home/components/OurMenu"),
 		RecommendedItems: () => import("@/views/home/components/Recommendations"),
