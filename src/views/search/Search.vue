@@ -64,7 +64,6 @@ export default {
 		},
 		async initSearch() {
 			this.searchText = this.$route.params.name
-			console.log("here   :", this.searchText)
 			await this.searchMenuItem()
 		},
 		async searchMenuItem() {

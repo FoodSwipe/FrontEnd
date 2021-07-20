@@ -65,7 +65,6 @@ export default {
 	}),
 	methods: {
 		saveDate() {
-			console.log(this.date)
 			this.menu=false
 		}
 	}

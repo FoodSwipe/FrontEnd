@@ -280,7 +280,7 @@ export default {
 			}
 		},
 		toAdminPanel() {
-			router.push({name: "Administration"})
+			router.push({name: "Administration Home"})
 		},
 		async logOut() {
 			const isLoggedOut = await this.$store.dispatch("auth/logout", { username: this.currentUser.username })

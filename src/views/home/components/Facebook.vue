@@ -9,20 +9,24 @@
 				md="5"
 				sm="6"
 			>
-				<div class="fb-page"
-					data-href="https://www.facebook.com/foodswipeonline" data-tabs="timeline"
-					data-width="" data-height=""
-					data-small-header="false" data-adapt-container-width="true"
-					data-hide-cover="false" data-show-facepile="true"
+				<v-card class="overflow-hidden"
+					max-width="500"
 				>
-					<blockquote cite="https://www.facebook.com/foodswipeonline"
-						class="fb-xfbml-parse-ignore"
+					<div class="fb-page"
+						data-href="https://www.facebook.com/foodswipeonline" data-tabs="timeline"
+						data-width="500" data-height=""
+						data-small-header="false" data-adapt-container-width="true"
+						data-hide-cover="false" data-show-facepile="true"
 					>
-						<a href="https://www.facebook.com/foodswipeonline"
-							target="_blank"
-						>FoodSwipe Delivery</a>
-					</blockquote>
-				</div>
+						<blockquote cite="https://www.facebook.com/foodswipeonline"
+							class="fb-xfbml-parse-ignore"
+						>
+							<a href="https://www.facebook.com/foodswipeonline"
+								target="_blank"
+							>FoodSwipe Delivery</a>
+						</blockquote>
+					</div>
+				</v-card>
 			</v-col>
 			<v-col cols="12"
 				xl="7"
