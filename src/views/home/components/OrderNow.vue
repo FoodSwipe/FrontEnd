@@ -5,9 +5,25 @@
 		color="transparent"
 		class="px-2"
 	>
-		<v-card-title class="order-heading">
-			Think food think foodswipe
-		</v-card-title>
+		<v-carousel :show-arrows="false"
+			height="100"
+			hide-delimiters
+			cycle
+			continuous
+			interval="3000"
+			touchless
+		>
+			<v-carousel-item>
+				<v-card-title class="order-heading">
+					Think food think food-swipe
+				</v-card-title>
+			</v-carousel-item>
+			<v-carousel-item>
+				<v-card-title class="order-heading">
+					Quality food simply delivered
+				</v-card-title>
+			</v-carousel-item>
+		</v-carousel>
 		<v-card
 			color="orange lighten-4"
 			rounded
@@ -169,5 +185,6 @@ export default {
 	font-size: 2rem;
 	line-height: 2.2rem;
 	font-weight: bold;
+	text-align: center;
 }
 </style>
