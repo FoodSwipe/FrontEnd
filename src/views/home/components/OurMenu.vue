@@ -1,25 +1,27 @@
 <template>
 	<v-card min-height="100vh"
-		class="d-flex justify-center align-center overflow-hidden px-6"
+
 		width="100vw"
-		style="position: relative"
 		flat
 		tile
 		color="#fff0f0"
 	>
-		<v-chip style="position: absolute; top: 30px; right: 4px; color: grey;"
-			color="rgb(255 217 217)"
-		>
-			Menu
-		</v-chip>
-		<v-row no-gutters>
+		<div style="width: 100vw; position: relative;">
+			<v-chip
+				style="position: absolute; right: 2px; top: 2px;"
+				color="rgb(255 217 217)"
+			>
+				Menu
+			</v-chip>
+		</div>
+		<v-row>
 			<v-col cols="12"
-				xl="6"
-				lg="6"
-				class="d-flex justify-center align-center pa-2"
+				xl="6" lg="6"
+				md="6"
 			>
 				<v-list max-width="600"
 					color="transparent"
+					class="mx-auto"
 				>
 					<v-list-item>
 						<v-list-item-avatar size="200">
@@ -76,13 +78,14 @@
 				</v-list>
 			</v-col>
 			<v-col cols="12"
-				xl="6"
-				lg="6"
+				xl="6" lg="6"
+				md="6"
 			>
 				<v-expansion-panels
 					focusable
 					popout
 					dark
+					class="mx-auto"
 					style="max-width: 600px;"
 				>
 					<v-expansion-panel v-for="(menuItemGroup, index) of menuItemGroups"
@@ -103,9 +106,7 @@
 									sm="12"
 									class="ma-0 pa-0"
 								>
-									<v-list max-width="300"
-										color="transparent"
-									>
+									<v-list color="transparent">
 										<v-list-item>
 											<v-list-item-icon>
 												<v-avatar size="30"
@@ -130,6 +131,7 @@
 				</v-expansion-panels>
 			</v-col>
 		</v-row>
+		<div class="py-4" />
 	</v-card>
 </template>
 <script>
