@@ -1,20 +1,89 @@
 <template>
-	<div id="menuColumn">
-		<div class="text-center pa-2">
-			<p class="our-menu">
-				Our Menu
-			</p>
-		</div>
-		<v-card max-width="800"
-			class="mx-auto my-2 py-4 our-menu-wrapper-card"
-			flat
+	<v-card min-height="100vh"
+		class="d-flex justify-center align-center overflow-hidden px-6"
+		width="100vw"
+		style="position: relative"
+		flat
+		tile
+		color="#fff0f0"
+	>
+		<v-chip style="position: absolute; top: 30px; right: 4px; color: grey;"
+			color="rgb(255 217 217)"
 		>
-			<v-row class="ma-0 pa-0"
-				align="center" justify="center"
+			Menu
+		</v-chip>
+		<v-row no-gutters>
+			<v-col cols="12"
+				xl="6"
+				lg="6"
+				class="d-flex justify-center align-center pa-2"
 			>
-				<v-expansion-panels focusable
+				<v-list max-width="600"
+					color="transparent"
+				>
+					<v-list-item>
+						<v-list-item-avatar size="200">
+							<v-img
+								:src="require('@/assets/premiumQuality.png')"
+								height="200"
+								contain
+							/>
+						</v-list-item-avatar>
+						<v-list-item-content>
+							<v-list-item-title>
+								Get Premium Quality Food Only
+							</v-list-item-title>
+							<v-list-item-subtitle>
+								Your appetite is our first priority
+							</v-list-item-subtitle>
+						</v-list-item-content>
+					</v-list-item>
+					<v-list-item>
+						<v-list-item-avatar size="200">
+							<v-img
+								:src="require('@/assets/moreChoices.png')"
+								height="200"
+								contain
+							/>
+						</v-list-item-avatar>
+						<v-list-item-content>
+							More choices
+							<v-list-item-subtitle>
+								We have large variety of food and beverage items. Just swipe our menu and order your preference.
+							</v-list-item-subtitle>
+						</v-list-item-content>
+					</v-list-item>
+					<v-list-item>
+						<v-list-item-avatar size="200"
+							color="transparent"
+						>
+							<v-img
+								:src="require('@/assets/fastDelivery.png')"
+								height="200"
+								width="250"
+								contain
+							/>
+						</v-list-item-avatar>
+						<v-list-item-content>
+							<v-list-item-title>
+								Gain Time
+							</v-list-item-title>
+							<v-list-item-subtitle>
+								Life can be complicated but ordering food doesn't have to be. Let us take care of the details while you focus on what really matters.
+							</v-list-item-subtitle>
+						</v-list-item-content>
+					</v-list-item>
+				</v-list>
+			</v-col>
+			<v-col cols="12"
+				xl="6"
+				lg="6"
+			>
+				<v-expansion-panels
+					focusable
 					popout
 					dark
+					style="max-width: 600px;"
 				>
 					<v-expansion-panel v-for="(menuItemGroup, index) of menuItemGroups"
 						:key="index"
@@ -24,9 +93,7 @@
 							{{ menuItemGroup.name }}
 						</v-expansion-panel-header>
 						<v-expansion-panel-content>
-							<v-row class="ma-0 pa-0"
-								no-gutters
-							>
+							<v-row class="ma-0 pa-0">
 								<v-col v-for="(menuItem, i) of menuItemGroup.items"
 									:key="(i + 1) * 21"
 									cols="12"
@@ -34,31 +101,36 @@
 									lg="6"
 									md="6"
 									sm="12"
+									class="ma-0 pa-0"
 								>
-									<v-list-item>
-										<v-list-item-icon>
-											<v-avatar size="30"
-												color="grey darken-3"
-												class="slight-up"
-											>
-												{{ menuItem.name[0] }}
-											</v-avatar>
-										</v-list-item-icon>
-										<v-list-item-content>
-											<v-list-item-title>{{ menuItem.name }}</v-list-item-title>
-										</v-list-item-content>
-										<v-list-item-action-text class="menu-item-price">
-											{{ menuItem.price }}
-										</v-list-item-action-text>
-									</v-list-item>
+									<v-list max-width="300"
+										color="transparent"
+									>
+										<v-list-item>
+											<v-list-item-icon>
+												<v-avatar size="30"
+													color="grey darken-3"
+													class="slight-up"
+												>
+													{{ menuItem.name[0] }}
+												</v-avatar>
+											</v-list-item-icon>
+											<v-list-item-content>
+												<v-list-item-title>{{ menuItem.name }}</v-list-item-title>
+											</v-list-item-content>
+											<v-list-item-action-text class="menu-item-price">
+												{{ menuItem.price }}
+											</v-list-item-action-text>
+										</v-list-item>
+									</v-list>
 								</v-col>
 							</v-row>
 						</v-expansion-panel-content>
 					</v-expansion-panel>
 				</v-expansion-panels>
-			</v-row>
-		</v-card>
-	</div>
+			</v-col>
+		</v-row>
+	</v-card>
 </template>
 <script>
 export default {
@@ -459,7 +531,6 @@ export default {
 	padding: 15px 0 0 0;
 	font-size: 2.5rem;
 	line-height: 2.5rem;
-	font-family: 'Sacramento', cursive;
 }
 .custom-shape-divider-bottom-1608137131 {
 	position: absolute;

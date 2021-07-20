@@ -25,7 +25,7 @@
 			</v-carousel-item>
 		</v-carousel>
 		<v-card
-			color="orange lighten-4"
+			color="#ffeebcdb"
 			rounded
 			max-width="820"
 			class="mx-auto"
@@ -44,11 +44,13 @@
 					<v-text-field
 						v-model="order.custom_location"
 						light
+						background-color="rgb(255 238 188 / 50%)"
+						color="#f36d00"
 						clearable
 						filled
 						prepend-inner-icon="explore"
 						label="Your location here... (*)"
-						hint="Try to be more precise so that we can know your doorstep."
+						hint="Try to be more precise with your location information."
 						hide-details="auto"
 						:error-messages="startOrderFormErrors.custom_location"
 					/>
@@ -62,6 +64,8 @@
 				>
 					<v-text-field
 						v-model="order.custom_contact"
+						color="#f36d00"
+						background-color="rgb(255 238 188 / 50%)"
 						light
 						filled
 						type="number"
@@ -69,6 +73,7 @@
 						hide-details="auto"
 						label="Contact number (*)"
 						clearable
+						hint="Please only provide your reachable contact number."
 						:error-messages="startOrderFormErrors.custom_contact"
 					/>
 				</v-col>

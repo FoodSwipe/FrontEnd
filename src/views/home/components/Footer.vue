@@ -1,5 +1,7 @@
 <template>
-	<v-footer padless>
+	<v-footer padless
+		height="60"
+	>
 		<v-col
 			class="text-center"
 			cols="12"

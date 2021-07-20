@@ -1,8 +1,13 @@
 <template>
-	<v-card max-width="1000" flat
-		style="margin: auto auto;"
+	<v-card max-width="100vw"
+		flat tile
+		min-height="94vh" color="#fff7df"
+		class="d-flex justify-center align-center"
 	>
-		<v-row class="ma-0 pa-0">
+		<v-row no-gutters
+			class="mx-auto"
+			style="max-width: 1000px;"
+		>
 			<v-col cols="12"
 				xl="5"
 				lg="5"
@@ -35,12 +40,25 @@
 				sm="6"
 				class="d-flex justify-center align-center"
 			>
-				<v-card flat>
-					<v-img
-						contain
-						:src="require('@/assets/social_networking.jpg')"
-						height="250"
-					/>
+				<v-card flat
+					color="transparent"
+					rounded
+				>
+					<v-card-title class="text-center d-flex justify-center align-center">
+						<div class="display-1">
+							Stay connected with us!
+						</div>
+					</v-card-title>
+					<v-card height="250"
+						max-width="400"
+					>
+						<v-img
+							width="100%"
+							contain
+							:src="require('@/assets/social_networking.jpg')"
+							height="250"
+						/>
+					</v-card>
 					<div class="text-center">
 						<v-card-title class="text-uppercase d-flex justify-center reach-us">
 							Reach us on social media

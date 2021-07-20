@@ -1,105 +1,124 @@
 <template>
-	<div class="pa-2">
-		<v-card
-			:loading="isLoading"
-			class="pa-4 mx-auto hot-items-card elevation-1"
-			max-width="1300"
+	<v-card
+		flat
+		tile
+		:loading="isLoading"
+		class="pa-4 d-flex justify-center align-center"
+		width="100vw"
+		min-height="100vh"
+		color="#ececec"
+	>
+		<v-card flat
+			color="transparent"
 		>
-			<v-card-title class="hot-items">
-				<u>Hot Items</u>
-			</v-card-title>
-			<v-card class="pa-0 mx-auto"
-				flat max-width="1000"
-				color="transparent"
-			>
-				<div class="swiper-container pa-1">
-					<div class="swiper-wrapper">
-						<v-card
-							v-for="(item, index) in topItemsSet"
-							:key="index"
-							class="swiper-slide"
-							max-width="140"
-							color="transparent elevation-1"
-							:class="
-								(index+1) === topItemsSet.length ? '' : 'mr-3'
-							"
-						>
-							<v-row class="ma-0 pa-0"
-								justify="center" align="center"
-							>
-								<v-col cols="12"
-									class="d-flex justify-center"
+			<v-row no-gutters>
+				<v-col xl="8"
+					lg="8" md="8"
+					sm="8" cols="12"
+				>
+					<v-card class="pa-0"
+						flat
+						color="transparent"
+						max-width="700"
+					>
+						<div class="swiper-container pa-1">
+							<div class="swiper-wrapper">
+								<v-card
+									v-for="(item, index) in topItemsSet"
+									:key="index"
+									class="swiper-slide"
+									max-width="140"
+									color="transparent elevation-1"
+									:class="
+										(index+1) === topItemsSet.length ? '' : 'mr-3'
+									"
 								>
-									<!-- eslint-disable-next-line vue/no-v-for-template-key-on-child-->
-									<v-badge
-										avatar
-										bordered
-										overlap
-										bottom
-										offset-x="30"
-										offset-y="20"
-										color="white"
+									<v-row class="ma-0 pa-0"
+										justify="center" align="center"
 									>
-										<template #badge>
-											<v-avatar size="25"
-												color="transparent"
-												class="elevation-4"
-											>
-												<v-img :src="item.menu_item.item_type[0].badge" />
-											</v-avatar>
-										</template>
-
-										<v-avatar size="100"
-											color="white"
-											class="item-image-avatar"
+										<v-col cols="12"
+											class="d-flex justify-center"
 										>
-											<v-img
-												class="car-image"
-												:src="item.menu_item.image"
-												max-width="100%"
-											/>
-										</v-avatar>
-									</v-badge>
-								</v-col>
-								<v-col cols="12"
-									class="d-flex justify-center"
-								>
-									<p class="mb-0 text-center item-name">
-										{{ item.menu_item.name }}
-									</p>
-								</v-col>
-								<v-col cols="12"
-									class="d-flex justify-center"
-								>
-									<p class="mb-0 text-center">
-										<span class="nrs">NRs</span><span class="number-font item-price">
-											{{ item.menu_item.price }}
-										</span>
-									</p>
-								</v-col>
-								<v-col cols="12"
-									class="d-flex justify-center"
-								>
-									<v-btn dark
-										class="to-cart-btn"
-										color="orange"
-										min-width="25"
-										@click.prevent="addItemToCart(item.menu_item)"
-									>
-										<v-icon>
-											add_shopping_cart
-										</v-icon>
-									</v-btn>
-								</v-col>
-							</v-row>
-						</v-card>
-					</div>
-					<div class="swiper-button-next" />
-					<div class="swiper-button-prev" />
-				</div>
-			</v-card>
+											<!-- eslint-disable-next-line vue/no-v-for-template-key-on-child-->
+											<v-badge
+												avatar
+												bordered
+												overlap
+												bottom
+												offset-x="30"
+												offset-y="20"
+												color="white"
+											>
+												<template #badge>
+													<v-avatar size="25"
+														color="transparent"
+														class="elevation-4"
+													>
+														<v-img :src="item.menu_item.item_type[0].badge" />
+													</v-avatar>
+												</template>
+
+												<v-avatar size="100"
+													color="white"
+													class="item-image-avatar"
+												>
+													<v-img
+														class="car-image"
+														:src="item.menu_item.image"
+														max-width="100%"
+													/>
+												</v-avatar>
+											</v-badge>
+										</v-col>
+										<v-col cols="12"
+											class="d-flex justify-center"
+										>
+											<p class="mb-0 text-center item-name">
+												{{ item.menu_item.name }}
+											</p>
+										</v-col>
+										<v-col cols="12"
+											class="d-flex justify-center"
+										>
+											<p class="mb-0 text-center">
+												<span class="nrs">NRs</span><span class="number-font item-price">
+													{{ item.menu_item.price }}
+												</span>
+											</p>
+										</v-col>
+										<v-col cols="12"
+											class="d-flex justify-center"
+										>
+											<v-btn dark
+												class="to-cart-btn"
+												color="orange"
+												min-width="25"
+												@click.prevent="addItemToCart(item.menu_item)"
+											>
+												<v-icon>
+													add_shopping_cart
+												</v-icon>
+											</v-btn>
+										</v-col>
+									</v-row>
+								</v-card>
+							</div>
+							<div class="swiper-button-next" />
+							<div class="swiper-button-prev" />
+						</div>
+					</v-card>
+				</v-col>
+				<v-col xl="4"
+					lg="4" md="4"
+					sm="4" cols="12"
+				>
+					<v-card-title class="display-2">
+						Hot Items You Can Grab Right Now
+					</v-card-title>
+				</v-col>
+			</v-row>
 		</v-card>
-	</div>
+	</v-card>
 </template>
 <script>
 import Swiper, { Navigation } from "swiper"

@@ -1,10 +1,13 @@
 <template>
-	<v-card class="mx-auto"
-		flat max-width="1200"
+	<v-card class="mx-auto d-flex justify-center align-center"
+		flat max-width="100vw"
+		min-height="100vh"
+		color="#ececec"
 	>
 		<v-row class="ma-0 pa-0"
 			justify="center"
 			align-content="center"
+			style="max-width: 1000px;"
 		>
 			<v-col cols="12"
 				class="text-center"
@@ -16,6 +19,9 @@
 					Ordering food online has never been this easy
 				</p>
 			</v-col>
+			<v-col cols="12">
+				<div class="py-4" />
+			</v-col>
 			<v-col cols="12"
 				xl="4"
 				lg="4"
@@ -25,9 +31,10 @@
 			>
 				<v-card class="mx-auto"
 					color="#fddadb"
+					max-width="400"
 				>
 					<v-img
-						width="100%"
+						max-width="400"
 						height="140"
 						src="https://mir-s3-cdn-cf.behance.net/project_modules/fs/6a6fd549558457.58b8217c4d619.gif"
 					/>
@@ -43,8 +50,10 @@
 			>
 				<v-card class="mx-auto"
 					color="#b9d7d9"
+					max-width="400"
 				>
 					<v-img
+						max-width="400"
 						contain
 						src="https://i.gifer.com/EnnH.gif"
 						height="140"
@@ -63,8 +72,10 @@
 			>
 				<v-card class="mx-auto"
 					color="rgb(122 205 223)"
+					max-width="400"
 				>
 					<v-img
+						max-width="400"
 						contain
 						src="https://goingdigitalx.files.wordpress.com/2020/08/mp.gif"
 						height="140"

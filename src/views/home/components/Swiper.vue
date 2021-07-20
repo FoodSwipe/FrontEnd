@@ -11,7 +11,19 @@
 			style="position: relative"
 		>
 			<home-toolbar style="position: absolute; top:0;" />
-			<order-now style="position: absolute; top: 40vh;" />
+			<order-now style="position: absolute; top: 30vh;" />
+			<div
+				style="position: absolute; top: 90vh; width: 100vw; display: flex; justify-content: center"
+			>
+				<v-btn icon
+					large
+					@click="scrollDown"
+				>
+					<v-icon x-large>
+						expand_more
+					</v-icon>
+				</v-btn>
+			</div>
 		</v-img>
 	</v-card>
 </template>
@@ -49,6 +61,12 @@ export default {
 				await this.openSnack("Internal server error. Please try again")
 			} else { this.isLoading = false}
 		},
+		scrollDown() {
+			window.scroll({
+				top: window.innerHeight,
+				behavior: "smooth"
+			})
+		}
 	}
 }
 </script>

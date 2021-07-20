@@ -1,46 +1,33 @@
 <template>
-	<div class="home">
-		<the-snack-bar />
-		<swiper />
-		<hot-items />
-		<v-row class="ma-0 pa-0">
-			<v-col
-				cols="12"
-				xl="8"
-				lg="8"
-				md="8"
-			>
-				<our-menu />
-			</v-col>
-			<v-col cols="12"
-				xl="4"
-				lg="4"
-				md="4"
-			>
-				<recommended-items />
-			</v-col>
-		</v-row>
-		<rhombus-divider />
-		<how-we-serve />
-		<rhombus-divider />
-		<food-swipe-facebook />
-	</div>
+	<v-main>
+		<v-container class="pa-0"
+			style="max-width: 100vw;"
+		>
+			<the-snack-bar />
+			<swiper />
+			<hot-items />
+			<our-menu />
+			<how-we-serve />
+			<food-swipe-facebook />
+			<home-footer />
+		</v-container>
+	</v-main>
 </template>
 
 <script>
 import TheSnackBar from "@/components/TheSnackBar"
+import HomeFooter from "@/views/home/components/Footer"
 
 export default {
 	name: "HomeView",
 	components: {
+		HomeFooter,
 		TheSnackBar,
 		Swiper: () => import("@/views/home/components/Swiper"),
 		HotItems: () => import("@/views/home/components/HotItems"),
 		OurMenu: () => import("@/views/home/components/OurMenu"),
-		RecommendedItems: () => import("@/views/home/components/Recommendations"),
 		HowWeServe: () => import("@/views/home/components/HowWeServe"),
 		FoodSwipeFacebook: () => import("@/views/home/components/Facebook"),
-		RhombusDivider: () => import("@/views/home/components/RhombusDivider"),
 	},
 }
 </script>
