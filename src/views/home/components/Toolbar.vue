@@ -1,187 +1,119 @@
 <template>
 	<div>
 		<v-app-bar
-			app
+			dark
 			color="transparent"
 			width="100vw"
-			class="ma-0 pa-0 elevation-0 food-swipe-toolbar"
+			height="60"
+			class="elevation-0 px-1 pr-6"
 		>
-			<div class="welcome subtitle-2 white--text">
-				Welcome to Food Swipe Online!
-			</div>
-			<v-spacer />
-			<div class="social-networks px-2">
-				<v-avatar size="20"
-					class="mx-1 cursor"
-					@click="routeToFoodSwipeFacebookPage()"
-				>
-					<v-img
-						:src="require('@/assets/mat_fb_icon.png')"
-					/>
-				</v-avatar>
-				<v-avatar size="18"
-					class="mx-1 cursor"
-					@click="routeToFoodSwipeInstaPage()"
-				>
-					<v-img
-						:src="require('@/assets/red_insta_icon.png')"
-					/>
-				</v-avatar>
-			</div>
-			<v-icon size="16"
-				color="white"
-				class="public-contact-icon"
+			<v-card-title class="organization-title"
+				:class="($route.name !== 'Food Swipe') ? 'cursor': ''"
+				@click="toHome"
 			>
-				call
-			</v-icon>
-			<p class="ma-0 public-contact">
-				+9779802801073,
-				+9779802801077
-			</p>
-			<template #extension>
-				<div class="organization-title">
-					<v-card-title class="org-name"
-						:class="($route.name !== 'Food Swipe') ? 'cursor': ''"
-						@click="toHome"
+				Food Swipe
+			</v-card-title>
+			<v-spacer />
+			<v-tooltip v-if="currentUser === null"
+				bottom
+			>
+				<template #activator="{on, attrs}">
+					<v-btn
+						v-bind="attrs"
+						icon
+						small
+						class="cursor"
+						v-on="on"
+						@click.stop="toggleDrawerState()"
 					>
-						Food Swipe
-					</v-card-title>
-					<v-fade-transition>
-						<v-card-subtitle v-if="$route.name !== 'Food Swipe'">
-							{{ $route.name }}
-						</v-card-subtitle>
-					</v-fade-transition>
-				</div>
-				<!--				<div class="nav-links px-2 fill-height">-->
-				<!--					<v-btn text-->
-				<!--						class="nav-btn rounded-0"-->
-				<!--						min-height="100%"-->
-				<!--						@click="toStore()"-->
-				<!--					>-->
-				<!--						Store-->
-				<!--					</v-btn>-->
-				<!--				</div>-->
-				<menu-item-search-bar />
-				<v-spacer />
-				<v-tooltip v-if="currentUser === null"
-					bottom
-				>
-					<template #activator="{on, attrs}">
-						<v-scale-transition>
-							<v-btn
-								v-bind="attrs"
-								icon
-								small
-								class="pr-0 mr-sm-6 mr-md-6 mr-lg-6 mr-xl-6 cursor"
-								v-on="on"
-								@click.stop="toggleDrawerState()"
-							>
-								<v-icon :size="($vuetify.breakpoint.width > 300)
-									? ''
-									: '16'"
-								>
-									input
-								</v-icon>
-							</v-btn>
-						</v-scale-transition>
-					</template>
-					<span>Login</span>
-				</v-tooltip>
-				<v-menu
-					v-else
-					close-on-content-click
-					offset-y
-					transition="fab-transition"
-					nudge-left="10"
-					nudge-bottom="5"
-				>
+						<v-icon size="26">
+							input
+						</v-icon>
+					</v-btn>
+				</template>
+				<span>Login</span>
+			</v-tooltip>
+			<v-menu
+				v-else
+				close-on-content-click
+				offset-y
+				transition="fab-transition"
+				nudge-left="10"
+				nudge-bottom="5"
+			>
+				<template #activator="{on, attrs}">
+					<v-btn
+						icon
+						small
+						class="cursor"
+						v-bind="attrs"
+						v-on="on"
+					>
+						<v-icon size="26">
+							account_circle
+						</v-icon>
+					</v-btn>
+				</template>
+				<v-list color="orange lighten-4">
+					<v-list-item>
+						<v-list-item-icon class="mr-2">
+							<v-icon>account_circle</v-icon>
+						</v-list-item-icon>
+						<v-list-item-title class="cursor"
+							@click="toProfile()"
+						>
+							Profile
+						</v-list-item-title>
+					</v-list-item>
+					<v-divider class="ml-4" />
+					<v-list-item v-if="showAdminButton"
+						class="cursor"
+					>
+						<v-list-item-icon class="mr-2">
+							<v-icon>settings_applications</v-icon>
+						</v-list-item-icon>
+						<v-list-item-title @click="toAdminPanel()">
+							Settings
+						</v-list-item-title>
+					</v-list-item>
+					<v-divider class="ml-4" />
+					<v-list-item class="cursor">
+						<v-list-item-icon class="mr-2">
+							<v-icon>input</v-icon>
+						</v-list-item-icon>
+						<v-list-item-title @click="logOut()">
+							Logout
+						</v-list-item-title>
+					</v-list-item>
+				</v-list>
+			</v-menu>
+			<div class="px-2" />
+			<v-badge
+				dark
+				color="orange"
+				:content="cartCount"
+				offset-x="10"
+				offset-y="15"
+			>
+				<v-tooltip bottom>
 					<template #activator="{on, attrs}">
 						<v-btn
+							:disabled="$route.name === 'Cart'"
 							icon
 							small
-							class="pr-0 mr-sm-6 mr-md-6 mr-lg-6 mr-xl-6 profile-avatar cursor"
+							class="mr-2"
 							v-bind="attrs"
+							@click="toCart()"
 							v-on="on"
 						>
-							<v-icon :size="
-								$vuetify.breakpoint.width > 300
-									? ''
-									: '16'
-							"
-							>
-								account_circle
+							<v-icon size="26">
+								shopping_cart
 							</v-icon>
 						</v-btn>
 					</template>
-					<v-list color="orange lighten-4">
-						<v-list-item>
-							<v-list-item-icon class="mr-2">
-								<v-icon>account_circle</v-icon>
-							</v-list-item-icon>
-							<v-list-item-title class="cursor"
-								@click="toProfile()"
-							>
-								Profile
-							</v-list-item-title>
-						</v-list-item>
-						<v-divider class="ml-4" />
-						<v-list-item v-if="showAdminButton"
-							class="cursor"
-						>
-							<v-list-item-icon class="mr-2">
-								<v-icon>settings_applications</v-icon>
-							</v-list-item-icon>
-							<v-list-item-title @click="toAdminPanel()">
-								Settings
-							</v-list-item-title>
-						</v-list-item>
-						<v-divider class="ml-4" />
-						<v-list-item class="cursor">
-							<v-list-item-icon class="mr-2">
-								<v-icon>input</v-icon>
-							</v-list-item-icon>
-							<v-list-item-title @click="logOut()">
-								Logout
-							</v-list-item-title>
-						</v-list-item>
-					</v-list>
-				</v-menu>
-				<v-fade-transition>
-					<v-badge
-						dark
-						color="black"
-						:content="cartCount"
-						offset-x="10"
-						offset-y="15"
-					>
-						<v-tooltip bottom>
-							<template #activator="{on, attrs}">
-								<v-btn
-									:disabled="$route.name === 'Cart'"
-									light
-									icon
-									small
-									class="mr-2"
-									v-bind="attrs"
-									@click="toCart()"
-									v-on="on"
-								>
-									<v-icon
-										:size="
-											$vuetify.breakpoint.width > 300
-												? ''
-												: '16'
-										"
-									>
-										shopping_cart
-									</v-icon>
-								</v-btn>
-							</template>
-							<span>Cart</span>
-						</v-tooltip>
-					</v-badge>
-				</v-fade-transition>
-			</template>
+					<span>Cart</span>
+				</v-tooltip>
+			</v-badge>
 		</v-app-bar>
 		<auth-sidebar />
 	</div>
@@ -191,13 +123,14 @@
 import router from "@/router"
 import { mapGetters } from "vuex"
 import AuthSidebar from "@/views/home/components/AuthSidebar"
+import Snack from "@/mixin/Snack."
 
 export default {
 	name: "HomeToolbarComponent",
 	components: {
 		AuthSidebar,
-		MenuItemSearchBar: () =>  import("@/views/home/components/MenuItemSearchBar")
 	},
+	mixins: [Snack],
 	data: () => ({
 		showAdminButton: false,
 		loginBanner: require("@/assets/banner_1.jpg"),
@@ -260,11 +193,6 @@ export default {
 		toggleDrawerState() {
 			this.$bus.emit("open-auth-sidebar")
 		},
-		openSnack(text, color="success") {
-			this.$store.dispatch("snack/setSnackState", true)
-			this.$store.dispatch("snack/setSnackColor", color)
-			this.$store.dispatch("snack/setSnackText", text)
-		},
 		toCart() {
 			router.push({ name: "Cart" })
 		},
@@ -285,12 +213,12 @@ export default {
 		async logOut() {
 			const isLoggedOut = await this.$store.dispatch("auth/logout", { username: this.currentUser.username })
 			if (isLoggedOut === true) {
-				this.openSnack("Logged out successfully.")
+				await this.openSnack("Logged out successfully.")
 				this.currentUser = null
 				this.showAdminButton = false
 				this.$bus.emit("refresh-order-now")
 			} else {
-				this.openSnack(isLoggedOut.detail, "error")
+				await this.openSnack(isLoggedOut.detail, "error")
 				localStorage.clear()
 			}
 			await this.initialize()
@@ -356,8 +284,9 @@ export default {
 	transition: font-size .3s ease
 	text-transform: uppercase
 	font-family: MainframeBB, serif
-	font-size: 1.4rem
-	line-height: 2rem
+	font-size: 20px
+	line-height: 22px
+	letter-spacing: 0
 	@media only screen and (max-width: 320px)
 		font-size: 1.2rem
 		line-height: 1.5rem

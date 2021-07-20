@@ -1,5 +1,6 @@
 <template>
 	<div class="home">
+		<the-snack-bar />
 		<swiper />
 		<order-now />
 		<rhombus-divider />
@@ -29,9 +30,12 @@
 </template>
 
 <script>
+import TheSnackBar from "@/components/TheSnackBar"
+
 export default {
 	name: "HomeView",
 	components: {
+		TheSnackBar,
 		Swiper: () => import("@/views/home/components/Swiper"),
 		OrderNow: () => import("@/views/home/components/OrderNow"),
 		HotItems: () => import("@/views/home/components/HotItems"),
@@ -40,6 +44,6 @@ export default {
 		HowWeServe: () => import("@/views/home/components/HowWeServe"),
 		FoodSwipeFacebook: () => import("@/views/home/components/Facebook"),
 		RhombusDivider: () => import("@/views/home/components/RhombusDivider"),
-	}
+	},
 }
 </script>

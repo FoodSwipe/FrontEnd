@@ -1,26 +1,7 @@
 <template>
 	<div>
+		<the-snack-bar />
 		<home-toolbar />
-		<v-snackbar
-			v-model="snack"
-			top
-			right
-			:timeout="3000"
-			:color="snackColor"
-			class="home-snack"
-		>
-			{{ snackText }}
-
-			<template #action="{ attrs }">
-				<v-btn
-					v-bind="attrs"
-					text
-					@click="snack = false"
-				>
-					Close
-				</v-btn>
-			</template>
-		</v-snackbar>
 		<v-main class="home-layout">
 			<v-container fluid
 				class="pa-0"
@@ -36,28 +17,15 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex"
+import TheSnackBar from "@/components/TheSnackBar"
 
 export default {
 	name: "HomeLayout",
 	components: {
+		TheSnackBar,
 		HomeToolbar: () => import("@/views/home/components/Toolbar"),
 		HomeFooter: () => import("@/views/home/components/Footer")
-	},
-	computed: {
-		...mapGetters({
-			snackText: "snack/snackText",
-			snackColor: "snack/snackColor"
-		}),
-		snack: {
-			get() {
-				return this.$store.state.snack.snack
-			},
-			set(v) {
-				this.$store.dispatch("snack/setSnackState", v)
-			}
-		}
-	},
+	}
 }
 </script>
 <style scoped lang="scss">
@@ -68,7 +36,7 @@ export default {
 		padding-top: 7.6rem !important;
 	}
 }
-.home-snack {
+.food-swipe-snack {
 	margin-top: -60px;
 }
 </style>

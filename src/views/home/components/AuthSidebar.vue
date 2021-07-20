@@ -1,7 +1,6 @@
 <template>
 	<v-dialog
 		v-model="drawer"
-		right
 		width="500"
 		overlay-color="black"
 		transition="scale-transition"
@@ -292,8 +291,11 @@
 </template>
 <script>
 import { mapGetters } from "vuex"
+import Snack from "@/mixin/Snack."
 
 export default {
+	name: "AuthSideBar",
+	mixins: [Snack],
 	data: () => ({
 		agree: false,
 		drawer: false,
@@ -334,11 +336,6 @@ export default {
 			localStorage.removeItem("cookingOrder")
 			this.openSnack("Site local storage cleared successfully.")
 		},
-		openSnack(text, color="success") {
-			this.$store.dispatch("snack/setSnackState", true)
-			this.$store.dispatch("snack/setSnackColor", color)
-			this.$store.dispatch("snack/setSnackText", text)
-		},
 		openAuthSidebar() {
 			this.login = {
 				username: "",
@@ -350,20 +347,21 @@ export default {
 			const loggedIn = await this.$store.dispatch("auth/login", this.login)
 			if (loggedIn === true) {
 				// logged in with zero pending order
-				this.openSnack("Logged in successfully.")
+				await this.openSnack("Logged in successfully.")
 				this.$bus.emit("set-cart-count", 0)
 				this.$bus.emit("refresh-order-now")
 				this.$bus.emit("refresh-profile")
 				this.drawer = false
 			} else if(loggedIn === "serverError") {
-				this.openSnack("Internal Server Error.", "error")
+				await this.openSnack("Internal Server Error.", "error")
 			} else if(loggedIn === "formError") {
-				this.openSnack(this.loginFieldErrors.detail, "error")
+				await this.openSnack(this.loginFieldErrors.detail, "error")
 			} else if (loggedIn.message) {
-				this.openSnack(loggedIn.message, "error")
+				console.log(loggedIn)
+				await this.openSnack(loggedIn.message, "error")
 			} else if (typeof loggedIn === "number") {
 				// logged in with a pending order
-				this.openSnack("Logged in successfully.")
+				await this.openSnack("Logged in successfully.")
 				this.$bus.emit("set-cart-count", loggedIn)
 				this.$bus.emit("refresh-cart")
 				this.$bus.emit("refresh-order-now")
@@ -374,12 +372,12 @@ export default {
 		async submitRegister() {
 			const registered = await this.$store.dispatch("user/register", this.register)
 			if (registered === true) {
-				this.openSnack("User registered successfully.")
+				await this.openSnack("User registered successfully.")
 				this.registerDialog = false
 				this.drawer = true
 			} else {
-				if (registered === 500) this.openSnack("Internal server error.", "error")
-				else this.openSnack("User registered failed.", "error")
+				if (registered === 500) await this.openSnack("Internal server error.", "error")
+				else await this.openSnack("User registered failed.", "error")
 			}
 		},
 		submitResetPasswordForm() {
