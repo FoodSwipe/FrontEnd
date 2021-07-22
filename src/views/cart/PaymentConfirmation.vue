@@ -168,7 +168,7 @@ export default {
 <style lang="scss" scoped>
 .payment-details-card {
 	border-radius: 0;
-	margin: -120px 0 20px 0;
+	//margin: -120px 0 20px 0;
 	background-color: transparent;
 }
 .card-text {

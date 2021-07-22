@@ -84,9 +84,11 @@
 <script>
 import router from "@/router"
 import { mapGetters } from "vuex"
+import Snack from "@/mixin/Snack"
 
 export default {
 	name: "OrderConfirmation",
+	mixins: [Snack],
 	data: () =>  ({
 		order: {
 			custom_location: null,
@@ -115,11 +117,6 @@ export default {
 				custom_email: this.cookingOrder.custom_email,
 			}
 		},
-		async openSnack(text, color="error") {
-			await this.$store.dispatch("snack/setSnackState", true)
-			await this.$store.dispatch("snack/setSnackColor", color)
-			await this.$store.dispatch("snack/setSnackText", text)
-		},
 		async proceedToPayment() {
 			const patched = await this.$store.dispatch("order/unauthorizedUpdateOrder", {
 				id: this.$helper.getCookingOrderId(),
@@ -141,11 +138,7 @@ export default {
 <style lang="scss" scoped>
 .delivery-details-card {
 	transition: all .3s ease;
-	margin: -150px 0 20px 0;
 	background-color: transparent;
-	@media only screen and (max-width: 475px) {
-		margin: -50px 0 20px 0;
-	}
 }
 .card-text {
 	background-color: #ffc1072b;

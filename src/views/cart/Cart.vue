@@ -3,10 +3,11 @@
 		tile
 		class="mx-auto"
 		min-height="100vh"
+		color="#fff5e6"
 	>
 		<simple-toolbar />
 		<v-card max-width="1200"
-			class="mx-auto"
+			class="mx-auto transparent"
 			flat tile
 		>
 			<v-row class="ma-0 pa-0 px-3"
