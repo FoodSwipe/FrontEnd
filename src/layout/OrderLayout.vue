@@ -1,5 +1,9 @@
 <template>
-	<div>
+	<v-card flat
+		tile min-height="100vh"
+		color="#fff5e6"
+	>
+		<simple-toolbar />
 		<div class="bg pt-12 pt-xl-16 pt-lg-16">
 			<div class="headline text-center py-16 grey--text text--lighten-3 rounded-0 my-auto">
 				<v-row class="ma-0 pa-0 pt-12 pt-xl-10 pt-lg-10"
@@ -75,7 +79,7 @@
 					@click="routeToOrderReview()"
 				>Review</span>
 			</div>
-			<div class="custom-shape-divider-bottom-1607775812">
+			<div class="order-shape-divider-bottom">
 				<svg data-name="Layer 1"
 					xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120"
 					preserveAspectRatio="none"
@@ -92,39 +96,32 @@
 				</svg>
 			</div>
 		</div>
-		<router-view />
-	</div>
+		<div class="order-router-view">
+			<router-view />
+		</div>
+	</v-card>
 </template>
 <script>
-import router from "@/router"
+import SimpleToolbar from "@/components/SimpleToolbar"
+import { mapGetters } from "vuex"
 
 export default {
 	name: "OrderConfirmation",
-	data: () =>  ({
-		// do something
-	}),
-	methods: {
-		routeToOrderShipping() {
-			// router.push({name: "Confirm Order"})
-		},
-		routeToOrderPayment() {
-			// router.push({name: "Confirm Payment"})
-		},
-		routeToOrderReview() {
-			// router.push({name: "Review Order"})
-		}
-	}
+	components: { SimpleToolbar }
 }
 </script>
 <style lang="scss" scoped>
+.order-router-view {
+	margin-top: -10vh;
+}
 .active-radio {
-	color: #2769ed !important;
+	color: #cddfff !important;
 }
 .active-hr {
-	background-color: #2769ed !important;
+	background-color: #cddfff !important;
 }
 .top-radio {
-	color: #474747;
+	color: #7d7d7d;
 }
 .mid-padding {
 	transition: all .3s ease;
@@ -138,7 +135,7 @@ export default {
 }
 .hr {
 	transition: all .3s ease;
-	background-color: #4d4d4f;
+	background-color: #7d7d7d;
 	height: 2px;
 	width: 125px;
 	margin-left: -4px;
@@ -162,7 +159,7 @@ export default {
 	margin-left: -2px;
 }
 .active-text {
-	color: #2769ed
+	color: aliceblue;
 }
 .top-text {
 	font-size: 1.2rem;
@@ -170,10 +167,10 @@ export default {
 		font-size: .875rem;
 	}
 	&:hover {
-		color: #3479e2;
+		color: #cddfff;
 	}
 }
-.custom-shape-divider-bottom-1607775812 {
+.order-shape-divider-bottom {
 	position: absolute;
 	bottom: 0;
 	left: 0;
@@ -183,20 +180,20 @@ export default {
 	transform: rotate(180deg);
 }
 
-.custom-shape-divider-bottom-1607775812 svg {
+.order-shape-divider-bottom svg {
 	position: relative;
 	display: block;
 	width: calc(100% + 1.3px);
 	height: 155px;
 }
 
-.custom-shape-divider-bottom-1607775812 .shape-fill {
-	fill: #FFFFFF;
+.order-shape-divider-bottom .shape-fill {
+	fill: #fff5e6;
 }
 
 /** For mobile devices **/
 @media (max-width: 767px) {
-	.custom-shape-divider-bottom-1607775812 svg {
+	.order-shape-divider-bottom svg {
 		width: calc(100% + 1.3px);
 		height: 55px;
 	}
