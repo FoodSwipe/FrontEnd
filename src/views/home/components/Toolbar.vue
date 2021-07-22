@@ -113,12 +113,24 @@ export default {
 	},
 	mixins: [Snack],
 	data: () => ({
-		showAdminButton: false,
 		loginBanner: require("@/assets/banner_1.jpg"),
-		currentUser: null,
 		cartCount: "0",
 	}),
-
+	computed: {
+		currentUser() {
+			return this.$helper.getCurrentUser()
+		},
+		showAdminButton() {
+			if (!this.currentUser) return false
+			else return this.currentUser.admin
+		}
+	},
+	created() {
+		this.$bus.on("refresh-profile", this.refreshProfile)
+	},
+	beforeUnmount() {
+		this.$bus.off("refresh-profile", this.refreshProfile)
+	},
 	methods: {
 		refreshProfile() {
 			this.initialize()
@@ -128,18 +140,6 @@ export default {
 		},
 		routeToFoodSwipeInstaPage() {
 			window.open(this.$constants.instagramUrl, "_blank")
-		},
-		subtractCartCount(value) {
-			this.cartCount = (parseInt(this.cartCount) - parseInt(value)).toString()
-		},
-		addCartCountByOne() {
-			this.cartCount = (parseInt(this.cartCount) + 1).toString()
-		},
-		setCartCount(count) {
-			this.cartCount = count.toString()
-		},
-		updateCartCount(expression) {
-			this.cartCount = (parseInt(this.cartCount) + expression).toString()
 		},
 		toggleDrawerState() {
 			this.$bus.emit("open-auth-sidebar")

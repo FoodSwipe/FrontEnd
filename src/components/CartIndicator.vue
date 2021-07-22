@@ -14,7 +14,7 @@
 					small
 					class="mr-2"
 					v-bind="attrs"
-					@click="toCart()"
+					to="/cart"
 					v-on="on"
 				>
 					<v-icon size="26">
@@ -48,19 +48,26 @@ export default {
 		this.$bus.on("add-cart-count-by-one", this.addCartCountByOne)
 		this.$bus.on("subtract-cart-count", this.subtractCartCount)
 		this.$bus.on("update-cart-count", this.updateCartCount)
-		this.$bus.on("refresh-profile", this.refreshProfile)
-
 		await this.initialize()
 	},
 	beforeUnmount() {
 		this.$bus.off("set-cart-count", this.setCartCount)
 		this.$bus.off("add-cart-count-by-one", this.addCartCountByOne)
 		this.$bus.off("subtract-cart-count", this.subtractCartCount)
-		this.$bus.off("refresh-profile", this.refreshProfile)
+		this.$bus.on("update-cart-count", this.updateCartCount)
 	},
 	methods: {
-		toCart() {
-			router.push({ name: "Cart" })
+		updateCartCount(expression) {
+			this.cartCount = (parseInt(this.cartCount) + expression).toString()
+		},
+		subtractCartCount(value) {
+			this.cartCount = (parseInt(this.cartCount) - parseInt(value)).toString()
+		},
+		addCartCountByOne() {
+			this.cartCount = (parseInt(this.cartCount) + 1).toString()
+		},
+		setCartCount(count) {
+			this.cartCount = count.toString()
 		},
 		async initialize() {
 			this.currentUser = this.$helper.getCurrentUser()
