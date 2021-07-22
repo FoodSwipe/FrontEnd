@@ -2,6 +2,7 @@
 	<v-card
 		:loading="loading"
 		class="mx-auto ma-1 store-item-card"
+		color="rgb(255 251 246)"
 	>
 		<template #progress>
 			<v-progress-linear
@@ -15,8 +16,8 @@
 			dark
 			height="200"
 			:src="item.image"
-			gradient="to top, rgba(0,0,0, .3), rgba(0,0,0, .7)"
-			class="cursor store-item-image rounded"
+			gradient="to top, rgba(0,0,0, .3), rgba(0,0,0, .5)"
+			class="cursor store-item-image rounded-t"
 			@click="routeToItemDetail(item)"
 		/>
 
@@ -83,7 +84,7 @@
 									v-on="on"
 									@click.prevent="addItemToCart(item)"
 								>
-									<v-icon>
+									<v-icon size="20">
 										add_shopping_cart
 									</v-icon>
 								</v-btn>
@@ -99,9 +100,11 @@
 <script>
 import router from "@/router"
 import { mapGetters } from "vuex"
+import Snack from "@/mixin/Snack"
 
 export default {
 	name: "StoreItemCard",
+	mixins: [Snack],
 	props: {
 		item: {
 			type: Object,
@@ -128,11 +131,6 @@ export default {
 				return found
 			}
 			return false
-		},
-		async openSnack(text, color="error") {
-			await this.$store.dispatch("snack/setSnackState", true)
-			await this.$store.dispatch("snack/setSnackColor", color)
-			await this.$store.dispatch("snack/setSnackText", text)
 		},
 		routeToItemDetail(item) {
 			router.push(`product/${item.id}`)

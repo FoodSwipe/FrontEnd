@@ -1,8 +1,8 @@
 <template>
 	<div
 		id="product-detail"
-		class="mt-16"
 	>
+		<simple-toolbar />
 		<v-card max-width="615"
 			class="mx-auto px-2"
 			flat
@@ -339,10 +339,12 @@
 import gsap from "gsap"
 import { mapGetters } from "vuex"
 import StartOrderComponent from "@/components/StartOrder"
+import SimpleToolbar from "@/components/SimpleToolbar"
 
 export default {
 	name: "ItemDetailView",
 	components: {
+		SimpleToolbar,
 		StartOrderComponent,
 		HotItems: () => import("@/views/home/components/HotItems"),
 	},
@@ -439,7 +441,6 @@ export default {
 				}
 			}
 			this.isLoading = false
-			await this.$vuetify.goTo("#product-detail")
 		},
 		beforeEnter(el) {
 			el.style.opacity = 0
