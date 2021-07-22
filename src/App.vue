@@ -24,6 +24,10 @@ export default {
 	line-height: 32px !important;
 }
 
+.point875{
+	font-size: .875rem !important;
+	line-height: 1rem;
+}
 
 .one-rem {
 	font-size: 1rem !important;

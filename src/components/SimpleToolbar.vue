@@ -1,7 +1,7 @@
 <template>
 	<v-toolbar flat>
 		<div class="organization-title">
-			Foodswipe
+			Food swipe
 		</div>
 	</v-toolbar>
 </template>

@@ -39,11 +39,12 @@
 				>
 					<v-card class="pa-0"
 						flat
+						rounded
 						color="transparent"
 						max-width="700"
 					>
-						<div class="swiper-container pa-1">
-							<div class="swiper-wrapper">
+						<div class="swiper-container pa-1 rounded">
+							<div class="swiper-wrapper rounded">
 								<v-card
 									v-for="(item, index) in topItemsSet"
 									:key="index"
