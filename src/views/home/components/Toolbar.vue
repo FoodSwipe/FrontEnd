@@ -93,32 +93,7 @@
 						</v-list>
 					</v-menu>
 					<div class="px-2" />
-					<v-badge
-						dark
-						color="orange"
-						:content="cartCount"
-						offset-x="10"
-						offset-y="15"
-					>
-						<v-tooltip bottom>
-							<template #activator="{on, attrs}">
-								<v-btn
-									:disabled="$route.name === 'Cart'"
-									icon
-									small
-									class="mr-2"
-									v-bind="attrs"
-									@click="toCart()"
-									v-on="on"
-								>
-									<v-icon size="26">
-										shopping_cart
-									</v-icon>
-								</v-btn>
-							</template>
-							<span>Cart</span>
-						</v-tooltip>
-					</v-badge>
+					<cart-indicator />
 				</div>
 			</div>
 			<auth-sidebar />
@@ -128,14 +103,13 @@
 
 <script>
 import router from "@/router"
-import { mapGetters } from "vuex"
-import AuthSidebar from "@/views/home/components/AuthSidebar"
-import Snack from "@/mixin/Snack."
+import Snack from "@/mixin/Snack"
 
 export default {
 	name: "HomeToolbarComponent",
 	components: {
-		AuthSidebar,
+		CartIndicator: () => import("@/components/CartIndicator"),
+		AuthSidebar: () => import("@/views/home/components/AuthSidebar"),
 	},
 	mixins: [Snack],
 	data: () => ({
@@ -144,38 +118,8 @@ export default {
 		currentUser: null,
 		cartCount: "0",
 	}),
-	computed: {
-		...mapGetters({
-			alreadyCookingOrder: "order/detailOrder"
-		}),
-	},
-	async created() {
-		this.$bus.on("set-cart-count", this.setCartCount)
-		this.$bus.on("add-cart-count-by-one", this.addCartCountByOne)
-		this.$bus.on("subtract-cart-count", this.subtractCartCount)
-		this.$bus.on("update-cart-count", this.updateCartCount)
-		this.$bus.on("refresh-profile", this.refreshProfile)
 
-		await this.initialize()
-	},
-	beforeUnmount() {
-		this.$bus.off("set-cart-count", this.setCartCount)
-		this.$bus.off("add-cart-count-by-one", this.addCartCountByOne)
-		this.$bus.off("subtract-cart-count", this.subtractCartCount)
-		this.$bus.off("refresh-profile", this.refreshProfile)
-	},
 	methods: {
-		async initialize() {
-			this.currentUser = this.$helper.getCurrentUser()
-			this.showAdminButton = this.$helper.isAdminUser()
-			const cookingOrder = this.$helper.getCookingOrderId()
-			if (cookingOrder) {
-				await this.$store.dispatch("order/withCartItems", {
-					id: cookingOrder
-				})
-				this.cartCount = this.alreadyCookingOrder.total_items.toString()
-			}
-		},
 		refreshProfile() {
 			this.initialize()
 		},
@@ -199,9 +143,6 @@ export default {
 		},
 		toggleDrawerState() {
 			this.$bus.emit("open-auth-sidebar")
-		},
-		toCart() {
-			router.push({ name: "Cart" })
 		},
 		toProfile() {
 			router.push({name: "Profile"})
@@ -284,19 +225,6 @@ export default {
 }
 </style>
 <style lang="sass" scoped>
-@font-face
-	font-family: "MainframeBB"
-	src: url("../../../../src/assets/MAINBRG_.TTF")
-.organization-title
-	transition: font-size .3s ease
-	text-transform: uppercase
-	font-family: MainframeBB, serif
-	font-size: 20px
-	line-height: 22px
-	letter-spacing: 0
-	@media only screen and (max-width: 320px)
-		font-size: 1.2rem
-		line-height: 1.5rem
 .profile-avatar
 	border: 2px solid white
 .public-contact

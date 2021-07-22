@@ -9,12 +9,22 @@
 		color="#ececec"
 		style="position: relative"
 	>
-		<div class="custom-shape-divider-top-1626805676">
+		<div class="custom-shape-divider-top">
 			<svg data-name="Layer 1"
 				xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120"
 				preserveAspectRatio="none"
 			>
-				<path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z"
+				<path d="M1200 0L0 0 598.97 114.72 1200 0z"
+					class="shape-fill"
+				/>
+			</svg>
+		</div>
+		<div class="custom-shape-divider-bottom">
+			<svg data-name="Layer 1"
+				xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120"
+				preserveAspectRatio="none"
+			>
+				<path d="M1200 0L0 0 598.97 114.72 1200 0z"
 					class="shape-fill"
 				/>
 			</svg>
@@ -123,9 +133,25 @@
 					lg="4" md="4"
 					sm="4" cols="12"
 				>
-					<v-card-title class="display-2 text-center">
+					<v-card-title class="text-center section-header">
 						Hot Items You Can Grab Right Now
 					</v-card-title>
+					<v-card-actions class="d-flex justify-center">
+						<v-btn class="blue-gradient px-4"
+							dark
+							height="55"
+							to="/store"
+						>
+							<v-icon>store</v-icon>
+							<v-scale-transition>
+								<span v-if="$vuetify.breakpoint.width > 300"
+									class="pl-2"
+								>
+									Visit Store
+								</span>
+							</v-scale-transition>
+						</v-btn>
+					</v-card-actions>
 				</v-col>
 			</v-row>
 		</v-card>
@@ -277,8 +303,8 @@ export default {
 	}
 }
 </style>
-<style>
-.custom-shape-divider-top-1626805676 {
+<style scoped>
+.custom-shape-divider-top {
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -287,14 +313,50 @@ export default {
 	line-height: 0;
 }
 
-.custom-shape-divider-top-1626805676 svg {
+.custom-shape-divider-top svg {
 	position: relative;
 	display: block;
-	width: calc(100% + 1.3px);
-	height: 500px;
+	width: calc(203% + 1.3px);
+	height: 325px;
 }
 
-.custom-shape-divider-top-1626805676 .shape-fill {
+.custom-shape-divider-top .shape-fill {
 	fill: #e5e5e5;
+}
+
+/** For tablet devices **/
+@media (min-width: 768px) and (max-width: 1023px) {
+	.custom-shape-divider-top svg {
+		width: calc(202% + 1.3px);
+		height: 322px;
+	}
+}
+.custom-shape-divider-bottom {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	overflow: hidden;
+	line-height: 0;
+	transform: rotate(180deg);
+}
+
+.custom-shape-divider-bottom svg {
+	position: relative;
+	display: block;
+	width: calc(203% + 1.3px);
+	height: 325px;
+}
+
+.custom-shape-divider-bottom .shape-fill {
+	fill: #e5e5e5;
+}
+
+/** For tablet devices **/
+@media (min-width: 768px) and (max-width: 1023px) {
+	.custom-shape-divider-bottom svg {
+		width: calc(202% + 1.3px);
+		height: 322px;
+	}
 }
 </style>

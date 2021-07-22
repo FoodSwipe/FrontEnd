@@ -29,6 +29,7 @@
 </template>
 <script>
 import { mapGetters } from "vuex"
+import Snack from "@/mixin/Snack"
 
 export default {
 	name: "ShowCaseSlider",
@@ -36,6 +37,7 @@ export default {
 		HomeToolbar: () => import("@/views/home/components/Toolbar"),
 		OrderNow: () => import("@/views/home/components/OrderNow"),
 	},
+	mixins: [Snack],
 	data: () => ({
 		loading: false,
 		colors: [

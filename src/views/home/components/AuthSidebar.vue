@@ -291,7 +291,7 @@
 </template>
 <script>
 import { mapGetters } from "vuex"
-import Snack from "@/mixin/Snack."
+import Snack from "@/mixin/Snack"
 
 export default {
 	name: "AuthSideBar",

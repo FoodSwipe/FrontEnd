@@ -34,7 +34,7 @@
 				<v-col cols="12"
 					class="text-center"
 				>
-					<p class="mb-0 display-1 font-weight-light">
+					<p class="mb-0 section-header">
 						How we deliver?
 					</p>
 					<p class="mb-0 subtitle">

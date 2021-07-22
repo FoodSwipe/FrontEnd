@@ -7,7 +7,17 @@
 		class="pa-4 d-flex justify-center align-center"
 		style="position: relative;"
 	>
-		<div class="custom-shape-divider-top-1626805339">
+		<div class="custom-shape-divider-top">
+			<svg data-name="Layer 1"
+				xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120"
+				preserveAspectRatio="none"
+			>
+				<path d="M1200 0L0 0 598.97 114.72 1200 0z"
+					class="shape-fill"
+				/>
+			</svg>
+		</div>
+		<div class="custom-shape-divider-bottom">
 			<svg data-name="Layer 1"
 				xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120"
 				preserveAspectRatio="none"
@@ -39,10 +49,10 @@
 						class="mx-auto"
 					>
 						<v-list-item>
-							<v-list-item-avatar size="200">
+							<v-list-item-avatar :size="avatarSize">
 								<v-img
 									:src="require('@/assets/premiumQuality.png')"
-									height="200"
+									max-height="200"
 									contain
 								/>
 							</v-list-item-avatar>
@@ -56,10 +66,10 @@
 							</v-list-item-content>
 						</v-list-item>
 						<v-list-item>
-							<v-list-item-avatar size="200">
+							<v-list-item-avatar :size="avatarSize">
 								<v-img
 									:src="require('@/assets/moreChoices.png')"
-									height="200"
+									max-height="200"
 									contain
 								/>
 							</v-list-item-avatar>
@@ -71,13 +81,12 @@
 							</v-list-item-content>
 						</v-list-item>
 						<v-list-item>
-							<v-list-item-avatar size="200"
+							<v-list-item-avatar :size="avatarSize"
 								color="transparent"
 							>
 								<v-img
 									:src="require('@/assets/fastDelivery.png')"
-									height="200"
-									width="250"
+									max-height="200"
 									contain
 								/>
 							</v-list-item-avatar>
@@ -537,8 +546,18 @@ export default {
 			},
 		]
 	}),
-	created() {
-		// do something
+	computed: {
+		avatarSize() {
+			if (this.$vuetify.breakpoint.width > 400) {
+				return 200
+			} else if (this.$vuetify.breakpoint.width > 300) {
+				return 150
+			} else if (this.$vuetify.breakpoint.width > 200) {
+				return 120
+			} else if (this.$vuetify.breakpoint.width > 100) {
+				return 80
+			} else return 60
+		}
 	}
 }
 </script>
@@ -548,34 +567,6 @@ export default {
 	padding: 15px 0 0 0;
 	font-size: 2.5rem;
 	line-height: 2.5rem;
-}
-.custom-shape-divider-bottom-1608137131 {
-	position: absolute;
-	bottom: 0;
-	left: 0;
-	width: 100%;
-	overflow: hidden;
-	line-height: 0;
-	transform: rotate(180deg);
-}
-
-.custom-shape-divider-bottom-1608137131 svg {
-	position: relative;
-	display: block;
-	width: calc(109% + 1.3px);
-	height: 97px;
-}
-
-.custom-shape-divider-bottom-1608137131 .shape-fill {
-	fill: #292929;
-}
-
-/** For mobile devices **/
-@media (max-width: 767px) {
-	.custom-shape-divider-bottom-1608137131 svg {
-		width: calc(186% + 1.3px);
-		height: 102px;
-	}
 }
 .menu-item-group-name {
 	font-size: 1.2rem;
@@ -596,7 +587,7 @@ export default {
 .divider-menu {
 	margin: 2px 0;
 }
-.custom-shape-divider-top-1626805339 {
+.custom-shape-divider-top {
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -605,14 +596,50 @@ export default {
 	line-height: 0;
 }
 
-.custom-shape-divider-top-1626805339 svg {
+.custom-shape-divider-top svg {
 	position: relative;
 	display: block;
-	width: calc(237% + 1.3px);
-	height: 500px;
+	width: calc(203% + 1.3px);
+	height: 325px;
 }
 
-.custom-shape-divider-top-1626805339 .shape-fill {
+.custom-shape-divider-top .shape-fill {
 	fill: #ffe7e7;
+}
+
+/** For tablet devices **/
+@media (min-width: 768px) and (max-width: 1023px) {
+	.custom-shape-divider-top svg {
+		width: calc(202% + 1.3px);
+		height: 322px;
+	}
+}
+.custom-shape-divider-bottom {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	overflow: hidden;
+	line-height: 0;
+	transform: rotate(180deg);
+}
+
+.custom-shape-divider-bottom svg {
+	position: relative;
+	display: block;
+	width: calc(203% + 1.3px);
+	height: 325px;
+}
+
+.custom-shape-divider-bottom .shape-fill {
+	fill: #ffe7e7;
+}
+
+/** For tablet devices **/
+@media (min-width: 768px) and (max-width: 1023px) {
+	.custom-shape-divider-bottom svg {
+		width: calc(202% + 1.3px);
+		height: 322px;
+	}
 }
 </style>
