@@ -23,7 +23,9 @@
 
 		<div class="name-type-group">
 			<v-card-text class="py-0">
-				<div class="text-center item-name">
+				<div class="text-center item-name cursor"
+					@click="routeToItemDetail(item)"
+				>
 					{{ item.name }}
 				</div>
 			</v-card-text>
@@ -72,26 +74,29 @@
 				<v-col cols="12"
 					class="ma-0 pa-0"
 				>
-					<v-card-actions class="ma-0 pa-0 d-flex justify-center">
-						<v-tooltip bottom>
-							<template #activator="{on, attrs}">
-								<v-btn
-									dark
-									class="add-to-cart-button"
-									color="orange"
-									v-bind="attrs"
-									:disabled="isAddedInCart(item)"
-									v-on="on"
-									@click.prevent="addItemToCart(item)"
-								>
-									<v-icon size="20">
-										add_shopping_cart
-									</v-icon>
-								</v-btn>
-							</template>
-							<span>Add to cart</span>
-						</v-tooltip>
-					</v-card-actions>
+					<v-fade-transition>
+						<v-card-actions v-if="!isAddedInCart(item)"
+							class="ma-0 pa-0 d-flex justify-center"
+						>
+							<v-tooltip bottom>
+								<template #activator="{on, attrs}">
+									<v-btn
+										dark
+										class="add-to-cart-button"
+										color="orange"
+										v-bind="attrs"
+										v-on="on"
+										@click.prevent="addItemToCart(item)"
+									>
+										<v-icon size="20">
+											add_shopping_cart
+										</v-icon>
+									</v-btn>
+								</template>
+								<span>Add to cart</span>
+							</v-tooltip>
+						</v-card-actions>
+					</v-fade-transition>
 				</v-col>
 			</v-row>
 		</v-card-text>
