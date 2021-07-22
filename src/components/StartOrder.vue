@@ -8,9 +8,10 @@
 			<v-card-title class="d-flex align-center">
 				Start your order right now!
 			</v-card-title>
-			<v-card-subtitle>
+			<v-card-subtitle class="pb-2">
 				Please register and login to the system so that we can track your orders and serve you more effectively.
 			</v-card-subtitle>
+			<v-divider class="pb-4" />
 			<v-card-text>
 				<v-row class="ma-0 pa-0">
 					<v-col cols="12">

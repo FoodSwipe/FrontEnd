@@ -95,8 +95,8 @@ const actions = {
 		const res = await $api.get(menuItemUrls.orderNowList)
 		commit("SET_MENU_ITEMS", res)
 	},
-	async fetchAll({ commit }) {
-		const res = await $api.get(menuItemUrls.list)
+	async fetchAll({ commit }, payload = null) {
+		const res = await $api.get(menuItemUrls.list, payload)
 		commit("SET_MENU_ITEMS", res)
 	},
 	async getDetail({commit}, payload) {

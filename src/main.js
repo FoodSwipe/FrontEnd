@@ -15,6 +15,10 @@ import vueScrollBehavior from "vue-scroll-behavior"
 
 Vue.use(vueScrollBehavior, { router: router })
 
+Vue.component("ShapeDivider", () =>
+	import("@/components/ShapeDivider")
+);
+
 Vue.config.productionTip = false
 Vue.prototype.$api = api
 Vue.prototype.$helper = helper

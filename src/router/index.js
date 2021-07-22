@@ -5,14 +5,14 @@ Vue.use(VueRouter)
 
 const routes = [
 	{
-		path: "",
-		name: "Food Swipe",
-		component: () => import("@/views/home/Home"),
-	},
-	{
-		path: "/home",
-		component: () => import("@/layout/HomeLayout"),
+		path: "/",
+		component: () => import("@/layout/HomeSimpleLayout"),
 		children: [
+			{
+				path: "/",
+				name: "Food Swipe",
+				component: () => import("@/views/home/Home"),
+			},
 			{
 				path: "store",
 				name: "Store",

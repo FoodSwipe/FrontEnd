@@ -11,6 +11,20 @@ export default {
 </script>
 <!--global css variables-->
 <style lang="scss">
+@import url('https://fonts.googleapis.com/css2?family=Otomanopee+One&display=swap');
+
+.section-header {
+	font-family: 'Otomanopee One', sans-serif;
+	font-size: 48px !important;
+	line-height: 48px !important;
+}
+.section-sub-header {
+	font-family: 'Otomanopee One', sans-serif;
+	font-size: 32px !important;
+	line-height: 32px !important;
+}
+
+
 .one-rem {
 	font-size: 1rem !important;
 	line-height: 1.2rem;
@@ -101,4 +115,19 @@ export default {
 		color: slategray !important;
 	}
 }
+</style>
+<style lang="sass">
+@font-face
+	font-family: "MainframeBB"
+	src: url("../src/assets/MAINBRG_.TTF")
+.organization-title
+	transition: font-size .3s ease
+	text-transform: uppercase
+	font-family: MainframeBB, serif
+	font-size: 20px
+	line-height: 22px
+	letter-spacing: 0
+	@media only screen and (max-width: 320px)
+		font-size: 1.2rem
+		line-height: 1.5rem
 </style>

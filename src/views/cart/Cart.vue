@@ -1,320 +1,330 @@
 <template>
 	<v-card flat
-		class="rounded-0 mt-4 mx-auto" width="1200"
+		tile
+		class="mx-auto"
+		min-height="100vh"
 	>
-		<v-row class="ma-0 pa-0 px-3"
-			justify="center"
+		<simple-toolbar />
+		<v-card max-width="1200"
+			class="mx-auto"
+			flat tile
 		>
-			<v-breadcrumbs v-if="!isLoading"
-				:items="cartBreadcrumbs"
-				class="px-1"
+			<v-row class="ma-0 pa-0 px-3"
+				justify="center"
 			>
-				<template #item="{ item }">
-					<v-breadcrumbs-item
-						class="home-breadcrumb-item"
-						:href="item.href"
-						:disabled="item.disabled"
-					>
-						{{ item.text.toUpperCase() }}
-					</v-breadcrumbs-item>
-				</template>
-			</v-breadcrumbs>
-			<v-spacer />
-			<v-tooltip bottom>
-				<template #activator="{on, attrs}">
-					<v-btn icon
-						v-bind="attrs"
-						v-on="on"
-						@click="$router.go(-1)"
-					>
-						<v-icon>arrow_back</v-icon>
-					</v-btn>
-				</template>
-				<span>Go Back</span>
-			</v-tooltip>
-		</v-row>
-		<v-row class="ma-0 pa-0">
-			<v-col v-if="cartItemsList.length === 0"
-				cols="12"
-			>
-				<v-card
-					color="#f9f2ed"
+				<v-breadcrumbs v-if="!isLoading"
+					:items="cartBreadcrumbs"
+					class="px-1"
 				>
-					<v-card-title class="d-flex justify-center align-center">
-						<v-icon>shopping_cart</v-icon><span class="ml-3">Your cart is empty!</span>
-					</v-card-title>
-					<v-card-subtitle class="text-center">
-						Add our fantastic menu items to your cart and start shopping.
-					</v-card-subtitle>
-					<v-divider />
-
-					<v-img
-						height="200"
-						contain
-						:src="require('@/assets/empty_cart.gif')"
-					/>
-					<v-card-actions class="d-flex justify-center">
-						<v-btn color="blue-gradient"
-							dark
-							to="/store"
+					<template #item="{ item }">
+						<v-breadcrumbs-item
+							class="home-breadcrumb-item"
+							:href="item.href"
+							:disabled="item.disabled"
 						>
-							<v-icon size="24">
-								store
-							</v-icon>
-							<span v-if="$vuetify.breakpoint.width > 165"
-								class="ml-2"
-							>Visit Store</span>
+							{{ item.text.toUpperCase() }}
+						</v-breadcrumbs-item>
+					</template>
+				</v-breadcrumbs>
+				<v-spacer />
+				<v-tooltip bottom>
+					<template #activator="{on, attrs}">
+						<v-btn icon
+							v-bind="attrs"
+							v-on="on"
+							@click="$router.go(-1)"
+						>
+							<v-icon>arrow_back</v-icon>
 						</v-btn>
-					</v-card-actions>
-				</v-card>
-			</v-col>
-			<v-col v-else
-				cols="12"
-				xl="8"
-				lg="8"
-				md="8"
-			>
-				<transition-group
-					appear
-					:css="false"
-					@before-enter="beforeEnter"
-					@enter="enter"
+					</template>
+					<span>Go Back</span>
+				</v-tooltip>
+			</v-row>
+			<v-row class="ma-0 pa-0">
+				<v-col v-if="cartItemsList.length === 0"
+					cols="12"
 				>
 					<v-card
-						v-for="(item, index) in cartItemsList"
-						:key="index + 1 * 17"
-						class="cart-item-card pa-0"
-						:class="
-							(index+1 === cartItemsList.length) ? '' : 'mb-4'
-						"
+						color="#f9f2ed"
 					>
-						<v-row class="ma-0 pa-0"
-							align="center"
-						>
-							<!-- image column-->
-							<v-col cols="12"
-								xl="3"
-								lg="3"
-								md="3"
-								sm="3"
-							>
-								<v-img
-									:src="(item.item !== undefined) ? item.item.image : ''"
-									width="100%"
-									height="100%"
-									max-height="150"
-								/>
-							</v-col>
-							<v-col cols="12"
-								xl="3"
-								lg="3"
-								md="3"
-								sm="3"
-							>
-								<p>
-									{{ item.item.name }}
-									<span class="subtitle-2">
-										<v-avatar v-for="(typeOfItem, indic) in item.item.item_type"
-											:key="typeOfItem.id +55 *37"
-											tile
-											size="20"
-											:class="
-												(indic +1 === item.item.item_type.length) ? '' : 'pr-2'
-											"
-											class="slight-up"
-										>
-											<v-img
-												:src="typeOfItem.badge"
-											/>
-										</v-avatar>
-									</span>
-								</p>
-								<div class="d-flex mb-0 align-center">
-									<v-btn icon
-										color="error"
-										:x-small="$vuetify.breakpoint.width < 280"
-										@click="removeItemFromCart(item)"
-									>
-										<v-icon>delete</v-icon>
-									</v-btn>
-									<v-btn v-if="$vuetify.breakpoint.width > 205"
-										icon
-										disabled
-										:x-small="$vuetify.breakpoint.width < 280"
-									>
-										<v-icon class="pl-2">
-											favorite
-										</v-icon>
-									</v-btn>
-									<v-spacer />
-									<div v-if="$vuetify.breakpoint.xsOnly"
-										class="py-2 d-flex align-center mb-0"
-									>
-										<v-icon v-if="$vuetify.breakpoint.width > 255"
-											size="18"
-											class="today-icon"
-										>
-											today
-										</v-icon>
-										<span class="pl-2 cart-item-created-at">{{ item.created_at }}</span>
-									</div>
-								</div>
-							</v-col>
-							<v-col cols="7"
-								xl="4"
-								lg="4"
-								md="4"
-								sm="3"
-							>
-								<div class="d-flex align-center">
-									<v-btn
-										icon
-										color="error"
-										height="56"
-										class="rounded-0"
-										:disabled="item.quantity <= 1"
-										@click="subtractQuantity(item)"
-									>
-										<v-icon>remove</v-icon>
-									</v-btn>
-									<v-text-field v-model="item.quantity"
-										class="cart-item-quantity"
-										filled
-										type="number"
-										hide-details="auto"
-										persistent-hint
-										@change="quantityChanged(item)"
-									/>
-									<v-btn icon
-										height="56"
-										color="primary"
-										class="rounded-0"
-										@click="addQuantity(item)"
-									>
-										<v-icon>add</v-icon>
-									</v-btn>
-								</div>
-							</v-col>
-							<v-col cols="5"
-								xl="2"
-								lg="2"
-								md="2"
-								sm="3"
-							>
-								<p
-									v-if="$vuetify.breakpoint.smAndUp"
-									class="py-2 d-flex align-center cart-item-created-at"
-								>
-									<span><v-icon size="18">
-										history
-									</v-icon></span>
-									<span class="pl-2">{{ item.created_at }}</span>
-								</p>
-								<div class="item-sub-total py-2">
-									NRs {{ item.quantity * item.item.price }}
-								</div>
-							</v-col>
-						</v-row>
-					</v-card>
-				</transition-group>
-			</v-col>
-			<v-scale-transition
-				mode="out-in"
-			>
-				<v-col
-					v-if="cartItemsList.length > 0"
-					cols="12"
-					xl="4"
-					lg="4"
-					md="4"
-				>
-					<v-card id="cart-summary"
-						class="mx-auto"
-						max-width="960"
-					>
-						<v-toolbar class="px-4 light-orange-gradient"
-							dark
-						>
-							<v-app-bar-nav-icon>
-								<v-avatar color="#fd966d"
-									class="golden-rod-border-2"
-								>
-									<v-img
-										src="https://image.freepik.com/free-vector/beard-man-barber-shop-logo-vector-illustration_56473-434.jpg"
-									/>
-								</v-avatar>
-							</v-app-bar-nav-icon>
-							<v-toolbar-title class="font-weight-bold">
-								Cart Summary
-							</v-toolbar-title>
-							<v-spacer />
-							<v-btn fab
-								elevation="1"
-								color="transparent"
-								small @click="showSummary = !showSummary"
-							>
-								<v-fade-transition>
-									<v-icon
-										v-if="!showSummary"
-										color="grey lighten-4"
-									>
-										keyboard_arrow_down
-									</v-icon>
-									<v-icon
-										v-if="showSummary"
-										color="grey lighten-4"
-									>
-										keyboard_arrow_up
-									</v-icon>
-								</v-fade-transition>
-							</v-btn>
-						</v-toolbar>
-						<v-expand-transition mode="ease">
-							<v-list v-if="showSummary"
-								two-line
-							>
-								<v-list-item
-									v-for="(summaryItem, summaryIndex) of getCartSummary"
-									:key="summaryIndex"
-								>
-									<v-list-item-icon class="fill-height my-auto">
-										<v-icon>{{ summaryItem.icon }}</v-icon>
-									</v-list-item-icon>
-									<v-list-item-content>
-										<v-list-item-title class="summary-title">
-											{{ summaryItem.field }}
-										</v-list-item-title>
-									</v-list-item-content>
-									<v-list-item-action-text class="summary-item-value">
-										{{ summaryItem.value }}
-									</v-list-item-action-text>
-								</v-list-item>
-							</v-list>
-						</v-expand-transition>
-						<v-card-actions>
-							<v-btn class="light-orange-gradient-x"
-								block
-								large
+						<v-card-title class="d-flex justify-center align-center">
+							<v-icon>shopping_cart</v-icon><span class="ml-3">Your cart is empty!</span>
+						</v-card-title>
+						<v-card-subtitle class="text-center">
+							Add our fantastic menu items to your cart and start shopping.
+						</v-card-subtitle>
+						<v-divider />
+
+						<v-img
+							height="200"
+							contain
+							:src="require('@/assets/empty_cart.gif')"
+						/>
+						<v-card-actions class="d-flex justify-center">
+							<v-btn color="blue-gradient"
 								dark
-								:disabled="cartItemsList.length === 0"
-								@click="routeToOrderConfirmation()"
+								to="/store"
 							>
-								Proceed
+								<v-icon size="24">
+									store
+								</v-icon>
+								<span v-if="$vuetify.breakpoint.width > 165"
+									class="ml-2"
+								>Visit Store</span>
 							</v-btn>
 						</v-card-actions>
 					</v-card>
 				</v-col>
-			</v-scale-transition>
-		</v-row>
+				<v-col v-else
+					cols="12"
+					xl="8"
+					lg="8"
+					md="8"
+				>
+					<transition-group
+						appear
+						:css="false"
+						@before-enter="beforeEnter"
+						@enter="enter"
+					>
+						<v-card
+							v-for="(item, index) in cartItemsList"
+							:key="index + 1 * 17"
+							class="cart-item-card pa-0"
+							:class="
+								(index+1 === cartItemsList.length) ? '' : 'mb-4'
+							"
+						>
+							<v-row class="ma-0 pa-0"
+								align="center"
+							>
+								<!-- image column-->
+								<v-col cols="12"
+									xl="3"
+									lg="3"
+									md="3"
+									sm="3"
+								>
+									<v-img
+										:src="(item.item !== undefined) ? item.item.image : ''"
+										width="100%"
+										height="100%"
+										max-height="150"
+									/>
+								</v-col>
+								<v-col cols="12"
+									xl="3"
+									lg="3"
+									md="3"
+									sm="3"
+								>
+									<p>
+										{{ item.item.name }}
+										<span class="subtitle-2">
+											<v-avatar v-for="(typeOfItem, indic) in item.item.item_type"
+												:key="typeOfItem.id +55 *37"
+												tile
+												size="20"
+												:class="
+													(indic +1 === item.item.item_type.length) ? '' : 'pr-2'
+												"
+												class="slight-up"
+											>
+												<v-img
+													:src="typeOfItem.badge"
+												/>
+											</v-avatar>
+										</span>
+									</p>
+									<div class="d-flex mb-0 align-center">
+										<v-btn icon
+											color="error"
+											:x-small="$vuetify.breakpoint.width < 280"
+											@click="removeItemFromCart(item)"
+										>
+											<v-icon>delete</v-icon>
+										</v-btn>
+										<v-btn v-if="$vuetify.breakpoint.width > 205"
+											icon
+											disabled
+											:x-small="$vuetify.breakpoint.width < 280"
+										>
+											<v-icon class="pl-2">
+												favorite
+											</v-icon>
+										</v-btn>
+										<v-spacer />
+										<div v-if="$vuetify.breakpoint.xsOnly"
+											class="py-2 d-flex align-center mb-0"
+										>
+											<v-icon v-if="$vuetify.breakpoint.width > 255"
+												size="18"
+												class="today-icon"
+											>
+												today
+											</v-icon>
+											<span class="pl-2 cart-item-created-at">{{ item.created_at }}</span>
+										</div>
+									</div>
+								</v-col>
+								<v-col cols="7"
+									xl="4"
+									lg="4"
+									md="4"
+									sm="3"
+								>
+									<div class="d-flex align-center">
+										<v-btn
+											icon
+											color="error"
+											height="56"
+											class="rounded-0"
+											:disabled="item.quantity <= 1"
+											@click="subtractQuantity(item)"
+										>
+											<v-icon>remove</v-icon>
+										</v-btn>
+										<v-text-field v-model="item.quantity"
+											class="cart-item-quantity"
+											filled
+											type="number"
+											hide-details="auto"
+											persistent-hint
+											@change="quantityChanged(item)"
+										/>
+										<v-btn icon
+											height="56"
+											color="primary"
+											class="rounded-0"
+											@click="addQuantity(item)"
+										>
+											<v-icon>add</v-icon>
+										</v-btn>
+									</div>
+								</v-col>
+								<v-col cols="5"
+									xl="2"
+									lg="2"
+									md="2"
+									sm="3"
+								>
+									<p
+										v-if="$vuetify.breakpoint.smAndUp"
+										class="py-2 d-flex align-center cart-item-created-at"
+									>
+										<span><v-icon size="18">
+											history
+										</v-icon></span>
+										<span class="pl-2">{{ item.created_at }}</span>
+									</p>
+									<div class="item-sub-total py-2">
+										NRs {{ item.quantity * item.item.price }}
+									</div>
+								</v-col>
+							</v-row>
+						</v-card>
+					</transition-group>
+				</v-col>
+				<v-scale-transition
+					mode="out-in"
+				>
+					<v-col
+						v-if="cartItemsList.length > 0"
+						cols="12"
+						xl="4"
+						lg="4"
+						md="4"
+					>
+						<v-card id="cart-summary"
+							class="mx-auto"
+							max-width="960"
+						>
+							<v-toolbar class="px-4 light-orange-gradient"
+								dark
+							>
+								<v-app-bar-nav-icon>
+									<v-avatar color="#fd966d"
+										class="golden-rod-border-2"
+									>
+										<v-img
+											src="https://image.freepik.com/free-vector/beard-man-barber-shop-logo-vector-illustration_56473-434.jpg"
+										/>
+									</v-avatar>
+								</v-app-bar-nav-icon>
+								<v-toolbar-title class="font-weight-bold">
+									Cart Summary
+								</v-toolbar-title>
+								<v-spacer />
+								<v-btn fab
+									elevation="1"
+									color="transparent"
+									small @click="showSummary = !showSummary"
+								>
+									<v-fade-transition>
+										<v-icon
+											v-if="!showSummary"
+											color="grey lighten-4"
+										>
+											keyboard_arrow_down
+										</v-icon>
+										<v-icon
+											v-if="showSummary"
+											color="grey lighten-4"
+										>
+											keyboard_arrow_up
+										</v-icon>
+									</v-fade-transition>
+								</v-btn>
+							</v-toolbar>
+							<v-expand-transition mode="ease">
+								<v-list v-if="showSummary"
+									two-line
+								>
+									<v-list-item
+										v-for="(summaryItem, summaryIndex) of getCartSummary"
+										:key="summaryIndex"
+									>
+										<v-list-item-icon class="fill-height my-auto">
+											<v-icon>{{ summaryItem.icon }}</v-icon>
+										</v-list-item-icon>
+										<v-list-item-content>
+											<v-list-item-title class="summary-title">
+												{{ summaryItem.field }}
+											</v-list-item-title>
+										</v-list-item-content>
+										<v-list-item-action-text class="summary-item-value">
+											{{ summaryItem.value }}
+										</v-list-item-action-text>
+									</v-list-item>
+								</v-list>
+							</v-expand-transition>
+							<v-card-actions>
+								<v-btn class="light-orange-gradient-x"
+									block
+									large
+									dark
+									:disabled="cartItemsList.length === 0"
+									@click="routeToOrderConfirmation()"
+								>
+									Proceed
+								</v-btn>
+							</v-card-actions>
+						</v-card>
+					</v-col>
+				</v-scale-transition>
+			</v-row>
+		</v-card>
 	</v-card>
 </template>
 <script>
 import router from "@/router"
 import Velocity from "velocity-animate"
 import { mapGetters } from "vuex"
+import SimpleToolbar from "@/components/SimpleToolbar"
 
 export default {
 	name: "CartView",
+	components: { SimpleToolbar },
 	data() {
 		return {
 			isLoading: false,
