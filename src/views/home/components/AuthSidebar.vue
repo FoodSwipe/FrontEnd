@@ -5,9 +5,7 @@
 		overlay-color="black"
 		transition="scale-transition"
 	>
-		<v-card
-			class="pb-6 dialog-content-card"
-		>
+		<v-card class="pb-6">
 			<v-card-title dense
 				class="nav-toolbar"
 				flat
@@ -395,8 +393,6 @@ export default {
 }
 </script>
 <style lang="sass" scoped>
-.dialog-content-card
-	border-radius: 10px !important
 .login-terms
 	font-size: .65rem
 .login-to-proceed

@@ -1,9 +1,8 @@
 <template>
 	<v-card width="100vw"
-		flat
-		tile
 		color="transparent"
 		class="px-4"
+		flat
 	>
 		<v-carousel :show-arrows="false"
 			height="100"
@@ -26,8 +25,6 @@
 		</v-carousel>
 		<v-card
 			v-if="cookingOrderId"
-			flat
-			rounded
 			max-width="820"
 			class="mx-auto"
 		>
@@ -163,7 +160,6 @@
 		<v-card
 			v-else
 			color="#ffeebcdb"
-			rounded
 			max-width="820"
 			class="mx-auto"
 		>
@@ -320,10 +316,6 @@ export default {
 }
 </script>
 <style scoped>
-::v-deep.v-autocomplete:not(.v-input--is-focused).v-select--chips input {
-	max-height: 25px;
-	color: black;
-}
 .order-heading {
 	display: flex;
 	justify-content: center;
