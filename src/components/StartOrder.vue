@@ -63,9 +63,11 @@
 </template>
 <script>
 import { mapGetters } from "vuex"
+import Snack from "@/mixin/Snack"
 
 export default {
 	name: "StartOrderComponent",
+	mixins: [Snack],
 	data: () => ({
 		startOrder: false,
 		withItem: null,
@@ -83,34 +85,36 @@ export default {
 	created() {
 		this.$bus.on("start-order", this.startOrderDialog)
 		this.$bus.on("start-order-prefill", this.prefillStartOrderForm)
+		this.$bus.on("add-item-to-cart", this.addItemToCart)
 	},
 	beforeUnmount() {
-		this.$bus.off("start-order", this.startOrderDialog)
-		this.$bus.off("start-order-prefill", this.prefillStartOrderForm)
+		this.$bus.off("start-order")
+		this.$bus.off("start-order-prefill")
+		this.$bus.off("add-item-to-cart")
 	},
 	methods: {
 		async startOrderDialog(args) {
 			await this.$store.dispatch("order/clearFormErrors")
 			this.startOrder = true
-			this.withItem = args.withItem
+			if(args.withItem) this.withItem = args.withItem
 		},
 		prefillStartOrderForm(args) {
 			this.order = args.order
+			this.startOrderDialog(args)
 		},
-		async openSnack(text, color="error") {
-			await this.$store.dispatch("snack/setSnackState", true)
-			await this.$store.dispatch("snack/setSnackColor", color)
-			await this.$store.dispatch("snack/setSnackText", text)
+		async addItemToCart(args) {
+			if(args.withItem) this.withItem = args.withItem
+			await this.$store.dispatch("cart/addToCart", {
+				order: this.$helper.getCookingOrderId(),
+				item: this.withItem.id
+			})
+			await this.$store.dispatch("order/withCartItems", {id: this.$helper.getCookingOrderId()})
+			await this.openSnack(`Cheers! ${this.withItem.name} added to cart.`, "success")
 		},
 		async makeOrder() {
 			const started = await this.$store.dispatch("order/startOrder", this.order)
 			if (started === true) {
-				await this.$store.dispatch("cart/addToCart", {
-					order: this.$helper.getCookingOrderId(),
-					item: this.withItem.id
-				})
-				this.$bus.emit("add-cart-count-by-one")
-				await this.openSnack(`Cheers! ${this.withItem.name} added to cart.`, "success")
+				await this.addItemToCart({withItem: this.withItem})
 				this.startOrder = false
 			} else if (started === 500) {
 				await this.openSnack("Internal Server Error.")
@@ -121,7 +125,6 @@ export default {
 				await this.$store.dispatch("order/withCartItems", {
 					id: this.$helper.getCookingOrderId()
 				})
-				await this.$bus.emit("set-cart-count", this.pendingOrder.total_items)
 				this.startOrder = false
 			}
 		},
