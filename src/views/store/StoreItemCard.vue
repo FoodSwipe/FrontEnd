@@ -79,7 +79,7 @@
 						class="ma-0 pa-0"
 					>
 						<v-fade-transition>
-							<v-card-actions v-if="!isAddedInCart(item)"
+							<v-card-actions v-if="!cartItems[item.name]"
 								class="ma-0 pa-0 d-flex justify-center"
 							>
 								<v-tooltip bottom>
@@ -108,7 +108,6 @@
 	</v-card>
 </template>
 <script>
-import router from "@/router"
 import { mapGetters } from "vuex"
 import Snack from "@/mixin/Snack"
 
@@ -124,64 +123,50 @@ export default {
 	data: () => ({
 		rememberFirstItem: null,
 		loading: false,
-		selection: 1
+		selection: 1,
+		orderInProgress: null
 	}),
 	computed: {
 		...mapGetters({
 			pendingOrder: "order/detailOrder"
 		}),
+		cartItems() {
+			const items = {}
+			if (!this.pendingOrder) return items
+			this.pendingOrder["cart_items"].forEach(item => {
+				items[item.item.name] = item
+			})
+			return items
+		}
 	},
 	methods: {
-		isAddedInCart(item) {
-			if (item && this.pendingOrder) {
-				let found = false
-				this.pendingOrder.cart_items.forEach(cart_item => {
-					if (cart_item.item.name === item.name) found = true
-				})
-				return found
-			}
-			return false
-		},
 		routeToItemDetail(item) {
-			router.push(`product/${item.id}`)
+			this.$router.push(`product/${item.id}`)
 		},
 		async addItemToCart(item) {
-			if (this.$helper.isAuthenticated()) {
-				const currentUser = this.$helper.getCurrentUser()
-				this.$bus.emit("start-order-prefill", {
-					order: {
-						custom_location: currentUser.profile.address,
-						custom_contact: (currentUser.profile.contact)
-							? currentUser.profile.contact.replace(/\D/g, "")
-							: null
-					}
-				})
-			}
 			if (this.$helper.getCookingOrderId()) {
-				const addedToCart = await this.$store.dispatch("cart/addToCart", {
-					order: parseInt(this.$helper.getCookingOrderId()),
-					item: item.id
-				})
-				if (addedToCart === true) {
-					await this.openSnack(`Cheers! ${item.name} is added to cart.`, "success")
-					this.$bus.emit("add-cart-count-by-one")
-					await this.$store.dispatch("order/withCartItems", {
-						id: this.$helper.getCookingOrderId()
-					})
-					this.isAddedInCart(item)
-				} else {
-					if (addedToCart.non_field_errors !== undefined) {
-						if (Array.isArray(addedToCart.non_field_errors)) {
-							if (addedToCart.non_field_errors[0] === "The fields order, item must make a unique set.") {
-								await this.openSnack("Item already added to cart.")
-							}
-						}
-					}
-				}
-			} else {
-				this.$bus.emit("start-order", {
+				this.$bus.emit("add-item-to-cart", {
 					withItem: item
 				})
+			} else {
+				if (this.$helper.isAuthenticated()) {
+					const currentUser = this.$helper.getCurrentUser()
+					// set last order location ? TBD
+					this.$bus.emit("start-order-prefill", {
+						order: {
+							custom_location: currentUser.profile.address,
+							custom_contact: (currentUser.profile.contact)
+								? currentUser.profile.contact.replace(/\D/g, "")
+								: null
+						},
+						withItem: item
+					})
+				}
+				else {
+					this.$bus.emit("start-order", {
+						withItem: item
+					})
+				}
 			}
 		},
 	},

@@ -4,74 +4,79 @@
 		:loading="loading"
 		color="transparent"
 	>
-		<v-card v-if="itemTypes"
-			class="py-4 px-2 d-flex justify-start align-center flex-wrap mx-auto"
-			flat
-			max-width="1200"
-			color="#fcf8f2"
+		<v-card flat
+			tile color="#fcf8f2"
+			width="100vw"
 		>
-			<v-chip label
-				class="ma-1 py-5"
-				@click="clearFilterMode()"
+			<v-card v-if="itemTypes"
+				class="py-4 px-2 d-flex justify-start align-center flex-wrap mx-auto"
+				flat
+				max-width="1200"
+				color="transparent"
 			>
-				<v-icon>
-					{{ filterMode ? 'clear' : 'filter_list' }}
-				</v-icon>
-				<span class="pl-2 filter-text">
-					{{ filterMode ? 'CLEAR FILTER' : 'FILTER' }}
-				</span>
-			</v-chip>
-			<v-chip
-				v-for="item in itemTypes['results']"
-				:key="item.id"
-				class="ma-1 py-5"
-				label
-				color="grey lighten-3"
-				@click="filter({item_type: item.id})"
-			>
-				<v-avatar>
-					<v-img :src="item.badge" />
-				</v-avatar>
-				<span class="pl-2 font-weight-bold filter-text">
-					{{ item.name.toUpperCase() }}
-				</span>
-			</v-chip>
-			<v-spacer />
-			<v-chip label
-				class="ma-1"
-				@click="filter({is_veg: true})"
-			>
-				<v-avatar>
-					<v-img :src="require('@/assets/veglogo.png')"
-						contain
-					/>
-				</v-avatar>
-				<span class="pl-1 filter-text">VEG</span>
-			</v-chip>
-			<v-chip label
-				class="ma-1"
-				@click="filter({is_veg: false})"
-			>
-				<v-avatar>
-					<v-img :src="require('@/assets/nonveglogo.png')"
-						contain
-					/>
-				</v-avatar>
-				<span class="pl-1 filter-text">NON VEG</span>
-			</v-chip>
-			<v-chip label
-				class="ma-1"
-				@click="filter({is_bar_item: true})"
-			>
-				<v-avatar>
-					<v-img :src="require('@/assets/bar_item_png.png')"
-						contain
-					/>
-				</v-avatar>
-				<span class="pl-1 filter-text">BAR</span>
-			</v-chip>
+				<v-chip label
+					class="ma-1 py-5"
+					@click="clearFilterMode()"
+				>
+					<v-icon>
+						{{ filterMode ? 'clear' : 'filter_list' }}
+					</v-icon>
+					<span class="pl-2 filter-text">
+						{{ filterMode ? 'CLEAR FILTER' : 'FILTER' }}
+					</span>
+				</v-chip>
+				<v-chip
+					v-for="item in itemTypes['results']"
+					:key="item.id"
+					class="ma-1 py-5"
+					label
+					color="grey lighten-3"
+					@click="filter({item_type: item.id})"
+				>
+					<v-avatar>
+						<v-img :src="item.badge" />
+					</v-avatar>
+					<span class="pl-2 font-weight-bold filter-text">
+						{{ item.name.toUpperCase() }}
+					</span>
+				</v-chip>
+				<v-spacer />
+				<v-chip label
+					class="ma-1"
+					@click="filter({is_veg: true})"
+				>
+					<v-avatar>
+						<v-img :src="require('@/assets/veglogo.png')"
+							contain
+						/>
+					</v-avatar>
+					<span class="pl-1 filter-text">VEG</span>
+				</v-chip>
+				<v-chip label
+					class="ma-1"
+					@click="filter({is_veg: false})"
+				>
+					<v-avatar>
+						<v-img :src="require('@/assets/nonveglogo.png')"
+							contain
+						/>
+					</v-avatar>
+					<span class="pl-1 filter-text">NON VEG</span>
+				</v-chip>
+				<v-chip label
+					class="ma-1"
+					@click="filter({is_bar_item: true})"
+				>
+					<v-avatar>
+						<v-img :src="require('@/assets/bar_item_png.png')"
+							contain
+						/>
+					</v-avatar>
+					<span class="pl-1 filter-text">BAR</span>
+				</v-chip>
+			</v-card>
 		</v-card>
-		<v-divider />
+		<div style="height: 2px; background-color: darkorange" />
 		<v-card max-width="1200"
 			class="mx-auto" flat
 			color="transparent"
@@ -168,12 +173,15 @@ export default {
 	},
 	methods: {
 		async initialize() {
-			console.log(this.itemTypes)
-			console.log(this.storeItems)
 			this.loading = true
 			await this.$store.dispatch("menuItem/fetchAll")
 			await this.$store.dispatch("menuItemGroup/fetchAll")
 			await this.$store.dispatch("itemType/fetchAllItemTypes")
+			if(this.$helper.getCookingOrderId()) {
+				await this.$store.dispatch("order/withCartItems", {
+					id: this.$helper.getCookingOrderId()
+				})
+			}
 			this.loading = false
 		},
 		search(e) {
@@ -195,29 +203,6 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.panel-header {
-	transition: all .3s;
-	background-color: aliceblue;
-	font-family: "Open Sans Condensed", sans-serif;
-	font-weight: 500;
-	font-size: 1.6rem;
-	line-height: 1.6rem;
-	color: #3c3c3c;
-	@media only screen and (max-width: 1200px) {
-		font-size: 1.2rem;
-		line-height: 1.2rem;
-	}
-	@media only screen and (max-width: 300px) {
-		font-size: 1rem;
-		line-height: 1rem;
-	}
-	:hover > & {
-		background-color: #fffaf0;
-	}
-}
-::v-deep.v-expansion-panel-content > div {
-	padding: 0 6px 4px;
-}
 .filter-text {
 	font-size: 12px !important;
 }
