@@ -36,7 +36,9 @@ Vue.component("SelectField", () =>
 Vue.component("TextareaField", () =>
 	import("@/components/FormFields/TextareaField")
 );
-
+Vue.component("FileField", () =>
+	import("@/components/FormFields/FileField")
+);
 Vue.component("ScrollTop", () =>
 	import("@/components/ScrollTop")
 );

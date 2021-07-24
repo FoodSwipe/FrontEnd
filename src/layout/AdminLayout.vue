@@ -1,5 +1,6 @@
 <template>
 	<div>
+		<scroll-top />
 		<v-app-bar
 			app
 			dark
@@ -35,26 +36,7 @@
 				<span>Home</span>
 			</v-tooltip>
 		</v-app-bar>
-		<v-snackbar
-			v-model="snack"
-			app
-			top
-			right
-			:color="snackColor"
-			class="admin-snackbar"
-		>
-			{{ snackText }}
-
-			<template #action="{ attrs }">
-				<v-btn
-					v-bind="attrs"
-					text
-					@click="snack = false"
-				>
-					Close
-				</v-btn>
-			</template>
-		</v-snackbar>
+		<the-snack-bar />
 		<v-navigation-drawer
 			v-model="drawer"
 			app
@@ -155,10 +137,12 @@
 <script>
 import router from "@/router"
 import { mapGetters } from "vuex"
+import TheSnackBar from "@/components/TheSnackBar"
 
 export default {
 	name: "AdminLayout",
 	components: {
+		TheSnackBar,
 		AdminFooter: () => import("@/views/admin/components/Footer")
 	},
 	data: () => ({
@@ -193,20 +177,6 @@ export default {
 			},
 		],
 	}),
-	computed: {
-		...mapGetters({
-			snackText: "snack/snackText",
-			snackColor: "snack/snackColor"
-		}),
-		snack: {
-			get() {
-				return this.$store.state.snack.snack
-			},
-			set(v) {
-				this.$store.dispatch("snack/setSnackState", v)
-			}
-		}
-	},
 	methods: {
 		routeToHomePage() {
 			router.push({name: "Food Swipe"})

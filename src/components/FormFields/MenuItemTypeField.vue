@@ -9,6 +9,7 @@
 			:loading="itemTypeLoading"
 			outlined
 			clearable
+			multiple
 			item-text="name"
 			item-value="id"
 			label="SELECT ITEM TYPE GROUP"

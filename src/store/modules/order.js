@@ -1,6 +1,6 @@
 import $api from "@/handler/axios"
 import urls from "@/urls.json"
-import { setCookingOrderOnLocalStorage } from "@/Helper"
+import { removeCookingOrderIdFromLocalStorage, setCookingOrderOnLocalStorage } from "@/Helper"
 
 const util = require("util")
 const orderUrls = urls.order
@@ -98,8 +98,16 @@ const actions = {
 		commit("SET_ORDERS", res)
 	},
 	async withCartItems({commit}, payload) {
-		const res = await $api.get(util.format(orderUrls.withCartItems, payload.id))
-		commit("SET_ORDER", res)
+		try {
+			const res = await $api.get(util.format(orderUrls.withCartItems, payload.id))
+			commit("SET_ORDER", res)
+			return true
+		} catch (e) {
+			if (e.response.status === 404) {
+				removeCookingOrderIdFromLocalStorage()
+			}
+			return false
+		}
 	},
 	async fetchAll({ commit }) {
 		const res = await $api.get(orderUrls.list)

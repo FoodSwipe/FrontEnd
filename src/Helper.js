@@ -9,28 +9,6 @@ const keysToIgnore = [
 ]
 
 module.exports = {
-	cookEditData(targetData, to_strip_fields_array) {
-		to_strip_fields_array.forEach((field) => {
-			const datum = targetData[field]
-			delete targetData[field]
-			if (Array.isArray(datum)) {
-				targetData[field] = []
-				datum.forEach((data) => {
-					targetData[field].push(data.id)
-				})
-			} else targetData[field] = datum.id
-		})
-		if (targetData.bar_size === null) targetData.bar_size = ""
-		if (targetData.is_veg === null) targetData.is_veg = false
-		if (targetData.is_bar_item === null) targetData.is_bar_item = false
-		return targetData
-	},
-	/**
-	 * Return form data for provided raw object
-	 * @param {Object} data raw data to be parsed
-	 *
-	 * @return {FormData}
-	 */
 	getFormData(data) {
 		let formData = new FormData()
 		for (const [key, value] of Object.entries(data)) {
@@ -39,7 +17,7 @@ module.exports = {
 					for (let i = 0; i < value.length; i++) {
 						formData.append(`${key}`, value[i]);
 					}
-				} else {
+				} else if(value) {
 					formData.append(key, value)
 				}
 			}
