@@ -18,6 +18,24 @@ Vue.use(vueScrollBehavior, { router: router })
 Vue.component("ShapeDivider", () =>
 	import("@/components/ShapeDivider")
 );
+Vue.component("TextField", () =>
+	import("@/components/FormFields/TextField")
+);
+Vue.component("AdminCheckbox", () =>
+	import("@/components/FormFields/AdminCheckboxField")
+);
+Vue.component("MenuItemGroupField", () =>
+	import("@/components/FormFields/MenuItemGroupField")
+);
+Vue.component("MenuItemTypeField", () =>
+	import("@/components/FormFields/MenuItemTypeField")
+);
+Vue.component("SelectField", () =>
+	import("@/components/FormFields/SelectField")
+);
+Vue.component("TextareaField", () =>
+	import("@/components/FormFields/TextareaField")
+);
 
 Vue.config.productionTip = false
 Vue.prototype.$api = api
