@@ -21,7 +21,7 @@
 			:loading="isLoading"
 			dark
 			:headers="headers"
-			:items="menuItemGroups"
+			:items="menuItemGroups.results"
 			:search="searchMenuItemGroup"
 			class="elevation-1"
 		>
@@ -56,9 +56,7 @@
 						dark
 						@click="openCreateDialog()"
 					>
-						<v-icon>add_circle</v-icon><span v-if="$vuetify.breakpoint.width > 600"
-							class="pl-2"
-						>New Menu Item Group</span>
+						<v-icon>add_circle</v-icon>
 					</v-btn>
 					<v-dialog
 						v-model="dialog"

@@ -49,7 +49,7 @@
 								v-model="selectedItems"
 								:disabled="isUpdating"
 								:items="orderNowRefinedList"
-								filled
+								outlined
 								chips
 								deletable-chips
 								color="orange lighten-1"
@@ -107,12 +107,12 @@
 							<v-combobox
 								id="contact"
 								v-model="order.custom_contact"
-								dense
+
 								class="user-contact"
 								:items="userProfileList"
 								:loading="isLoadingAutocomplete"
 								color="orange"
-								filled
+								outlined
 								item-text="contact"
 								item-value="contact"
 								label="Contact"
@@ -144,10 +144,10 @@
 							<v-text-field
 								id="custom-location"
 								v-model="order.custom_location"
-								dense
+
 								label="Location (*)"
 								color="purple lighten-3"
-								filled
+								outlined
 								clearable
 								prepend-inner-icon="title"
 								hide-details="auto"
@@ -158,9 +158,9 @@
 							<v-text-field
 								id="custom-email"
 								v-model="order.custom_email"
-								dense
+
 								label="Email address"
-								filled
+								outlined
 								clearable
 								prepend-inner-icon="email"
 								hide-details="auto"
@@ -176,9 +176,9 @@
 							<v-text-field
 								id="loyalty-discount"
 								v-model="order.loyalty_discount"
-								dense
+
 								label="Loyalty Discount"
-								filled
+								outlined
 								clearable
 								prepend-inner-icon="redeem"
 								hide-details="auto"
@@ -190,9 +190,9 @@
 								id="delivery-charge"
 								v-model="order.delivery_charge"
 								type="number"
-								dense
+
 								label="Delivery Charge"
-								filled
+								outlined
 								clearable
 								prepend-inner-icon="local_shipping"
 								hide-details="auto"
@@ -219,7 +219,7 @@
 						>
 							<v-text-field v-model="order.payment_type"
 								hide-details="auto" label="Payment Type"
-								filled dense
+								outlined
 								readonly clearable
 								:error-messages="orderFormErrors.payment_type"
 							/>
@@ -311,11 +311,6 @@ export default {
 		closeDialog() {
 			this.dialog = false
 		},
-		async openSnack(text, color="error") {
-			await this.$store.dispatch("snack/setSnackState", true)
-			await this.$store.dispatch("snack/setSnackColor", color)
-			await this.$store.dispatch("snack/setSnackText", text)
-		},
 		async saveOrder() {
 			let addedToCart = false
 			if(typeof this.order.custom_contact == "string") {
@@ -392,13 +387,13 @@ th[role='columnheader'] span {
 }
 .checkbox-input-column {
 	::v-deep.v-input--checkbox {
-		background-color: rgb(255 255 255 / 8%);
+		background-color: #1e1e1e;
 		margin-top: 0;
-		padding: 13px 12px;
-		border-bottom: 1px solid rgb(156 155 150) !important;
-		border-radius: 3px 3px 0 0;
+		padding: 15px 14px;
+		border: 1px solid #545454 !important;
+		border-radius: 4px;
 		&:hover {
-			background-color: #484848;
+			border: 1.2px solid white !important;
 		}
 	}
 }

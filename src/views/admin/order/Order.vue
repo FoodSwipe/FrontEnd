@@ -17,7 +17,9 @@
 				</template>
 			</v-breadcrumbs>
 		</v-row>
-		<v-card dark
+		<v-card
+			v-if="orders"
+			dark
 			:loading="isLoading"
 		>
 			<v-toolbar height="auto">
@@ -82,7 +84,7 @@
 											<v-scale-transition>
 												<span v-if="$vuetify.breakpoint.smAndUp"
 													class="pl-3"
-												>New Order</span>
+												>Order</span>
 											</v-scale-transition>
 										</v-btn>
 									</template>

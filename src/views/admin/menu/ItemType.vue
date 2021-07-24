@@ -22,7 +22,7 @@
 			dark
 			:search="searchItemTypes"
 			:headers="headers"
-			:items="itemTypes"
+			:items="itemTypes.results"
 		>
 			<template #top>
 				<v-toolbar>
@@ -61,9 +61,7 @@
 								v-bind="attrs"
 								v-on="on"
 							>
-								<v-icon>add_circle</v-icon><span v-if="$vuetify.breakpoint.width > 600"
-									class="pl-2"
-								>New Item Type</span>
+								<v-icon>add_circle</v-icon>
 							</v-btn>
 						</template>
 						<v-card class="dark-slate-border-2">
@@ -282,7 +280,7 @@ export default {
 			})
 			if (patched === true) {
 				await this.openSnack("Item type image updated successfully.", "success")
-				this.initialize()
+				await this.initialize()
 			} else if (patched === 500) {
 				await this.openSnack("Internal Server Error.")
 			} else {

@@ -131,24 +131,15 @@
 					>
 						Menu Item Information
 					</v-col>
-					<v-col cols="12"
-						xl="6"
-						lg="6"
-						md="6"
-						sm="6"
-					>
-						<v-text-field
-							id="name"
-							v-model="editedItem.name"
-							dense
-							label="Name (*)"
-							filled
-							clearable
-							prepend-inner-icon="title"
-							hide-details="auto"
-							:error-messages="menuItemFormErrors.name"
-						/>
-					</v-col>
+					<text-field v-model="editedItem.name"
+						icon="title"
+						label="name (*)"
+						name="name"
+						split
+						:errors="menuItemFormErrors"
+						@change="patch({name: editedItem.name})"
+					/>
+
 					<v-col cols="12"
 						xl="6"
 						lg="6"
@@ -157,105 +148,56 @@
 						class="checkbox-input-column"
 					>
 						<v-checkbox
-							id="is-veg"
 							v-model="editedItem.is_veg"
-							dense
+							class="checkbox-field"
 							label="Vegetarian ?"
-							hide-details="auto"
-							:error-messages="menuItemFormErrors.is_veg"
+							hide-details
+							:error-messages="menuItemFormErrors['is_veg']"
+							@change="patch({is_veg: editedItem.is_veg})"
 						/>
 					</v-col>
-					<v-col cols="12">
-						<v-autocomplete
-							id="item-group"
-							v-model="editedItem.menu_item_group"
-							dense
-							:items="menuItemGroups"
-							item-text="name"
-							item-value="id"
-							filled
-							clearable
-							attach=""
-							label="Item Group (*)"
-							hide-details="auto"
-							prepend-inner-icon="bubble_chart"
-							:value="editedItem.menu_item_group"
-							return-object
-							:error-messages="menuItemFormErrors.menu_item_group"
-						>
-							<template #no-data>
-								<v-list-item>
-									<v-list-item-title>
-										No <code>Menu Item Group</code> found.
-									</v-list-item-title>
-								</v-list-item>
-							</template>
-						</v-autocomplete>
-					</v-col>
-					<v-col cols="6">
-						<v-text-field
-							id="item-weight"
-							v-model="editedItem.weight"
-							dense
-							filled
-							clearable
-							type="number"
-							label="Weight (g)"
-							hide-details="auto"
-							prepend-inner-icon="save_alt"
-							hint="in grams for regular item and ml for bar item"
-							:error-messages="menuItemFormErrors.weight"
-						/>
-					</v-col>
-					<v-col cols="6">
-						<v-text-field
-							id="item-calorie"
-							v-model="editedItem.calorie"
-							dense
-							filled
-							clearable
-							type="number"
-							label="Calorie (kCal)"
-							hide-details="auto"
-							prepend-inner-icon="flash_on"
-							:error-messages="menuItemFormErrors.calorie"
-						/>
-					</v-col>
-					<v-col cols="12">
-						<v-autocomplete id="item-type"
-							v-model="editedItem.item_type"
-							dense
-							:items="itemTypes"
-							item-text="name"
-							item-value="id"
-							filled
-							small-chips
-							deletable-chips
-							multiple
-							attach=""
-							clearable
-							label="Item type"
-							hide-details="auto"
-							prepend-inner-icon="group_work"
-							return-object
-							:error-messages="menuItemFormErrors.item_type"
-						/>
-					</v-col>
-					<v-col cols="12">
-						<v-text-field
-							id="item-ingredients"
-							v-model="editedItem.ingredients"
-							dense
-							hint="Comma separated values will be very useful for item presentation"
-							label="Ingredients"
-							filled
-							clearable
-							prepend-inner-icon="casino"
-							hide-details="auto"
-							:error-messages="menuItemFormErrors.ingredients"
-						/>
-					</v-col>
-					<v-col cols="6"
+
+					<menu-item-group-field v-model="editedItem.menu_item_group"
+						:errors="menuItemFormErrors"
+						@change="patch({menu_item_group: editedItem.menu_item_group})"
+					/>
+					<text-field
+						v-model="editedItem.weight"
+						type="number"
+						label="Weight (g)"
+						icon="save_alt"
+						name="weight"
+						split
+						hint="in grams for regular item and ml for bar item"
+						:errors="menuItemFormErrors"
+						@change="patch({weight: editedItem.weight})"
+					/>
+					<text-field
+						id="item-calorie"
+						v-model="editedItem.calorie"
+						split
+						type="number"
+						label="Calorie (kCal)"
+						icon="flash_on"
+						name="calorie"
+						:error-messages="menuItemFormErrors"
+						@change="patch({calorie: editedItem.calorie})"
+					/>
+					<menu-item-type-field v-model="editedItem.item_type"
+						:errors="menuItemFormErrors"
+						@change="patch({item_type: editedItem.item_type})"
+					/>
+					<text-field
+						id="item-ingredients"
+						v-model="editedItem.ingredients"
+						hint="Comma separated values will be very useful for item presentation"
+						label="Ingredients"
+						icon="casino"
+						name="ingredients"
+						:errors="menuItemFormErrors"
+						@change="patch({ingredients: editedItem.ingredients})"
+					/>
+					<v-col cols="12"
 						xl="6"
 						lg="6"
 						md="6"
@@ -263,93 +205,65 @@
 						class="checkbox-input-column"
 					>
 						<v-checkbox
-							id="is-bar-item"
 							v-model="editedItem.is_bar_item"
-							dense
-							label="Is Bar Item?"
-							append-icon="local_bar"
-							hide-details="auto"
-							:error-messages="menuItemFormErrors.is_bar_item"
+							class="checkbox-field"
+							label="BAR ITEM ?"
+							hide-details
+							:error-messages="menuItemFormErrors['is_bar_item']"
+							@change="patch({is_veg: editedItem.is_bar_item})"
 						/>
 					</v-col>
 					<v-scale-transition>
-						<v-col v-if="editedItem.is_bar_item"
-							cols="6"
-							xl="6"
-							lg="6"
-							md="6"
-							sm="6"
-						>
-							<v-select
-								id="bar-weight"
-								v-model="editedItem.bar_size"
-								dense
-								dark
-								:items="BAR_SIZE_ARRAY"
-								label="Bar item size"
-								hide-details="auto"
-								clearable
-								filled
-								attach=""
-								prepend-inner-icon="format_color_fill"
-								:error-messages="menuItemFormErrors.bar_size"
-							/>
-						</v-col>
+						<select-field
+							v-if="editedItem.is_bar_item"
+							id="bar-weight"
+							v-model="editedItem.bar_size"
+							split
+							:options="BAR_SIZE_ARRAY"
+							label="Bar item size"
+							name="bar_size"
+							icon="format_color_fill"
+							:error-messages="menuItemFormErrors"
+							@change="patch({bar_size: editedItem.bar_size})"
+						/>
 					</v-scale-transition>
 					<v-col cols="12"
 						class="form-group-heading"
 					>
 						Business Information
 					</v-col>
-					<v-col cols="12"
-						xl="6"
-						lg="6"
-						md="6"
-						sm="6"
-					>
-						<v-text-field
-							id="price"
-							v-model="editedItem.price"
-							dense
-							label="Price (NRs) (*)"
-							filled
-							type="number"
-							clearable
-							prepend-inner-icon="money"
-							hide-details="auto"
-							:error-messages="menuItemFormErrors.price"
-						/>
-					</v-col>
-					<v-col cols="12"
-						xl="6"
-						lg="6"
-						md="6"
-						sm="6"
-					>
-						<v-text-field
-							id="scale"
-							v-model="editedItem.scale"
-							dense
-							label="Scale"
-							hint="How much (quantity(pcs) / weight(ml)) at this price?"
-							filled
-							type="number"
-							clearable
-							prepend-inner-icon="network_check"
-							hide-details="auto"
-							:error-messages="menuItemFormErrors.scale"
-						/>
-					</v-col>
+					<text-field
+						v-model="editedItem.price"
+						label="Price (NRs) (*)"
+						type="number"
+						icon="money"
+						name="price"
+						:errors="menuItemFormErrors"
+						split
+						@change="patch({price: editedItem.price})"
+					/>
+					<text-field
+						id="scale"
+						v-model="editedItem.scale"
+						split
+						label="Scale"
+						hint="How much (quantity(pcs) / weight(ml)) at this price?"
+						type="number"
+						icon="network_check"
+						name="scale"
+						:errors="menuItemFormErrors"
+						@change="patch({scale: editedItem.scale})"
+					/>
 					<v-col cols="12"
 						class="checkbox-input-column"
 					>
 						<v-checkbox
-							id="is-available"
 							v-model="editedItem.is_available"
-							dense
-							label="Is available?"
-							hide-details="auto"
-							:error-messages="menuItemFormErrors.is_available"
+							class="checkbox-field"
+							label="IS AVAILABLE ?"
+							hide-details
+							:error-messages="menuItemFormErrors['is_available']"
+							@change="patch({is_veg: editedItem.is_available})"
 						/>
 					</v-col>
 					<v-col cols="12"
@@ -357,36 +271,31 @@
 					>
 						More Information
 					</v-col>
-					<v-col cols="12">
-						<v-textarea
-							id="description"
-							v-model="editedItem.description"
-							dense
-							label="Description"
-							filled
-							clearable
-							hint="Add features, specialities or uniqueness about the item."
-							prepend-inner-icon="message"
-							hide-details="auto"
-							:error-messages="menuItemFormErrors.description"
-						/>
-					</v-col>
+					<textarea-field
+						id="description"
+						v-model="editedItem.description"
+						hint="Add features, specialities or uniqueness about the item."
+						icon="message"
+						counter="512"
+						:errors="menuItemFormErrors"
+						name="description"
+						label="Description"
+						@change="patch({description: editedItem.description})"
+					/>
 					<v-col cols="12">
 						<v-file-input
-							id="item-image"
 							v-model="imageForUpload"
-							dense
-							filled
+							outlined
 							small-chips
 							show-size
 							accept="image/*"
-							label="Add Image (*)"
+							label="IMAGE (*)"
 							clearable
-							multiple
 							prepend-icon=""
 							prepend-inner-icon="camera"
 							hide-details="auto"
-							:error-messages="menuItemFormErrors.image"
+							:error-messages="menuItemFormErrors['image']"
+							@change="patch({image: imageForUpload})"
 						/>
 					</v-col>
 					<v-col cols="12">
@@ -410,6 +319,7 @@
 								save as new
 							</v-btn>
 							<v-btn
+								v-else
 								color="green lighten-5"
 								class="green--text"
 								depressed
@@ -426,14 +336,21 @@
 </template>
 <script>
 import { mapGetters } from "vuex"
-import { cookEditData, getFormData } from "@/Helper"
+import { getFormData } from "@/Helper"
+import Snack from "@/mixin/Snack"
+import MenuItemGroupField from "@/components/FormFields/MenuItemGroupField"
+import MenuItemTypeField from "@/components/FormFields/MenuItemTypeField"
+import TextField from "@/components/FormFields/TextField"
 
 export default {
 	name: "MenuItemFormDialog",
+	components: { TextField, MenuItemTypeField, MenuItemGroupField },
+	mixins: [Snack],
+	emits: ["reload"],
 	data: () => ({
 		dialog: false,
 		editedIndex: -1,
-		imageForUpload: [],
+		imageForUpload: null,
 		editedItem: {
 			id: null,
 			name: "",
@@ -473,8 +390,6 @@ export default {
 	computed: {
 		...mapGetters({
 			menuItemFormErrors: "menuItem/menuItemFormErrors",
-			menuItemGroups: "menuItemGroup/allMenuItemGroups",
-			itemTypes: "itemType/allItemTypes",
 		}),
 		formTitle() {
 			return this.editedIndex === -1 ? "New menu item" : "Edit menu item"
@@ -496,8 +411,6 @@ export default {
 	async created() {
 		this.$bus.on("open-menu-item-form-dialog-add-item", this.openDialog)
 		this.$bus.on("open-menu-item-form-dialog-edit-item", this.openEditDialog)
-		await this.$store.dispatch("itemType/fetchAllItemTypes")
-		await this.$store.dispatch("menuItemGroup/fetchAll")
 	},
 	beforeUnmount() {
 		this.$bus.off("open-menu-item-form-dialog-add-item")
@@ -505,12 +418,13 @@ export default {
 	},
 	methods: {
 		openDialog() {
-			this.dialog = true
 			this.$store.dispatch("menuItem/clearFormErrors")
-			this.imageForUpload = []
+			this.imageForUpload = null
+			this.editedItem.is_available = true
+			this.dialog = true
 		},
 
-		openEditDialog(args) {
+		async openEditDialog(args) {
 			this.editedIndex = args.editedIndex
 			this.editedItem = args.editedItem
 			this.openDialog()
@@ -533,63 +447,39 @@ export default {
 					menu_item_group: null,
 					item_type: [],
 					image: null,
-					imageForUpload: [],
+					imageForUpload: null,
 				}
 				this.editedIndex = -1
 			})
 			this.dialog = false
 		},
-		async openSnack(text, color="error") {
-			await this.$store.dispatch("snack/setSnackState", true)
-			await this.$store.dispatch("snack/setSnackColor", color)
-			await this.$store.dispatch("snack/setSnackText", text)
-		},
-		cookMenuItemEditData() {
-			let rawData = cookEditData(this.editedItem, ["item_type", "menu_item_group"])
-			if (this.imageForUpload.length > 0) {
-				rawData = {
-					...rawData,
-					image: this.imageForUpload[0]
-				}
-			} else {
-				delete rawData["image"]
-			}
-			if (rawData.bar_size === null) delete rawData["bar_size"]
-			return rawData
-		},
 		async saveAsNew() {
 			await this.createMenuItem()
 		},
-		async updateMenuItem() {
-			const rawData = this.cookMenuItemEditData()
-			const payload = getFormData(rawData)
-			const updated = await this.$store.dispatch(
-				"menuItem/update",
-				{
+		async patch(payload) {
+			if (this.editedIndex !== -1) {
+				const patched = await this.$store.dispatch("menuItem/patch", {
 					id: this.editedItem.id,
 					body: payload
+				})
+				console.log(patched)
+				if (patched === true) {
+					await this.openSnack("Menu item updated successfully.", "success")
+					this.$emit("reload")
+				} else if (patched === false) {
+					await this.openSnack("Internal server error. Please try again.")
 				}
-			)
-			if (updated === true) {
-				await this.openSnack("Menu item updated successfully.", "success")
-				this.$bus.emit("reload-menu-items")
-				this.close()
-			} else if (updated === 500) {
-				await this.openSnack("Internal Server Error.")
-			} else {
-				await this.openSnack("Please load a valid form.")
 			}
 		},
 		async createMenuItem() {
-			const rawData = cookEditData(this.editedItem, ["item_type", "menu_item_group"])
 			const payload = getFormData({
-				...rawData,
-				image: this.imageForUpload[0]
+				...this.editedItem,
+				image: this.imageForUpload
 			})
 			const created = await this.$store.dispatch("menuItem/create", payload)
 			if (created === true) {
 				await this.openSnack("Menu item added successfully.", "success")
-				this.$bus.emit("reload-menu-items")
+				this.$emit("reload")
 				this.close()
 			} else if (created === 500) {
 				await this.openSnack("Internal Server Error.")
@@ -598,9 +488,7 @@ export default {
 			}
 		},
 		async save() {
-			if (this.editedIndex > -1) {
-				await this.updateMenuItem()
-			} else {
+			if (this.editedIndex === -1) {
 				await this.createMenuItem()
 			}
 		},
@@ -627,18 +515,15 @@ export default {
 }
 .checkbox-input-column {
 	::v-deep.v-input--checkbox {
-		background-color: rgb(255 255 255 / 8%);
+		background-color: #1e1e1e;
 		margin-top: 0;
-		padding: 13px 12px;
-		border-bottom: 1px solid rgb(156 155 150) !important;
-		border-radius: 3px 3px 0 0;
+		padding: 15px 14px;
+		border: 1px solid #545454 !important;
+		border-radius: 4px;
 		&:hover {
-			background-color: #484848;
+			border: 1.2px solid white !important;
 		}
 	}
-}
-::v-deep.v-autocomplete:not(.v-input--is-focused).v-select--chips input {
-	max-height: 25px;
 }
 th[role='columnheader'] span {
 	font-weight: bold !important;

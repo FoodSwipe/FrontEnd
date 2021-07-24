@@ -1,5 +1,6 @@
 <template>
 	<div>
+		z
 		<v-row class="ma-0 pa-0">
 			<v-breadcrumbs v-if="!isLoading"
 				dark
@@ -56,15 +57,11 @@
 						color="primary"
 						@click="openAddMenuItemFormDialog"
 					>
-						<v-icon
-							dark
-							:class="$vuetify.breakpoint.smAndUp ? 'mr-2' : ''"
-						>
+						<v-icon dark>
 							add_circle
 						</v-icon>
-						<span v-if="$vuetify.breakpoint.smAndUp">New Menu Item</span>
 					</v-btn>
-					<menu-item-form-dialog />
+					<menu-item-form-dialog @reload="initialize" />
 				</v-toolbar>
 			</template>
 			<!-- eslint-disable-next-line vue/valid-v-slot-->
@@ -118,7 +115,7 @@
 				/>
 			</template>
 			<!-- eslint-disable-next-line vue/valid-v-slot-->
-			<template #item#.is_bar_item="{ item }">
+			<template #item.is_bar_item="{ item }">
 				<v-checkbox v-model="item.is_bar_item"
 					color="orange"
 					@change="updateIsBarItem(item)"
@@ -210,12 +207,7 @@ export default {
 	},
 
 	created() {
-		this.$bus.on("reload-menu-items", this.initialize)
 		this.initialize()
-	},
-
-	beforeUnmount() {
-		this.$bus.off("reload-menu-items", this.initialize)
 	},
 
 	methods: {
@@ -332,7 +324,13 @@ export default {
 		openAddMenuItemFormDialog() {
 			this.$bus.emit("open-menu-item-form-dialog-add-item")
 		},
-		openEditMenuItemFormDialog(item) {
+		async openEditMenuItemFormDialog(item) {
+			if (item.menu_item_group) {
+				await this.$store.dispatch("menuItemGroup/fetchAll", { search: item.menu_item_group.name })
+			}
+			if (item.item_type) {
+				await this.$store.dispatch("itemType/fetchAllItemTypes", {search: item.item_type.name})
+			}
 			this.$bus.emit("open-menu-item-form-dialog-edit-item", {
 				editedIndex: this.menuItems.indexOf(item),
 				editedItem: Object.assign({}, item),
