@@ -1,18 +1,15 @@
 <template>
 	<v-snackbar
 		v-model="snack"
-		top
-		right
 		:timeout="3000"
-		:color="snackColor"
 		class="food-swipe-snack"
 	>
 		{{ snackText }}
-
 		<template #action="{ attrs }">
 			<v-btn
-				v-bind="attrs"
 				text
+				:color="snackColor"
+				v-bind="attrs"
 				@click="snack = false"
 			>
 				Close
