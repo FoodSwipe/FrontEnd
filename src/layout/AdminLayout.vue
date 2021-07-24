@@ -133,7 +133,11 @@
 					:to="item.to"
 					link
 				>
-					<v-list-item-icon><v-icon>{{ item.icon }}</v-icon></v-list-item-icon>
+					<v-list-item-icon style="max-width: 20px;">
+						<v-icon size="20">
+							{{ item.icon }}
+						</v-icon>
+					</v-list-item-icon>
 					<v-list-item-content>
 						<v-list-item-title>{{ item.title }}</v-list-item-title>
 					</v-list-item-content>
@@ -161,7 +165,7 @@ export default {
 		drawer: true,
 		drawerItems: [
 			{ title: "Home", icon: "home", to: "/admin/home" },
-			{ title: "Orders", icon: "view_list", to: "/admin/order" },
+			{ title: "Orders", icon: "receipt_long", to: "/admin/order" },
 			{ title: "KOT", icon: "view_list", to: "/admin/kot" },
 			{ title: "Users", icon: "group", to: "/admin/user" },
 			{ title: "Menu Items", icon: "local_bar", to: "/admin/menu-item" },
