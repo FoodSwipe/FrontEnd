@@ -296,6 +296,7 @@ import Snack from "@/mixin/Snack"
 export default {
 	name: "AuthSideBar",
 	mixins: [Snack],
+	emits: ["reload"],
 	data: () => ({
 		agree: false,
 		drawer: false,
@@ -350,14 +351,13 @@ export default {
 				await this.openSnack("Logged in successfully.")
 				this.$bus.emit("set-cart-count", 0)
 				this.$bus.emit("refresh-order-now")
-				this.$bus.emit("refresh-profile")
+				this.$emit("reload")
 				this.drawer = false
 			} else if(loggedIn === "serverError") {
 				await this.openSnack("Internal Server Error.", "error")
 			} else if(loggedIn === "formError") {
 				await this.openSnack(this.loginFieldErrors.detail, "error")
 			} else if (loggedIn.message) {
-				console.log(loggedIn)
 				await this.openSnack(loggedIn.message, "error")
 			} else if (typeof loggedIn === "number") {
 				// logged in with a pending order
@@ -365,7 +365,7 @@ export default {
 				this.$bus.emit("set-cart-count", loggedIn)
 				this.$bus.emit("refresh-cart")
 				this.$bus.emit("refresh-order-now")
-				this.$bus.emit("refresh-profile")
+				this.$emit("reload")
 				this.drawer = false
 			}
 		},

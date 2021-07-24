@@ -25,78 +25,7 @@
 			</v-carousel-item>
 		</v-carousel>
 		<v-card
-			v-if="!isDisabled"
-			color="#ffeebcdb"
-			rounded
-			max-width="820"
-			class="mx-auto"
-		>
-			<v-row class="ma-0 pa-0"
-				justify="center"
-				align="center"
-			>
-				<v-col cols="12"
-					class="pa-2"
-					xl="6"
-					lg="6"
-					md="6"
-					sm="6"
-				>
-					<v-text-field
-						v-model="order.custom_location"
-						light
-						background-color="rgb(255 238 188 / 50%)"
-						color="#f36d00"
-						clearable
-						filled
-						prepend-inner-icon="explore"
-						label="Your location here... (*)"
-						hint="Try to be more precise with your location information."
-						hide-details="auto"
-						:error-messages="startOrderFormErrors.custom_location"
-					/>
-				</v-col>
-				<v-col cols="12"
-					xl="6"
-					lg="6"
-					md="6"
-					sm="6"
-					class="pa-2"
-				>
-					<v-text-field
-						v-model="order.custom_contact"
-						color="#f36d00"
-						background-color="rgb(255 238 188 / 50%)"
-						light
-						filled
-						type="number"
-						prepend-inner-icon="call"
-						hide-details="auto"
-						label="Contact number (*)"
-						clearable
-						hint="Please only provide your reachable contact number."
-						:error-messages="startOrderFormErrors.custom_contact"
-					/>
-				</v-col>
-				<v-col cols="12"
-					class="d-flex justify-center pa-2"
-				>
-					<v-btn block
-						color="#f36d00"
-						height="50"
-						dark
-						:disabled="isDisabled"
-						@click="startShopping()"
-					>
-						<v-icon>fastfood</v-icon>
-						<span v-if="$vuetify.breakpoint.width > 255"
-							class="ml-2"
-						>Start Order</span>
-					</v-btn>
-				</v-col>
-			</v-row>
-		</v-card>
-		<v-card v-else
+			v-if="cookingOrderId"
 			flat
 			rounded
 			max-width="820"
@@ -202,6 +131,7 @@
 								:icon="$vuetify.breakpoint.width < 600"
 								v-bind="attrs"
 								v-on="on"
+								@click="$router.push({name: 'Confirm Order'})"
 							>
 								<v-icon size="16">
 									shopping_basket
@@ -230,6 +160,77 @@
 				</div>
 			</v-card-text>
 		</v-card>
+		<v-card
+			v-else
+			color="#ffeebcdb"
+			rounded
+			max-width="820"
+			class="mx-auto"
+		>
+			<v-row class="ma-0 pa-0"
+				justify="center"
+				align="center"
+			>
+				<v-col cols="12"
+					class="pa-2"
+					xl="6"
+					lg="6"
+					md="6"
+					sm="6"
+				>
+					<v-text-field
+						v-model="order.custom_location"
+						light
+						background-color="rgb(255 255 255 / 33%)"
+						color="#f36d00"
+						clearable
+						filled
+						prepend-inner-icon="explore"
+						label="Your location here... (*)"
+						hint="Try to be more precise with your location information."
+						hide-details="auto"
+						:error-messages="startOrderFormErrors.custom_location"
+					/>
+				</v-col>
+				<v-col cols="12"
+					xl="6"
+					lg="6"
+					md="6"
+					sm="6"
+					class="pa-2"
+				>
+					<v-text-field
+						v-model="order.custom_contact"
+						color="#f36d00"
+						background-color="rgb(255 255 255 / 33%)"
+						light
+						filled
+						type="number"
+						prepend-inner-icon="call"
+						hide-details="auto"
+						label="Contact number (*)"
+						clearable
+						hint="Please only provide your reachable contact number."
+						:error-messages="startOrderFormErrors.custom_contact"
+					/>
+				</v-col>
+				<v-col cols="12"
+					class="d-flex justify-center pa-2"
+				>
+					<v-btn block
+						color="#f36d00"
+						height="50"
+						dark
+						@click="startShopping()"
+					>
+						<v-icon>fastfood</v-icon>
+						<span v-if="$vuetify.breakpoint.width > 255"
+							class="ml-2"
+						>Start Order</span>
+					</v-btn>
+				</v-col>
+			</v-row>
+		</v-card>
 	</v-card>
 </template>
 <script>
@@ -242,7 +243,8 @@ export default {
 	mixins: [Snack],
 	data: () => ({
 		itemsFieldRequiredErrorMessage: null,
-		isDisabled: false,
+		cookingOrderId: null,
+		currentUser: null,
 		order: {
 			custom_location: "",
 			custom_contact: ""
@@ -256,11 +258,9 @@ export default {
 		}),
 	},
 	async created() {
-		console.log(this.pendingOrder)
 		this.$bus.on("refresh-order-now", this.preFillForm)
-
 		await this.initialize()
-		this.preFillForm()
+		await this.preFillForm()
 	},
 	async beforeUnmount() {
 		this.$bus.off("refresh-order-now", this.preFillForm)
@@ -270,19 +270,26 @@ export default {
 			router.push({name: "Confirm Order"})
 		},
 		async initialize() {
-			this.isDisabled = (this.$helper.getCookingOrderId() !== null)
+			this.cookingOrderId = this.$helper.getCookingOrderId()
 		},
-		preFillForm() {
-			if(this.$helper.isAuthenticated()) {
-				const currentUser = this.$helper.getCurrentUser()
+		async preFillForm() {
+			this.currentUser = this.$helper.getCurrentUser()
+			this.cookingOrderId = this.$helper.getCookingOrderId()
+			console.log(this.cookingOrderId, this.currentUser)
+
+			if(this.currentUser && !this.cookingOrderId) {
 				this.order = {
-					custom_location: currentUser.profile.address,
-					custom_contact: (currentUser.profile.contact) ? currentUser.profile.contact.replace(/\D/g, "") : null,
+					custom_location: this.currentUser.profile.address,
+					custom_contact: (this.currentUser.profile.contact) ? this.currentUser.profile.contact.replace(/\D/g, "") : null,
 				}
-			} else {
+			} else if (this.currentUser && this.cookingOrderId) {
+				await this.$store.dispatch("order/withCartItems", {
+					id: this.cookingOrderId
+				})
+			} else if (!this.currentUser && !this.cookingOrderId) {
 				this.order = {
-					custom_location: "",
-					custom_contact: ""
+					custom_contact: "",
+					custom_location: ""
 				}
 			}
 		},
@@ -293,7 +300,7 @@ export default {
 					custom_location: "",
 					custom_contact: ""
 				}
-				this.isDisabled = true
+				this.cookingOrderId = this.$helper.getCookingOrderId()
 				await this.openSnack("Cheers! Lets start shopping now!", "success")
 				await router.push({"name": "Store"})
 			} else if (started === 500) {

@@ -99,7 +99,7 @@
 					<cart-indicator />
 				</div>
 			</div>
-			<auth-sidebar />
+			<auth-sidebar @reload="initialize()" />
 		</v-card>
 	</v-card>
 </template>
@@ -118,25 +118,20 @@ export default {
 	data: () => ({
 		loginBanner: require("@/assets/banner_1.jpg"),
 		cartCount: "0",
+		currentUser: null,
 	}),
 	computed: {
-		currentUser() {
-			return this.$helper.getCurrentUser()
-		},
 		showAdminButton() {
 			if (!this.currentUser) return false
-			else return this.currentUser.admin
+			else return this.currentUser["admin"]
 		}
 	},
 	created() {
-		this.$bus.on("refresh-profile", this.refreshProfile)
-	},
-	beforeUnmount() {
-		this.$bus.off("refresh-profile", this.refreshProfile)
+		this.initialize()
 	},
 	methods: {
-		refreshProfile() {
-			this.initialize()
+		initialize() {
+			this.currentUser = this.$helper.getCurrentUser()
 		},
 		routeToFoodSwipeFacebookPage() {
 			window.open(this.$constants.facebookUrl, "_blank")
@@ -146,9 +141,6 @@ export default {
 		},
 		toggleDrawerState() {
 			this.$bus.emit("open-auth-sidebar")
-		},
-		toProfile() {
-			router.push({name: "Profile"})
 		},
 		toStore() {
 			router.push({name: "Store"})
@@ -166,7 +158,6 @@ export default {
 			if (isLoggedOut === true) {
 				await this.openSnack("Logged out successfully.")
 				this.currentUser = null
-				this.showAdminButton = false
 				this.$bus.emit("refresh-order-now")
 			} else {
 				await this.openSnack(isLoggedOut.detail, "error")
