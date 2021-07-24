@@ -42,7 +42,7 @@
 						v-else
 						close-on-content-click
 						offset-y
-						transition="fab-transition"
+						transition="scale-transition"
 						nudge-left="10"
 						nudge-bottom="5"
 					>
@@ -60,33 +60,36 @@
 							</v-btn>
 						</template>
 						<v-list color="orange lighten-4">
-							<v-list-item>
-								<v-list-item-icon class="mr-2">
-									<v-icon>account_circle</v-icon>
-								</v-list-item-icon>
-								<v-list-item-title class="cursor"
-									@click="toProfile()"
-								>
-									Profile
-								</v-list-item-title>
-							</v-list-item>
-							<v-divider class="ml-4" />
+							<!--							<v-list-item>-->
+							<!--								<v-list-item-icon class="mr-2">-->
+							<!--									<v-icon>account_circle</v-icon>-->
+							<!--								</v-list-item-icon>-->
+							<!--								<v-list-item-title class="cursor"-->
+							<!--									@click="toProfile()"-->
+							<!--								>-->
+							<!--									Profile-->
+							<!--								</v-list-item-title>-->
+							<!--							</v-list-item>-->
+							<!--							<v-divider class="ml-4" />-->
 							<v-list-item v-if="showAdminButton"
 								class="cursor"
+								@click="toAdminPanel()"
 							>
 								<v-list-item-icon class="mr-2">
 									<v-icon>settings_applications</v-icon>
 								</v-list-item-icon>
-								<v-list-item-title @click="toAdminPanel()">
+								<v-list-item-title>
 									Settings
 								</v-list-item-title>
 							</v-list-item>
 							<v-divider class="ml-4" />
-							<v-list-item class="cursor">
+							<v-list-item class="cursor"
+								@click="logOut()"
+							>
 								<v-list-item-icon class="mr-2">
 									<v-icon>input</v-icon>
 								</v-list-item-icon>
-								<v-list-item-title @click="logOut()">
+								<v-list-item-title>
 									Logout
 								</v-list-item-title>
 							</v-list-item>

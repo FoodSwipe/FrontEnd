@@ -72,11 +72,19 @@
 												color="white"
 											>
 												<template #badge>
-													<v-avatar size="25"
+													<v-avatar
+														size="25"
 														color="transparent"
 														class="elevation-4"
 													>
-														<v-img :src="item.menu_item.item_type[0].badge" />
+														<v-img
+															v-if="item.menu_item.item_type.length > 0"
+															:src="item.menu_item.item_type[0].badge"
+														/>
+														<span v-else
+															class="grey rounded-circle"
+															style="width: 14px;"
+														>x</span>
 													</v-avatar>
 												</template>
 

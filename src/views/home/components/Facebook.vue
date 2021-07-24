@@ -45,9 +45,7 @@
 					<blockquote cite="https://www.facebook.com/foodswipeonline"
 						class="fb-xfbml-parse-ignore"
 					>
-						<a href="https://www.facebook.com/foodswipeonline"
-							target="_blank"
-						>FoodSwipe Delivery</a>
+						<a href="https://www.facebook.com/foodswipeonline">Food Swipe Food Delivery</a>
 					</blockquote>
 				</div>
 			</v-card>
