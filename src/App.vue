@@ -13,6 +13,14 @@ export default {
 <style lang="scss">
 @import url('https://fonts.googleapis.com/css2?family=Otomanopee+One&display=swap');
 
+.v-label {
+	font-size: 14px !important;
+}
+
+.v-input {
+	font-size: 14px !important;
+}
+
 .section-header {
 	font-family: 'Otomanopee One', sans-serif;
 	font-size: 48px !important;
