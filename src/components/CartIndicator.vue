@@ -1,11 +1,13 @@
 <template>
 	<v-badge
-		dark
+		:dark="dark"
 		color="orange"
-		:content="cartCount"
 		offset-x="10"
 		offset-y="15"
 	>
+		<template #badge>
+			<span class="white--text number-font">{{ cartCount }}</span>
+		</template>
 		<v-tooltip bottom>
 			<template #activator="{on, attrs}">
 				<v-btn
@@ -33,7 +35,12 @@ import router from "@/router"
 
 export default {
 	name: "CartIndicator",
-	props: {},
+	props: {
+		dark: {
+			type: Boolean,
+			default: true
+		}
+	},
 	data: () => ({
 		currentUser: null,
 		cartCount: "0",
