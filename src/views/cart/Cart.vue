@@ -90,7 +90,7 @@
 					>
 						<v-card
 							v-for="(item, index) in cartItemsList"
-							:key="index + 1 * 17"
+							:key="index"
 							class="cart-item-card pa-0"
 							:class="
 								(index+1 === cartItemsList.length) ? '' : 'mb-4'
@@ -236,81 +236,7 @@
 						lg="4"
 						md="4"
 					>
-						<v-card id="cart-summary"
-							class="mx-auto"
-							max-width="960"
-						>
-							<v-toolbar class="px-4 light-orange-gradient"
-								dark
-							>
-								<v-app-bar-nav-icon>
-									<v-avatar color="#fd966d"
-										class="golden-rod-border-2"
-									>
-										<v-img
-											src="https://image.freepik.com/free-vector/beard-man-barber-shop-logo-vector-illustration_56473-434.jpg"
-										/>
-									</v-avatar>
-								</v-app-bar-nav-icon>
-								<v-toolbar-title class="font-weight-bold">
-									Cart Summary
-								</v-toolbar-title>
-								<v-spacer />
-								<v-btn fab
-									elevation="1"
-									color="transparent"
-									small @click="showSummary = !showSummary"
-								>
-									<v-fade-transition>
-										<v-icon
-											v-if="!showSummary"
-											color="grey lighten-4"
-										>
-											keyboard_arrow_down
-										</v-icon>
-										<v-icon
-											v-if="showSummary"
-											color="grey lighten-4"
-										>
-											keyboard_arrow_up
-										</v-icon>
-									</v-fade-transition>
-								</v-btn>
-							</v-toolbar>
-							<v-expand-transition mode="ease">
-								<v-list v-if="showSummary"
-									two-line
-								>
-									<v-list-item
-										v-for="(summaryItem, summaryIndex) of getCartSummary"
-										:key="summaryIndex"
-									>
-										<v-list-item-icon class="fill-height my-auto">
-											<v-icon>{{ summaryItem.icon }}</v-icon>
-										</v-list-item-icon>
-										<v-list-item-content>
-											<v-list-item-title class="summary-title">
-												{{ summaryItem.field }}
-											</v-list-item-title>
-										</v-list-item-content>
-										<v-list-item-action-text class="summary-item-value">
-											{{ summaryItem.value }}
-										</v-list-item-action-text>
-									</v-list-item>
-								</v-list>
-							</v-expand-transition>
-							<v-card-actions>
-								<v-btn class="light-orange-gradient-x"
-									block
-									large
-									dark
-									:disabled="cartItemsList.length === 0"
-									@click="routeToOrderConfirmation()"
-								>
-									Proceed
-								</v-btn>
-							</v-card-actions>
-						</v-card>
+						<cart-summary />
 					</v-col>
 				</v-scale-transition>
 			</v-row>
@@ -318,18 +244,19 @@
 	</v-card>
 </template>
 <script>
-import router from "@/router"
 import Velocity from "velocity-animate"
 import { mapGetters } from "vuex"
 import SimpleToolbar from "@/components/SimpleToolbar"
+import Snack from "@/mixin/Snack"
+import CartSummary from "@/views/cart/CartSummary"
 
 export default {
 	name: "CartView",
-	components: { SimpleToolbar },
+	components: { CartSummary, SimpleToolbar },
+	mixins: [Snack],
 	data() {
 		return {
 			isLoading: false,
-			showSummary: true,
 			cartItemsList: [{
 				item: {
 					name: ""
@@ -350,89 +277,35 @@ export default {
 		}
 	},
 	computed: {
-		getCartSummary() {
-			if (!this.currentOrder) return []
-			const summary = this.$helper.getCartSummary(
-				this.currentOrder,
-				this.cartItemsList
-			)
-
-			return [
-				{
-					icon: "call",
-					field: "Contact Number",
-					value: this.currentOrder.custom_contact
-				},
-				{
-					icon: "shopping_cart",
-					field: "Total Items",
-					value: summary.totalItems,
-				},
-				{
-					icon: "title",
-					field: "Sub-Total (NRs)",
-					value: summary.totalPrice
-				},
-				{
-					icon: "location_on",
-					field: "Delivery To",
-					value: this.currentOrder.custom_location
-				},
-				{
-					icon: "two_wheeler",
-					field: "Delivery Charge (NRs)",
-					value: summary.deliveryCharge
-				},
-				{
-					icon: "card_giftcard",
-					field: "Loyalty Discount Awarded",
-					value: summary.loyaltyDiscount + "%",
-				},
-				{
-					icon: "money",
-					field: "Grand Total (NRs)",
-					value: summary.grandTotal,
-					divider: true
-				}
-			]
-		},
 		...mapGetters({
 			currentOrder: "order/detailOrder",
 			cartItemDetail: "cart/detailCartItem"
 		})
 	},
-	created() {
+	async created() {
 		this.$bus.on("refresh-cart", this.initialize)
-		this.initialize()
+		await this.initialize()
 	},
 	beforeUnmount() {
 		this.$bus.off("refresh-cart", this.initialize)
 	},
 	methods: {
 		async quantityChanged(item) {
-			await this.$store.dispatch("cart/fetchParticular", {id: item.id})
-			const previousCartQuantity = this.cartItemDetail.quantity
-
-			const patched = await this.$store.dispatch("cart/patch", {
+			await this.$store.dispatch("cart/patch", {
 				id: item.id,
 				body: {
 					quantity: item.quantity
 				}
 			})
-			if (patched === true) {
-				this.$bus.emit("update-cart-count", parseInt(item.quantity)-previousCartQuantity)
-			}
 		},
 		async initialize() {
 			this.isLoading = true
 			const cookingOrder = this.$helper.getCookingOrderId()
 			if (cookingOrder) {
-				if (cookingOrder) {
-					await this.$store.dispatch("order/withCartItems", {
-						id: cookingOrder
-					})
-				}
-				this.cartItemsList = this.currentOrder.cart_items
+				await this.$store.dispatch("order/withCartItems", {
+					id: cookingOrder
+				})
+				this.cartItemsList = this.currentOrder["cart_items"]
 			} else {
 				this.cartItemsList = []
 			}
@@ -460,50 +333,33 @@ export default {
 			)
 		},
 
-		emitCartQuantityUpdate() {
-			let totalItems = 0
-			this.cartItemsList.forEach(item => {
-				totalItems += item.quantity
-			})
-			this.$bus.emit("set-cart-count", totalItems)
-		},
-
-		addQuantity(item) {
+		async addQuantity(item) {
 			item.quantity += 1
-			this.$store.dispatch("cart/patch", {
+			await this.$store.dispatch("cart/patch", {
 				id: item.id,
 				body: {
 					quantity: item.quantity
 				}
 			})
-			this.emitCartQuantityUpdate()
+			await this.initialize()
 		},
-		subtractQuantity(item) {
+		async subtractQuantity(item) {
 			if (item.quantity === 1) return
 			item.quantity -=1
-			this.$store.dispatch("cart/patch", {
+			await this.$store.dispatch("cart/patch", {
 				id: item.id,
 				body: {
 					quantity: item.quantity
 				}
 			})
-			this.emitCartQuantityUpdate()
-		},
-		openSnack(text, color) {
-			this.$store.dispatch("snack/setSnackState", true)
-			this.$store.dispatch("snack/setSnackColor", color)
-			this.$store.dispatch("snack/setSnackText", text)
+			await this.initialize()
 		},
 		async removeItemFromCart(item) {
 			await this.$store.dispatch("cart/removeFromCart", {
 				id: item.id
 			})
-			this.$bus.emit("subtract-cart-count", item.quantity)
-			this.openSnack(item.item.name + " removed from cart.", "success")
 			await this.initialize()
-		},
-		routeToOrderConfirmation() {
-			router.push({name: "Confirm Order"})
+			await this.openSnack(item.item.name + " removed from cart.", "success")
 		}
 	},
 }
