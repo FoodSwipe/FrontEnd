@@ -3,6 +3,7 @@
 		:loading="loading"
 		class="mx-auto ma-1 store-item-card"
 		color="rgb(255 251 246)"
+		min-height="380"
 	>
 		<template #progress>
 			<v-progress-linear
@@ -12,17 +13,21 @@
 			/>
 		</template>
 
-		<v-img
-			dark
+		<v-card class="overflow-hidden"
 			height="200"
-			:src="item.image"
-			gradient="to top, rgba(0,0,0, .3), rgba(0,0,0, .5)"
-			class="cursor store-item-image rounded-t"
-			@click="routeToItemDetail(item)"
-		/>
+		>
+			<v-img
+				dark
+				height="200"
+				:src="item.image"
+				gradient="to top, rgba(0,0,0, .3), rgba(0,0,0, .5)"
+				class="cursor store-item-image"
+				@click="routeToItemDetail(item)"
+			/>
+		</v-card>
 
-		<div class="name-type-group">
-			<v-card-text class="py-0">
+		<div class="description">
+			<v-card-text class=" pt-2 pb-0">
 				<div class="text-center item-name cursor"
 					@click="routeToItemDetail(item)"
 				>
@@ -52,54 +57,54 @@
 					</v-tooltip>
 				</span>
 			</v-card-subtitle>
-		</div>
 
-		<v-card-text class="item-details text-center">
-			<v-row
-				align="center"
-				class="ma-0 pa-0"
-				no-gutters
-			>
-				<v-fade-transition>
-					<v-col
-						cols="12"
-						class="py-4"
-					>
-						<div>
-							<span class="rs">Rs</span><span class="item-price">{{ item.price }}</span>
-						</div>
-					</v-col>
-				</v-fade-transition>
-				<v-spacer v-if="$vuetify.breakpoint.width > 300" />
-				<v-col cols="12"
+			<v-card-text class="item-details text-center">
+				<v-row
+					align="center"
 					class="ma-0 pa-0"
+					no-gutters
 				>
 					<v-fade-transition>
-						<v-card-actions v-if="!isAddedInCart(item)"
-							class="ma-0 pa-0 d-flex justify-center"
+						<v-col
+							cols="12"
+							class="py-4"
 						>
-							<v-tooltip bottom>
-								<template #activator="{on, attrs}">
-									<v-btn
-										dark
-										class="add-to-cart-button"
-										color="orange"
-										v-bind="attrs"
-										v-on="on"
-										@click.prevent="addItemToCart(item)"
-									>
-										<v-icon size="20">
-											add_shopping_cart
-										</v-icon>
-									</v-btn>
-								</template>
-								<span>Add to cart</span>
-							</v-tooltip>
-						</v-card-actions>
+							<div>
+								<span class="rs">Rs</span><span class="item-price">{{ item.price }}</span>
+							</div>
+						</v-col>
 					</v-fade-transition>
-				</v-col>
-			</v-row>
-		</v-card-text>
+					<v-spacer v-if="$vuetify.breakpoint.width > 300" />
+					<v-col cols="12"
+						class="ma-0 pa-0"
+					>
+						<v-fade-transition>
+							<v-card-actions v-if="!isAddedInCart(item)"
+								class="ma-0 pa-0 d-flex justify-center"
+							>
+								<v-tooltip bottom>
+									<template #activator="{on, attrs}">
+										<v-btn
+											dark
+											class="add-to-cart-button"
+											color="orange"
+											v-bind="attrs"
+											v-on="on"
+											@click.prevent="addItemToCart(item)"
+										>
+											<v-icon size="20">
+												add_shopping_cart
+											</v-icon>
+										</v-btn>
+									</template>
+									<span>Add to cart</span>
+								</v-tooltip>
+							</v-card-actions>
+						</v-fade-transition>
+					</v-col>
+				</v-row>
+			</v-card-text>
+		</div>
 	</v-card>
 </template>
 <script>
@@ -214,9 +219,6 @@ export default {
 			-ms-transform:scale(1.1); /* IE 9 */
 			-o-transform:scale(1.1); /* Opera */
 			transform:scale(1.1);
-		}
-		.item-name {
-			padding-top: 20px;
 		}
 	}
 }

@@ -5,61 +5,98 @@
 		color="transparent"
 	>
 		<v-card v-if="itemTypes"
-			class="pa-4 d-flex justify-start align-center flex-wrap mx-auto"
+			class="py-4 px-2 d-flex justify-start align-center flex-wrap mx-auto"
 			flat
-			max-width="1150"
-			color="transparent"
+			max-width="1200"
+			color="#fcf8f2"
 		>
 			<v-chip label
 				class="ma-1 py-5"
+				@click="clearFilterMode()"
 			>
 				<v-icon>
-					filter_list
+					{{ filterMode ? 'clear' : 'filter_list' }}
 				</v-icon>
-				<span class="pl-2">Filter</span>
+				<span class="pl-2 filter-text">
+					{{ filterMode ? 'CLEAR FILTER' : 'FILTER' }}
+				</span>
 			</v-chip>
-			<v-chip v-for="item in itemTypes"
+			<v-chip
+				v-for="item in itemTypes['results']"
 				:key="item.id"
 				class="ma-1 py-5"
 				label
 				color="grey lighten-3"
-				@click="filter(item)"
+				@click="filter({item_type: item.id})"
 			>
 				<v-avatar>
 					<v-img :src="item.badge" />
 				</v-avatar>
-				<span class="pl-2 font-weight-bold"
-					style="font-size: 12px; !important;"
-				>{{ item.name.toUpperCase() }}</span>
+				<span class="pl-2 font-weight-bold filter-text">
+					{{ item.name.toUpperCase() }}
+				</span>
 			</v-chip>
 			<v-spacer />
+			<v-chip label
+				class="ma-1"
+				@click="filter({is_veg: true})"
+			>
+				<v-avatar>
+					<v-img :src="require('@/assets/veglogo.png')"
+						contain
+					/>
+				</v-avatar>
+				<span class="pl-1 filter-text">VEG</span>
+			</v-chip>
+			<v-chip label
+				class="ma-1"
+				@click="filter({is_veg: false})"
+			>
+				<v-avatar>
+					<v-img :src="require('@/assets/nonveglogo.png')"
+						contain
+					/>
+				</v-avatar>
+				<span class="pl-1 filter-text">NON VEG</span>
+			</v-chip>
+			<v-chip label
+				class="ma-1"
+				@click="filter({is_bar_item: true})"
+			>
+				<v-avatar>
+					<v-img :src="require('@/assets/bar_item_png.png')"
+						contain
+					/>
+				</v-avatar>
+				<span class="pl-1 filter-text">BAR</span>
+			</v-chip>
 		</v-card>
 		<v-divider />
 		<v-card max-width="1200"
 			class="mx-auto" flat
 			color="transparent"
+			min-height="80vh"
 		>
-			<v-row
+			<v-row no-gutters
 				class="ma-0 pa-0"
-				align="start"
-				no-gutters
 			>
-				<v-col cols="12"
+				<v-col
 					xl="3"
 					lg="3"
 					md="3"
 					sm="3"
 				>
-					<v-list class="ma-3 px-0 rounded"
-						flat
+					<v-list
+						class="rounded ma-2 mt-3" flat
 						color="rgb(255 251 246)"
 					>
 						<v-subheader>Menu Item Groups</v-subheader>
 						<v-divider />
 						<v-list-item-group class="pa-1">
-							<v-list-item v-for="groupItem in storeItemGroups"
+							<v-list-item v-for="groupItem in storeItemGroups['results']"
 								:key="groupItem.id"
 								class="rounded"
+								@click="filter({ menu_item_group: groupItem.id })"
 							>
 								<v-list-item-avatar>
 									<v-img :src="groupItem.image" />
@@ -111,7 +148,9 @@ export default {
 	data: () => ({
 		panel: [],
 		loading: false,
-		menuItemType: null
+		menuItemType: null,
+		filterMode: false,
+		menuItemGroupNav: true,
 	}),
 	computed: {
 		...mapGetters({
@@ -121,15 +160,36 @@ export default {
 		})
 	},
 	async created(){
+		this.$bus.on("search-menu-item", this.search)
 		await this.initialize()
+	},
+	beforeUnmount() {
+		this.$bus.off("search-menu-item")
 	},
 	methods: {
 		async initialize() {
+			console.log(this.itemTypes)
+			console.log(this.storeItems)
 			this.loading = true
 			await this.$store.dispatch("menuItem/fetchAll")
 			await this.$store.dispatch("menuItemGroup/fetchAll")
 			await this.$store.dispatch("itemType/fetchAllItemTypes")
 			this.loading = false
+		},
+		search(e) {
+			this.filter(e)
+		},
+		async filter(payload = null) {
+			this.loading = true
+			await this.$store.dispatch("menuItem/fetchAll", payload)
+			this.filterMode = true
+			this.loading = false
+		},
+		async clearFilterMode() {
+			if(this.filterMode) {
+				this.filterMode = false
+				await this.$store.dispatch("menuItem/fetchAll")
+			}
 		}
 	}
 }
@@ -157,5 +217,8 @@ export default {
 }
 ::v-deep.v-expansion-panel-content > div {
 	padding: 0 6px 4px;
+}
+.filter-text {
+	font-size: 12px !important;
 }
 </style>

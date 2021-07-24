@@ -1,17 +1,17 @@
 <template>
 	<v-card width="100vw"
 		flat tile
-		min-height="100vh"
 		color="#fff5e6"
 	>
-		<div class="py-2" />
 		<v-toolbar class="px-2 mx-auto"
 			max-width="1200"
 			flat
-			color="transparent"
+			color="#fcf8f2"
+			height="75"
 		>
 			<v-avatar size="70"
-				class="mx-2"
+				class="mx-2 cursor"
+				@click="$router.push('/')"
 			>
 				<v-img :src="require('@/assets/food_swipe_logo.png')"
 					height="70"
@@ -46,24 +46,21 @@
 				>
 			</div>
 			<v-spacer />
-			<div class="mr-3 px-4 pt-2 pb-1 rounded"
-				style="background-color: #ffd9d9;"
-			>
-				<cart-indicator />
-			</div>
 			<v-btn color="light-orange-gradient"
 				class="elevation-0"
-				height="40"
-				dark
+				icon
 				small
 				to="/"
 			>
-				<v-icon size="20">
+				<v-icon size="26">
 					home
 				</v-icon>
 			</v-btn>
+			<div class="px-4">
+				<cart-indicator :dark="false" />
+			</div>
 		</v-toolbar>
-		<v-row class="ma-0 px-0 py-2"
+		<v-row class="ma-0 pa-0"
 			no-gutters
 		>
 			<v-col cols="12">
@@ -93,6 +90,7 @@ export default {
 		},
 		searchMenuItems() {
 			console.log(this.search)
+			this.$bus.emit("search-menu-item", { search: this.search})
 		}
 	}
 }
