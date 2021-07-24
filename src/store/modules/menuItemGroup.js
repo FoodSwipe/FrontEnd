@@ -40,7 +40,7 @@ const mutations = {
 
 const getters = {
 	allMenuItemGroups: state => {
-		return state.menuItemGroups.results
+		return state.menuItemGroups
 	},
 	detailMenuItemGroup: state => {
 		return state.menuItemGroup
@@ -60,8 +60,8 @@ const actions = {
 		const res = await $api.get(menuItemGroupUrls.withItems)
 		commit("SET_MENU_ITEM_GROUPS", res)
 	},
-	async fetchAll({ commit }) {
-		const res = await $api.get(menuItemGroupUrls.list)
+	async fetchAll({ commit }, payload = null) {
+		const res = await $api.getWithPayload(menuItemGroupUrls.list, payload)
 		commit("SET_MENU_ITEM_GROUPS", res)
 	},
 	async create({commit}, payload) {

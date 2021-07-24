@@ -35,7 +35,7 @@ const mutations = {
 
 const getters = {
 	allItemTypes: state => {
-		return state.itemTypes.results
+		return state.itemTypes
 	},
 	itemType: state => {
 		return state.itemType
@@ -51,8 +51,8 @@ const actions = {
 			...defaultErrMsgs
 		})
 	},
-	async fetchAllItemTypes({ commit }) {
-		const res = await $api.get(itemUrls.list)
+	async fetchAllItemTypes({ commit }, payload) {
+		const res = await $api.getWithPayload(itemUrls.list, payload)
 		commit("SET_ITEM_TYPES", res)
 	},
 	async fetchItemType({commit}, payload) {
