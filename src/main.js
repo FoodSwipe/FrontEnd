@@ -37,6 +37,10 @@ Vue.component("TextareaField", () =>
 	import("@/components/FormFields/TextareaField")
 );
 
+Vue.component("ScrollTop", () =>
+	import("@/components/ScrollTop")
+);
+
 Vue.config.productionTip = false
 Vue.prototype.$api = api
 Vue.prototype.$helper = helper

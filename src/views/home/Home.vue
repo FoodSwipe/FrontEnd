@@ -5,6 +5,7 @@
 		<our-menu />
 		<how-we-serve />
 		<food-swipe-facebook />
+		<scroll-top />
 	</div>
 </template>
 
