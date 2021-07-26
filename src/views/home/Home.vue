@@ -5,6 +5,7 @@
 		<our-menu />
 		<how-we-serve />
 		<food-swipe-facebook />
+		<facebook-chat />
 		<scroll-top />
 	</div>
 </template>
@@ -18,6 +19,7 @@ export default {
 		OurMenu: () => import("@/views/home/components/OurMenu"),
 		HowWeServe: () => import("@/views/home/components/HowWeServe"),
 		FoodSwipeFacebook: () => import("@/views/home/components/Facebook"),
+		FacebookChat: () => import("@/components/FbChat")
 	},
 };
 </script>

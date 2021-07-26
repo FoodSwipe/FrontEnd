@@ -271,7 +271,6 @@ export default {
 		async preFillForm() {
 			this.currentUser = this.$helper.getCurrentUser()
 			this.cookingOrderId = this.$helper.getCookingOrderId()
-			console.log(this.cookingOrderId, this.currentUser)
 
 			if(this.currentUser && !this.cookingOrderId) {
 				this.order = {

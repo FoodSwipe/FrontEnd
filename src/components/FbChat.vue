@@ -1,11 +1,13 @@
 <template>
-	<!-- Messenger Chat Plugin Code -->
-	<div id="fb-root" />
+	<div>
+		<!-- Messenger Chat Plugin Code -->
+		<div id="fb-root" />
 
-	<!-- Your Chat Plugin code -->
-	<div id="fb-customer-chat"
-		class="fb-customerchat"
-	/>
+		<!-- Your Chat Plugin code -->
+		<div id="fb-customer-chat"
+			class="fb-customerchat"
+		/>
+	</div>
 </template>
 <script>
 export default {
