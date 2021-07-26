@@ -2,7 +2,7 @@ import axios from "axios"
 import { getAccessToken } from "@/Helper"
 
 const BACKEND_URL="https://api.foodswipe.com.np/api/"
-// const BACKEND_URL="http://localhost:8000/api/
+// const BACKEND_URL="http://localhost:8000/api/"
 
 const api = {
 	setHeaders: function (contentType) {
