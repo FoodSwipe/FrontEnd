@@ -52,7 +52,7 @@
 								outlined
 								chips
 								deletable-chips
-								color="orange lighten-1"
+								color="orange"
 								placeholder="Add menu items in this order (*)"
 								item-text="name"
 								item-value="id"
@@ -144,9 +144,8 @@
 							<v-text-field
 								id="custom-location"
 								v-model="order.custom_location"
-
+								color="orange"
 								label="Location (*)"
-								color="purple lighten-3"
 								outlined
 								clearable
 								prepend-inner-icon="title"
@@ -158,7 +157,7 @@
 							<v-text-field
 								id="custom-email"
 								v-model="order.custom_email"
-
+								color="orange"
 								label="Email address"
 								outlined
 								clearable
@@ -176,7 +175,7 @@
 							<v-text-field
 								id="loyalty-discount"
 								v-model="order.loyalty_discount"
-
+								color="orange"
 								label="Loyalty Discount"
 								outlined
 								clearable
@@ -190,7 +189,7 @@
 								id="delivery-charge"
 								v-model="order.delivery_charge"
 								type="number"
-
+								color="orange"
 								label="Delivery Charge"
 								outlined
 								clearable
@@ -208,7 +207,7 @@
 						>
 							<v-checkbox v-model="done_from_customer"
 								hide-details="auto" label="Done from customer?"
-								readonly
+								readonly color="orange"
 							/>
 						</v-col>
 						<v-col cols="12"
@@ -221,6 +220,7 @@
 								hide-details="auto" label="Payment Type"
 								outlined
 								readonly clearable
+								color="orange"
 								:error-messages="orderFormErrors.payment_type"
 							/>
 						</v-col>
