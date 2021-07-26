@@ -108,12 +108,12 @@
 	</v-card>
 </template>
 <script>
-import { mapGetters } from "vuex"
 import Snack from "@/mixin/Snack"
+import ToCart from "@/mixin/ToCart"
 
 export default {
 	name: "StoreItemCard",
-	mixins: [Snack],
+	mixins: [Snack, ToCart],
 	props: {
 		item: {
 			type: Object,
@@ -126,49 +126,10 @@ export default {
 		selection: 1,
 		orderInProgress: null
 	}),
-	computed: {
-		...mapGetters({
-			pendingOrder: "order/detailOrder"
-		}),
-		cartItems() {
-			const items = {}
-			if (!this.pendingOrder) return items
-			this.pendingOrder["cart_items"].forEach(item => {
-				items[item.item.name] = item
-			})
-			return items
-		}
-	},
 	methods: {
 		routeToItemDetail(item) {
 			this.$router.push(`product/${item.id}`)
-		},
-		async addItemToCart(item) {
-			if (this.$helper.getCookingOrderId()) {
-				this.$bus.emit("add-item-to-cart", {
-					withItem: item
-				})
-			} else {
-				if (this.$helper.isAuthenticated()) {
-					const currentUser = this.$helper.getCurrentUser()
-					// set last order location ? TBD
-					this.$bus.emit("start-order-prefill", {
-						order: {
-							custom_location: currentUser.profile.address,
-							custom_contact: (currentUser.profile.contact)
-								? currentUser.profile.contact.replace(/\D/g, "")
-								: null
-						},
-						withItem: item
-					})
-				}
-				else {
-					this.$bus.emit("start-order", {
-						withItem: item
-					})
-				}
-			}
-		},
+		}
 	},
 }
 </script>
