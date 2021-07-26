@@ -104,9 +104,9 @@
 			justify="space-around"
 		>
 			<v-card-actions>
-				<v-btn filled
-					dark
-					color="deep-blue-gradient"
+				<v-btn
+					text
+					color="primary"
 					to="/order/shipping-confirmation"
 				>
 					<v-icon>explore</v-icon>
@@ -116,9 +116,9 @@
 				</v-btn>
 			</v-card-actions>
 			<v-card-actions>
-				<v-btn filled
-					dark
-					color="teal-gradient"
+				<v-btn
+					text
+					color="teal"
 					@click="doneOrder()"
 				>
 					<span v-if="$vuetify.breakpoint.width > 320"
@@ -132,19 +132,16 @@
 </template>
 <script>
 import router from "@/router"
+import Snack from "@/mixin/Snack"
 
 export default {
 	name: "OrderConfirmation",
+	mixins: [Snack],
 	data: () =>  ({
 		isCashOnDeliverySelected: true,
 		isOnlinePaymentSelected: false,
 	}),
 	methods: {
-		async openSnack(text, color="success") {
-			await this.$store.dispatch("snack/setSnackState", true)
-			await this.$store.dispatch("snack/setSnackColor", color)
-			await this.$store.dispatch("snack/setSnackText", text)
-		},
 		async doneOrder() {
 			const done = await this.$store.dispatch("order/doneFromCustomer", {
 				id: this.$helper.getCookingOrderId(),
@@ -153,11 +150,10 @@ export default {
 				}
 			})
 			if (done === true) {
-				await this.openSnack("Order placement completed successfully.")
-				this.$bus.emit("set-cart-count", 0)
-				await router.push(`review-order/${this.$helper.getCookingOrderId()}`)
 				this.$helper.removeCookingOrderIdFromLocalStorage()
 				await this.$store.dispatch("order/clearOrderDetail")
+				await this.openSnack("Order placement completed successfully.")
+				await router.push(`review-order/${this.$helper.getCookingOrderId()}`)
 			} else {
 				await this.openSnack("Internal server error. Try again.", "error")
 			}
