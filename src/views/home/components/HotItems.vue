@@ -3,7 +3,7 @@
 		flat
 		tile
 		:loading="isLoading"
-		class="pa-4 d-flex justify-center align-center"
+		class="pa-4"
 		width="100vw"
 		min-height="100vh"
 		color="#ececec"
@@ -29,201 +29,115 @@
 				/>
 			</svg>
 		</div>
-		<v-card flat
+		<div class="py-8" />
+		<v-card width="100%"
+			class="px-2"
+			flat tile
 			color="transparent"
 		>
-			<v-row no-gutters>
-				<v-col xl="8"
-					lg="8" md="8"
-					sm="8" cols="12"
-				>
-					<v-card class="pa-0"
-						flat
-						rounded
-						color="transparent"
-						max-width="700"
-					>
-						<div class="swiper-container pa-1 rounded">
-							<div class="swiper-wrapper rounded">
-								<v-card
-									v-for="(item, index) in topItemsSet"
-									:key="index"
-									class="swiper-slide"
-									max-width="140"
-									min-height="300"
-									color="transparent elevation-1"
-									:class="
-										(index+1) === topItemsSet.length ? '' : 'mr-3'
-									"
-								>
-									<v-row class="ma-0 pa-0"
-										justify="center" align="center"
-									>
-										<v-col cols="12"
-											class="d-flex justify-center"
-										>
-											<!-- eslint-disable-next-line vue/no-v-for-template-key-on-child-->
-											<v-badge
-												avatar
-												bordered
-												overlap
-												bottom
-												offset-x="30"
-												offset-y="20"
-												color="white"
-											>
-												<template #badge>
-													<v-avatar
-														size="25"
-														color="transparent"
-														class="elevation-4"
-													>
-														<v-img
-															v-if="item.menu_item.item_type.length > 0"
-															:src="item.menu_item.item_type[0].badge"
-														/>
-														<span v-else
-															class="grey rounded-circle"
-															style="width: 14px;"
-														>x</span>
-													</v-avatar>
-												</template>
+			<top-sheet-card
+				title="Hot items you can pick right now"
+				color="orange"
+			>
+				<div class="d-flex flex-wrap">
+					<peek-items
+						v-for="(topItem, index) in topItemsSet"
+						:key="topItem.id"
+						class="swiper-slide"
+						:item="topItem"
+						:class="{
+							'mr-3': topItemsSet.length !== index + 1
+						}"
+					/>
+				</div>
+			</top-sheet-card>
 
-												<v-avatar size="100"
-													color="white"
-													class="item-image-avatar"
-												>
-													<v-img
-														class="car-image"
-														:src="item.menu_item.image"
-														max-width="100%"
-													/>
-												</v-avatar>
-											</v-badge>
-										</v-col>
-										<v-col cols="12"
-											class="d-flex justify-center"
-										>
-											<p class="mb-0 text-center item-name">
-												{{ item.menu_item.name }}
-											</p>
-										</v-col>
-										<v-col cols="12"
-											class="d-flex justify-center"
-										>
-											<p class="mb-0 text-center">
-												<span class="nrs">NRs</span><span class="number-font item-price">
-													{{ item.menu_item.price }}
-												</span>
-											</p>
-										</v-col>
-										<v-col v-if="!cartItems[item.menu_item.name]"
-											cols="12"
-											class="d-flex justify-center"
-										>
-											<v-btn dark
-												class="to-cart-btn"
-												color="orange"
-												min-width="25"
-												@click.prevent="addItemToCart(item.menu_item)"
-											>
-												<v-icon>
-													add_shopping_cart
-												</v-icon>
-											</v-btn>
-										</v-col>
-									</v-row>
-								</v-card>
-							</div>
-							<div class="swiper-button-next" />
-							<div class="swiper-button-prev" />
-						</div>
-					</v-card>
-				</v-col>
-				<v-col xl="4"
-					lg="4" md="4"
-					sm="4" cols="12"
-				>
-					<v-card-title class="text-center section-header">
-						Hot Items You Can Grab Right Now
-					</v-card-title>
-					<v-card-actions class="d-flex justify-center">
-						<v-btn class="light-orange-gradient px-4"
-							dark
-							height="55"
-							to="/store"
-						>
-							<v-icon>store</v-icon>
-							<v-scale-transition>
-								<span v-if="$vuetify.breakpoint.width > 300"
-									class="pl-2"
-								>
-									Visit Store
-								</span>
-							</v-scale-transition>
-						</v-btn>
-					</v-card-actions>
-				</v-col>
-			</v-row>
+			<div class="py-8" />
+
+			<top-sheet-card
+				title="Recommendation from Foodswipe"
+				color="teal"
+			>
+				<div class="d-flex flex-wrap">
+					<peek-items
+						v-for="(item, index) in recommendations"
+						:key="item.id"
+						:item="item"
+						:class="{
+							'mr-3': recommendations.length !== index + 1
+						}"
+					/>
+				</div>
+			</top-sheet-card>
+			<div class="py-8" />
+			<top-sheet-card
+				title="Swipe Through Our Menu Item Collections"
+				color="indigo"
+			>
+				<div class="d-flex flex-wrap">
+					<menu-item-group-avatar
+						v-for="(itemGroup, index) in itemGroups"
+						:key="itemGroup.id"
+						:item-group="itemGroup"
+						:class="{
+							'mr-3': itemGroups.length !== index + 1
+						}"
+					/>
+				</div>
+			</top-sheet-card>
 		</v-card>
 		<start-order-component />
 	</v-card>
 </template>
 <script>
-import Swiper, { Navigation } from "swiper"
 import { mapGetters } from "vuex"
 import StartOrderComponent from "@/components/StartOrder"
-import ToCart from "@/mixin/ToCart"
+import PeekItems from "@/components/PeekItems"
+import TopSheetCard from "@/components/TopSheetCard"
+import MenuItemGroupAvatar from "@/components/MenuItemGroupAvatar"
 
 export default {
 	name: "HotItemsComponent",
-	components: { StartOrderComponent },
-	mixins: [ToCart],
+	components: { MenuItemGroupAvatar, TopSheetCard, PeekItems, StartOrderComponent },
 	data: () => ({
 		isLoading: false,
-		topItemsSet: []
+		topItemsSet: [],
+		recommendations: [],
+		itemGroups: [],
 	}),
 	computed: {
 		...mapGetters({
 			topItems: "menuItem/allTopItems",
+			recommendedItems: "menuItem/allRecommendedItems",
+			menuItemGroups: "menuItemGroup/allMenuItemGroups"
 		})
 	},
 	async created() {
 		await this.initialize()
 	},
-	mounted() {
-		Swiper.use([Navigation]);
-
-		const mySwiper = new Swiper(".swiper-container", {
-			slidesPerView: "auto",
-			direction: "horizontal",
-			loop: false,
-			centeredSlides: true,
-			spaceBetween: 0,
-			speed: 400,
-			navigation: {
-				nextEl: ".swiper-button-next",
-				prevEl: ".swiper-button-prev",
-			}
-		})
-	},
 	methods: {
 		async initialize() {
 			this.isLoading = true
-			const fetched = await this.$store.dispatch("menuItem/fetchTopItems")
+			let fetched
+			fetched = await this.$store.dispatch("menuItem/fetchTopItems")
 			if (fetched) {
 				this.topItemsSet = this.topItems
 			}
+			fetched = await this.$store.dispatch("menuItem/fetchRecommendedItems")
+			if (fetched) {
+				this.recommendations = this.recommendedItems
+			}
+			fetched = await this.$store.dispatch("menuItemGroup/withItems")
+			if (fetched) {
+				this.itemGroups = this.menuItemGroups.results
+			}
+			console.log(this.itemGroups)
 			this.isLoading = false
 		}
 	}
 }
 </script>
-<style scoped>
-.swiper-pagination{
-	bottom: -1px !important;
-}
-</style>
+
 
 <style scoped lang="sass">
 .hot-items
@@ -233,48 +147,6 @@ export default {
 	font-size: 1.5rem
 	line-height: 1.5rem
 	font-family: "Rasa SemiBold", cursive
-.item-name
-	padding-top: 10px
-	width: 100px
-	font-size: .87rem
-	line-height: .87rem
-	font-weight: 500
-</style>
-<style scoped lang="scss">
-.hot-items-card {
-	border-radius: 25px !important;
-}
-.to-cart-btn {
-	border-radius: 25px;
-}
-.swiper-slide {
-	border-radius: 25px !important;
-	background: linear-gradient(to bottom, #ffdba1, transparent);
-}
-.item-price {
-	color: green;
-	font-size: 1.3rem;
-}
-.nrs {
-	color: red;
-	font-size: .875rem;
-	font-weight: bold;
-}
-.item-image-avatar {
-	max-width: 100%;
-	-webkit-transition: all .4s ease; /* Safari and Chrome */
-	-moz-transition: all .4s ease; /* Firefox */
-	-ms-transition: all .4s ease; /* IE 9 */
-	-o-transition: all .4s ease; /* Opera */
-	transition: all .4s ease;
-	&:hover {
-		-webkit-transform:scale(1.2); /* Safari and Chrome */
-		-moz-transform:scale(1.2); /* Firefox */
-		-ms-transform:scale(1.2); /* IE 9 */
-		-o-transform:scale(1.2); /* Opera */
-		transform:scale(1.2);
-	}
-}
 </style>
 <style scoped>
 .custom-shape-divider-top {
