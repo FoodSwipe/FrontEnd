@@ -6,6 +6,7 @@
 		<how-we-serve />
 		<food-swipe-facebook />
 		<facebook-chat />
+		<visit-store />
 		<scroll-top />
 	</div>
 </template>
@@ -14,6 +15,7 @@
 export default {
 	name: "HomeView",
 	components: {
+		VisitStore: () => import("@/components/VisitStore"),
 		Swiper: () => import("@/views/home/components/Swiper"),
 		HotItems: () => import("@/views/home/components/HotItems"),
 		OurMenu: () => import("@/views/home/components/OurMenu"),
