@@ -55,21 +55,21 @@
 			justify="space-around"
 		>
 			<v-card-actions>
-				<v-btn filled
+				<v-btn
 					to="/cart"
-					dark
-					color="blue-gradient"
+					text
+					color="red lighten-1"
 				>
-					<v-icon>arrow_back</v-icon>
+					<v-icon>shopping_cart</v-icon>
 					<span v-if="$vuetify.breakpoint.width > 320"
 						class="pl-2"
 					>Back to cart</span>
 				</v-btn>
 			</v-card-actions>
 			<v-card-actions>
-				<v-btn filled
-					dark
-					color="purple-gradient"
+				<v-btn
+					text
+					color="orange"
 					@click="proceedToPayment()"
 				>
 					<span v-if="$vuetify.breakpoint.width > 320"

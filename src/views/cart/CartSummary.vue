@@ -129,9 +129,9 @@ export default {
 		async removeThisOrder() {
 			const deleted = await this.$store.dispatch("order/delete", {id: this.currentOrder.id})
 			if (deleted) {
-				await this.$router.push("/store")
-				localStorage.removeItem("cookingOrder")
+				this.$helper.removeCookingOrderIdFromLocalStorage()
 				await this.$store.dispatch("order/clearOrderDetail")
+				await this.$router.push("/store")
 				await this.openSnack("Order remove success. Please continue swiping.", "success")
 			} else {
 				await this.openSnack("Order remove failed. We're trying to fix the case. Please be with us.")

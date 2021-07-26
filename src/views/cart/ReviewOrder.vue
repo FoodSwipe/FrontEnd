@@ -83,7 +83,7 @@
 			<v-btn filled
 				dark
 				to="/store"
-				color="purple-gradient"
+				color="light-orange-gradient"
 			>
 				<v-icon>store</v-icon>
 				<span v-if="$vuetify.breakpoint.width > 320"
