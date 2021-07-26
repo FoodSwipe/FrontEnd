@@ -50,6 +50,7 @@
 									:key="index"
 									class="swiper-slide"
 									max-width="140"
+									min-height="300"
 									color="transparent elevation-1"
 									:class="
 										(index+1) === topItemsSet.length ? '' : 'mr-3'
@@ -116,7 +117,8 @@
 												</span>
 											</p>
 										</v-col>
-										<v-col cols="12"
+										<v-col v-if="!cartItems[item.menu_item.name]"
+											cols="12"
 											class="d-flex justify-center"
 										>
 											<v-btn dark
@@ -146,7 +148,7 @@
 						Hot Items You Can Grab Right Now
 					</v-card-title>
 					<v-card-actions class="d-flex justify-center">
-						<v-btn class="blue-gradient px-4"
+						<v-btn class="light-orange-gradient px-4"
 							dark
 							height="55"
 							to="/store"
@@ -164,21 +166,26 @@
 				</v-col>
 			</v-row>
 		</v-card>
+		<start-order-component />
 	</v-card>
 </template>
 <script>
 import Swiper, { Navigation } from "swiper"
 import { mapGetters } from "vuex"
+import StartOrderComponent from "@/components/StartOrder"
+import ToCart from "@/mixin/ToCart"
 
 export default {
 	name: "HotItemsComponent",
+	components: { StartOrderComponent },
+	mixins: [ToCart],
 	data: () => ({
 		isLoading: false,
 		topItemsSet: []
 	}),
 	computed: {
 		...mapGetters({
-			topItems: "menuItem/allTopItems"
+			topItems: "menuItem/allTopItems",
 		})
 	},
 	async created() {
@@ -201,49 +208,6 @@ export default {
 		})
 	},
 	methods: {
-		async openSnack(text, color="error") {
-			await this.$store.dispatch("snack/setSnackState", true)
-			await this.$store.dispatch("snack/setSnackColor", color)
-			await this.$store.dispatch("snack/setSnackText", text)
-		},
-		async addItemToCart(item) {
-			if (this.$helper.isAuthenticated()) {
-				const currentUser = this.$helper.getCurrentUser()
-				this.$bus.emit("start-order-prefill", {
-					order: {
-						custom_location: currentUser.profile.address,
-						custom_contact: (currentUser.profile.contact)
-							? currentUser.profile.contact.replace(/\D/g, "")
-							: null
-					}
-				})
-			}
-			if (this.$helper.getCookingOrderId()) {
-				const addedToCart = await this.$store.dispatch("cart/addToCart", {
-					order: parseInt(this.$helper.getCookingOrderId()),
-					item: item.id
-				})
-				if (addedToCart === true) {
-					await this.openSnack(`Cheers! ${item.name} is added to cart.`, "success")
-					this.$bus.emit("add-cart-count-by-one")
-					await this.$store.dispatch("order/withCartItems", {
-						id: this.$helper.getCookingOrderId()
-					})
-				} else {
-					if (addedToCart.non_field_errors !== undefined) {
-						if (Array.isArray(addedToCart.non_field_errors)) {
-							if (addedToCart.non_field_errors[0] === "The fields order, item must make a unique set.") {
-								await this.openSnack("Item already added to cart.")
-							}
-						}
-					}
-				}
-			} else {
-				this.$bus.emit("start-order", {
-					withItem: item
-				})
-			}
-		},
 		async initialize() {
 			this.isLoading = true
 			const fetched = await this.$store.dispatch("menuItem/fetchTopItems")
