@@ -31,10 +31,11 @@
 			flat tile
 			color="transparent"
 			max-width="1000"
-			class="mx-auto d-flex justify-space-around align-center flex-wrap"
+			class="mx-auto d-flex justify-space-evenly align-center flex-wrap"
 		>
 			<v-card
 				:width="fbCardWidth"
+				class="d-flex justify-center"
 			>
 				<div class="fb-page"
 					data-href="https://www.facebook.com/foodswipeonline" data-tabs="timeline"
