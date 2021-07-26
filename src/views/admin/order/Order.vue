@@ -338,6 +338,7 @@
 				</v-btn>
 			</div>
 		</v-card>
+		<div class="py-4" />
 		<start-order-form-dialog />
 	</div>
 </template>

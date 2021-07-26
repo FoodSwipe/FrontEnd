@@ -11,7 +11,7 @@ export default {
 </script>
 <!--global css variables-->
 <style lang="scss">
-@import url('https://fonts.googleapis.com/css2?family=Otomanopee+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,200;0,300;0,400;0,500;0,600;1,200;1,300;1,400;1,500;1,600&display=swap');
 
 .v-label {
 	font-size: 14px !important;
@@ -22,9 +22,9 @@ export default {
 }
 
 .section-header {
-	font-family: 'Otomanopee One', sans-serif;
-	font-size: 48px !important;
-	line-height: 48px !important;
+	font-family: 'Raleway', sans-serif;
+	font-size: 24px !important;
+	line-height: 24px !important;
 }
 .section-sub-header {
 	font-family: 'Otomanopee One', sans-serif;

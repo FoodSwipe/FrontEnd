@@ -59,6 +59,7 @@ const actions = {
 	async withItems({commit}) {
 		const res = await $api.get(menuItemGroupUrls.withItems)
 		commit("SET_MENU_ITEM_GROUPS", res)
+		return true
 	},
 	async fetchAll({ commit }, payload = null) {
 		const res = await $api.getWithPayload(menuItemGroupUrls.list, payload)
