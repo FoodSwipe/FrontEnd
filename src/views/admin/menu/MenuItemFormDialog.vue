@@ -320,6 +320,7 @@
 							</v-btn>
 							<v-btn
 								v-else
+								:loading="loading"
 								color="green lighten-5"
 								class="green--text"
 								depressed
@@ -348,6 +349,7 @@ export default {
 	mixins: [Snack],
 	emits: ["reload"],
 	data: () => ({
+		loading: false,
 		dialog: false,
 		editedIndex: -1,
 		imageForUpload: null,
@@ -462,7 +464,6 @@ export default {
 					id: this.editedItem.id,
 					body: payload
 				})
-				console.log(patched)
 				if (patched === true) {
 					await this.openSnack("Menu item updated successfully.", "success")
 					this.$emit("reload")
@@ -472,6 +473,7 @@ export default {
 			}
 		},
 		async createMenuItem() {
+			this.loading = true
 			const payload = getFormData({
 				...this.editedItem,
 				image: this.imageForUpload
@@ -486,6 +488,7 @@ export default {
 			} else {
 				await this.openSnack("Please load a valid form.")
 			}
+			this.loading = false
 		},
 		async save() {
 			if (this.editedIndex === -1) {

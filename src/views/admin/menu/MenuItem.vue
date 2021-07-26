@@ -1,6 +1,5 @@
 <template>
 	<div>
-		z
 		<v-row class="ma-0 pa-0">
 			<v-breadcrumbs v-if="!isLoading"
 				dark

@@ -123,6 +123,7 @@
 									Cancel
 								</v-btn>
 								<v-btn
+									:loading="loadingSave"
 									color="blue darken-1"
 									text
 									@click.prevent="save()"
@@ -249,13 +250,16 @@
 <script>
 import { getFormData } from "@/Helper"
 import { mapGetters } from "vuex"
+import Snack from "@/mixin/Snack"
 
 export default {
 	name: "MenuItemGroupAdministration",
+	mixins: [Snack],
 	data: () => ({
 		dialog: false,
 		dialogDelete: false,
 		isLoading: false,
+		loadingSave: false,
 		searchMenuItemGroup: "",
 		itemTypeArray: [
 			"Spicy",
@@ -317,11 +321,6 @@ export default {
 	},
 
 	methods: {
-		async openSnack(text, color="error") {
-			await this.$store.dispatch("snack/setSnackState", true)
-			await this.$store.dispatch("snack/setSnackColor", color)
-			await this.$store.dispatch("snack/setSnackText", text)
-		},
 		async openCreateDialog() {
 			await this.$store.dispatch("menuItemGroup/clearFormErrors")
 			this.imageForUpload = []
@@ -414,6 +413,7 @@ export default {
 		},
 
 		async save() {
+			this.loadingSave = true
 			if (this.imageForUpload.length > 0) {
 				this.editedItem.image = this.imageForUpload[0]
 			} else {
@@ -449,6 +449,7 @@ export default {
 					await this.openSnack("Please load a valid form.")
 				}
 			}
+			this.loadingSave = false
 		},
 	},
 }
