@@ -3,13 +3,13 @@
 		<v-btn
 			v-show="scrollTop"
 			v-scroll="onScroll"
-			color="pink"
+			color="orange darken-4"
 			fab
 			dark
 			small
 			fixed
 			bottom
-			right
+			left
 			@click="scrollToTop"
 		>
 			<v-icon>arrow_drop_up</v-icon>
