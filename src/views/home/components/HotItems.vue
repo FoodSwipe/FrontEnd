@@ -43,8 +43,8 @@
 					<peek-items
 						v-for="(topItem, index) in topItemsSet"
 						:key="topItem.id"
-						class="swiper-slide"
 						:item="topItem"
+						class="mb-2"
 						:class="{
 							'mr-3': topItemsSet.length !== index + 1
 						}"
@@ -63,6 +63,7 @@
 						v-for="(item, index) in recommendations"
 						:key="item.id"
 						:item="item"
+						class="mb-2"
 						:class="{
 							'mr-3': recommendations.length !== index + 1
 						}"
