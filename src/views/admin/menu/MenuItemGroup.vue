@@ -372,13 +372,13 @@ export default {
 
 		async editItem(item) {
 			await this.$store.dispatch("menuItemGroup/clearFormErrors")
-			this.editedIndex = this.menuItemGroups.indexOf(item)
+			this.editedIndex = item.id
 			this.editedItem = Object.assign({}, item)
 			this.dialog = true
 		},
 
 		deleteItem(item) {
-			this.editedIndex = this.menuItemGroups.indexOf(item)
+			this.editedIndex = item.id
 			this.editedItem = Object.assign({}, item)
 			this.dialogDelete = true
 		},
@@ -389,7 +389,6 @@ export default {
 			})
 			if (deleted === true) {
 				await this.openSnack(this.editedItem.name + " deleted successfully.", "success")
-				this.menuItemGroups.splice(this.editedIndex, 1)
 				this.closeDelete()
 			} else {
 				await this.openSnack("Internal Server Error.")

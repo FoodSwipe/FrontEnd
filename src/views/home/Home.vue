@@ -6,7 +6,7 @@
 		<how-we-serve />
 		<food-swipe-facebook />
 		<facebook-chat />
-		<visit-store />
+		<visit-store v-if="$vuetify.breakpoint.width < 1000" />
 		<scroll-top />
 	</div>
 </template>

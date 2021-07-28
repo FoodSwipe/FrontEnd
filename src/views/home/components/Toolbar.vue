@@ -19,6 +19,19 @@
 					Food Swipe
 				</v-card-title>
 				<div class="d-flex align-center justify-space-between">
+					<div
+						v-if="$vuetify.breakpoint.width > 1000"
+						class="pr-3"
+					>
+						<v-btn
+							icon
+							to="/store"
+						>
+							<v-icon size="28">
+								store
+							</v-icon>
+						</v-btn>
+					</div>
 					<v-tooltip v-if="currentUser === null"
 						bottom
 					>
@@ -60,17 +73,6 @@
 							</v-btn>
 						</template>
 						<v-list color="orange lighten-4">
-							<!--							<v-list-item>-->
-							<!--								<v-list-item-icon class="mr-2">-->
-							<!--									<v-icon>account_circle</v-icon>-->
-							<!--								</v-list-item-icon>-->
-							<!--								<v-list-item-title class="cursor"-->
-							<!--									@click="toProfile()"-->
-							<!--								>-->
-							<!--									Profile-->
-							<!--								</v-list-item-title>-->
-							<!--							</v-list-item>-->
-							<!--							<v-divider class="ml-4" />-->
 							<v-list-item v-if="showAdminButton"
 								class="cursor"
 								@click="toAdminPanel()"

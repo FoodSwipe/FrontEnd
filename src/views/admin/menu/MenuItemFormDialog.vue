@@ -310,16 +310,7 @@
 								Cancel
 							</v-btn>
 							<v-btn
-								v-if="editedIndex !== -1"
-								color="blue lighten-5"
-								class="blue--text"
-								depressed
-								@click.stop="saveAsNew"
-							>
-								save as new
-							</v-btn>
-							<v-btn
-								v-else
+								v-if="editedIndex === -1"
 								:loading="loading"
 								color="green lighten-5"
 								class="green--text"
@@ -454,9 +445,6 @@ export default {
 				this.editedIndex = -1
 			})
 			this.dialog = false
-		},
-		async saveAsNew() {
-			await this.createMenuItem()
 		},
 		async patch(payload) {
 			if (this.editedIndex !== -1) {
