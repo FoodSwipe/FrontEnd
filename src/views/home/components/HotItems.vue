@@ -79,6 +79,7 @@
 						v-for="(itemGroup, index) in itemGroups"
 						:key="itemGroup.id"
 						:item-group="itemGroup"
+						class="mb-2"
 						:class="{
 							'mr-3': itemGroups.length !== index + 1
 						}"
