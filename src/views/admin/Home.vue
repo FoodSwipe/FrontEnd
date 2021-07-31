@@ -9,7 +9,7 @@
 				<template #item="{ item }">
 					<v-breadcrumbs-item
 						class="admin-breadcrumb-item"
-						:href="item.href"
+						:to="item.href"
 						:disabled="item.disabled"
 					>
 						{{ item.text.toUpperCase() }}

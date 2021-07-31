@@ -75,7 +75,7 @@
 						<v-list color="orange lighten-4">
 							<v-list-item v-if="showAdminButton"
 								class="cursor"
-								@click="toAdminPanel()"
+								to="/admin/home"
 							>
 								<v-list-item-icon class="mr-2">
 									<v-icon>settings_applications</v-icon>
@@ -84,7 +84,10 @@
 									Settings
 								</v-list-item-title>
 							</v-list-item>
-							<v-divider class="ml-4" />
+							<v-divider
+								v-if="showAdminButton"
+								class="ml-4"
+							/>
 							<v-list-item class="cursor"
 								@click="logOut()"
 							>
@@ -151,9 +154,6 @@ export default {
 			if (this.$route.name !== "Food Swipe") {
 				router.push({ name: "Food Swipe" })
 			}
-		},
-		toAdminPanel() {
-			router.push({name: "Administration Home"})
 		},
 		async logOut() {
 			const isLoggedOut = await this.$store.dispatch("auth/logout", { username: this.currentUser.username })

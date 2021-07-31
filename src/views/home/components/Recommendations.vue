@@ -1,6 +1,5 @@
 <template>
 	<div>
-		<start-order-dialog />
 		<v-subheader class="px-0 recommend"
 			:class="
 				($vuetify.breakpoint.mdAndUp)
@@ -69,9 +68,6 @@ import router from "@/router"
 
 export default {
 	name: "RecommendationsList",
-	components: {
-		StartOrderDialog: () => import("@/components/StartOrder")
-	},
 	data: () => ({
 		addedToCart: false,
 		recommendedItemsSet: [],

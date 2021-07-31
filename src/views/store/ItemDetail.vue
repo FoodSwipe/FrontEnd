@@ -24,7 +24,7 @@
 					<template #item="{ item }">
 						<v-breadcrumbs-item
 							class="home-breadcrumb-item"
-							:href="item.href"
+							:to="item.href"
 							:disabled="item.disabled"
 						>
 							{{ item.text.toUpperCase() }}
@@ -223,20 +223,17 @@
 			</v-card>
 			<hot-items />
 		</v-card>
-		<start-order-component />
 	</v-card>
 </template>
 <script>
 import gsap from "gsap"
 import { mapGetters } from "vuex"
-import StartOrderComponent from "@/components/StartOrder"
 import SimpleToolbar from "@/components/SimpleToolbar"
 
 export default {
 	name: "ItemDetailView",
 	components: {
 		SimpleToolbar,
-		StartOrderComponent,
 		HotItems: () => import("@/views/home/components/HotItems"),
 	},
 	data: () => ({

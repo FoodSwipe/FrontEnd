@@ -66,7 +66,7 @@ import { mapGetters } from "vuex"
 import Snack from "@/mixin/Snack"
 
 export default {
-	name: "StartOrderComponent",
+	name: "StartOrder",
 	mixins: [Snack],
 	data: () => ({
 		startOrder: false,

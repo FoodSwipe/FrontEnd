@@ -88,19 +88,17 @@
 				</div>
 			</top-sheet-card>
 		</v-card>
-		<start-order-component />
 	</v-card>
 </template>
 <script>
 import { mapGetters } from "vuex"
-import StartOrderComponent from "@/components/StartOrder"
 import PeekItems from "@/components/PeekItems"
 import TopSheetCard from "@/components/TopSheetCard"
 import MenuItemGroupAvatar from "@/components/MenuItemGroupAvatar"
 
 export default {
 	name: "HotItemsComponent",
-	components: { MenuItemGroupAvatar, TopSheetCard, PeekItems, StartOrderComponent },
+	components: { MenuItemGroupAvatar, TopSheetCard, PeekItems },
 	data: () => ({
 		isLoading: false,
 		topItemsSet: [],

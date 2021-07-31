@@ -10,7 +10,6 @@
 			<v-col cols="12">
 				<store-item-group />
 			</v-col>
-			<start-order-dialog />
 		</v-row>
 	</v-card>
 </template>
@@ -20,7 +19,6 @@ export default {
 	components: {
 		StoreToolBar: () => import("@/views/store/StoreToolBar"),
 		StoreItemGroup: () => import("@/views/store/StoreItemGroup"),
-		StartOrderDialog: () => import("@/components/StartOrder")
 	},
 	methods: {
 		setSearchValue(e) {
