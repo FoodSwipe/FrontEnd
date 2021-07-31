@@ -88,7 +88,6 @@ export default {
 		async initialize() {
 			this.isLoading = true
 			const fetched = await this.$store.dispatch("homePageContent/fetchAllHomePageContent")
-			console.log(this.homePageContents)
 			if (!fetched) {
 				await this.openSnack("Internal server error. Please try again")
 			} else { this.isLoading = false}

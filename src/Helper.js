@@ -197,7 +197,6 @@ module.exports = {
 				})
 			}
 		})
-		console.log(batchGroupedKOTItems)
 		return batchGroupedKOTItems
 	},
 	/**
@@ -234,7 +233,6 @@ module.exports = {
 				})
 			}
 		})
-		console.log(orderKOTs)
 		return orderKOTs
 	},
 	/**

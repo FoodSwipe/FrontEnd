@@ -131,7 +131,6 @@ export default {
 			if (fetched) {
 				this.itemGroups = this.menuItemGroups.results
 			}
-			console.log(this.itemGroups)
 			this.isLoading = false
 		}
 	}
