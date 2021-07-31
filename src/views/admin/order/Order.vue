@@ -64,7 +64,26 @@
 											<v-icon>style</v-icon>
 										</v-btn>
 									</template>
-									<dropdown-list :filter-options="orderFilter" />
+									<v-list dark
+										dense
+									>
+										<v-list-item-group
+											v-for="(item, index) in orderFilter"
+											:key="index"
+										>
+											<v-list-item @click="initialize(item.filter)">
+												<v-list-item-icon v-if="item.icon">
+													<v-icon>{{ item.icon }}</v-icon>
+												</v-list-item-icon>
+												<v-list-item-content>
+													<v-list-item-title>{{ item.title }}</v-list-item-title>
+												</v-list-item-content>
+											</v-list-item>
+											<v-divider v-if="index + 1 !== orderFilter.length"
+												inset
+											/>
+										</v-list-item-group>
+									</v-list>
 								</v-menu>
 							</div>
 							<div class="px-1">
@@ -102,9 +121,10 @@
 									dense
 									hide-details
 									solo
-									label="Search Orders"
+									label="Search..."
 									clearable
 									prepend-inner-icon="search"
+									@change="filter({search: searchOrders})"
 								/>
 							</div>
 						</v-col>
@@ -112,7 +132,16 @@
 							xl="6" lg="6"
 							md="6" sm="6"
 						>
-							<date-filter what-to-filter="transaction" />
+							<v-text-field
+								v-model="dateFilter"
+								dense
+								hide-details
+								solo
+								label="Search by date.."
+								clearable
+								prepend-inner-icon="event"
+								@change="filter({search: dateFilter})"
+							/>
 						</v-col>
 					</v-row>
 				</template>
@@ -188,7 +217,7 @@
 						</v-card-subtitle>
 						<v-card-text class="py-0 d-flex justify-space-between">
 							<div class="delivery-status d-flex">
-								<v-tooltip v-if="!order.is_delivered"
+								<v-tooltip v-if="!order.delivery_started"
 									bottom
 								>
 									<template #activator="{attr, on}">
@@ -215,7 +244,7 @@
 									<span>Delivery started</span>
 								</v-tooltip>
 
-								<v-tooltip v-if="order.is_delivered"
+								<v-tooltip v-if="order.delivery_started && !order.is_delivered"
 									bottom
 								>
 									<template #activator="{attr, on}">
@@ -229,7 +258,7 @@
 									<span>Delivered</span>
 								</v-tooltip>
 
-								<v-tooltip v-else
+								<v-tooltip v-if="order.is_delivered"
 									bottom
 								>
 									<template #activator="{attr, on}">
@@ -254,6 +283,7 @@
 							<v-list dense
 								color="transparent"
 								class="pa-0"
+								disabled
 							>
 								<v-subheader>
 									<v-icon size="20">
@@ -349,13 +379,12 @@ import { mapGetters } from "vuex"
 export default {
 	name: "OrderAdministration",
 	components: {
-		DropdownList: () => import("@/components/DropdownList"),
-		DateFilter: () => import("@/components/DateFilter"),
 		StartOrderFormDialog: () => import("@/views/admin/order/NewOrderForm")
 	},
 	data: () => ({
 		isLoading: false,
 		searchOrders: "",
+		dateFilter: "",
 		colors: [
 			"our-blue-gradient",
 			"red-gradient",
@@ -367,10 +396,11 @@ export default {
 			"brown-gradient",
 		],
 		orderFilter: [
-			{title: "Top", icon: "favorite"},
-			{title: "Latest", icon: "history"},
-			{title: "Pending", icon: "hdr_strong"},
-			{title: "Delivered", icon: "check"},
+			{title: "All", filter: {}},
+			{title: "Done from Customer", filter: {done_from_customer: true}},
+			{title: "Customer in Progress", filter: {done_from_customer: false}},
+			{title: "Delivery Pending", filter: {delivery_started: true, is_delivered: false}},
+			{title: "Delivery Completed", filter: {is_delivered: true}},
 		],
 		orderBreadcrumbs: [
 			{
@@ -401,9 +431,10 @@ export default {
 			if (!value) return null
 			return value.substr(value.indexOf(" ")+1, value.length)
 		},
-		async initialize() {
+		async initialize(payload = null) {
 			this.isLoading = true
-			await this.$store.dispatch("order/fetchAllWithAuthenticated")
+			if(payload === null) payload = {done_from_customer: true}
+			await this.$store.dispatch("order/fetchAllWithAuthenticated", payload)
 			this.isLoading = false
 		},
 		routeToOrderDetail(order) {
@@ -411,6 +442,9 @@ export default {
 		},
 		startNewOrderByAdmin() {
 			this.$bus.emit("start-order-admin")
+		},
+		async filter(payload) {
+			await this.initialize(payload)
 		}
 	}
 }

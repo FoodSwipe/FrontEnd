@@ -93,8 +93,8 @@ const actions = {
 			...defaultOrderErrors
 		})
 	},
-	async fetchAllWithAuthenticated({commit}) {
-		const res = await $api.get(orderUrls.listAuthenticated)
+	async fetchAllWithAuthenticated({commit}, payload = null) {
+		const res = await $api.getWithPayload(orderUrls.list, payload)
 		commit("SET_ORDERS", res)
 	},
 	async withCartItems({commit}, payload) {
