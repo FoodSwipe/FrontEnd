@@ -85,6 +85,7 @@
 								<v-tooltip bottom>
 									<template #activator="{on, attrs}">
 										<v-btn
+											:loading="loadingCartBtn"
 											dark
 											class="add-to-cart-button"
 											color="orange"
@@ -121,6 +122,7 @@ export default {
 		}
 	},
 	data: () => ({
+		loadingCartBtn: false,
 		rememberFirstItem: null,
 		loading: false,
 		selection: 1,

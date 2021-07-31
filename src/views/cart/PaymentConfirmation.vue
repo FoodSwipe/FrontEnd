@@ -117,6 +117,7 @@
 			</v-card-actions>
 			<v-card-actions>
 				<v-btn
+					:loading="loadingBtn"
 					text
 					color="teal"
 					@click="doneOrder()"
@@ -138,11 +139,13 @@ export default {
 	name: "OrderConfirmation",
 	mixins: [Snack],
 	data: () =>  ({
+		loadingBtn: false,
 		isCashOnDeliverySelected: true,
 		isOnlinePaymentSelected: false,
 	}),
 	methods: {
 		async doneOrder() {
+			this.loadingBtn = true
 			const done = await this.$store.dispatch("order/doneFromCustomer", {
 				id: this.$helper.getCookingOrderId(),
 				body: {
@@ -150,13 +153,12 @@ export default {
 				}
 			})
 			if (done === true) {
-				this.$helper.removeCookingOrderIdFromLocalStorage()
-				await this.$store.dispatch("order/clearOrderDetail")
 				await this.openSnack("Order placement completed successfully.")
 				await router.push(`review-order/${this.$helper.getCookingOrderId()}`)
 			} else {
 				await this.openSnack("Internal server error. Try again.", "error")
 			}
+			this.loadingBtn = false
 		}
 	}
 }

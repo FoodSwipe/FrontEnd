@@ -18,14 +18,11 @@
 			</v-breadcrumbs>
 		</v-row>
 		<v-data-table
-			v-model:expanded="expanded"
 			:loading="isLoading"
 			dark
 			:headers="dessertHeaders"
 			:items="orderKOTs"
 			:search="searchKOT"
-			:single-expand="true"
-			show-expand
 			class="elevation-4 kot-table"
 			item-key="id"
 		>
@@ -63,30 +60,61 @@
 					</v-menu>
 				</v-toolbar>
 			</template>
-			<template #expanded-item="{ headers, item }">
-				<td :colspan="headers.length">
-					<p class="ma-0 pt-2">
-						<v-icon class="pr-1 mb-1"
-							size="20"
-							color="red"
-						>
-							star
-						</v-icon>
-						<span>More info about KOT #{{ item.id }}</span>
-					</p>
-					<v-divider class="mx-4 my-1" />
+			<!-- eslint-disable-next-line vue/valid-v-slot-->
+			<template #item.orderId="{ item }">
+				<span class="cursor one-point-two-rem orange--text"
+					@click="routeToUpdateOrder(item.orderId)"
+				>{{ item.orderId }}</span>
+			</template>
+			<!-- eslint-disable-next-line vue/valid-v-slot-->
+			<template #item.cart_items="{ item }">
+				{{ item.cartItems.length }}
+			</template>
+			<!-- eslint-disable-next-line vue/valid-v-slot-->
+			<template #item.actions="{item}">
+				<v-btn
+					icon
+					@click="openKotDetailDialog(item)"
+				>
+					<v-icon>more_vert</v-icon>
+				</v-btn>
+			</template>
+			<template #no-data>
+				<v-btn
+					color="primary"
+					@click="initialize"
+				>
+					Reset
+				</v-btn>
+			</template>
+		</v-data-table>
+		<v-dialog v-model="kotDetailDialog"
+			dark
+			max-width="400"
+		>
+			<v-card v-if="kotForPreview">
+				<v-card-title class="grey darken-3">
+					<v-icon class="pr-1"
+						size="20"
+						color="red"
+					>
+						star
+					</v-icon>
+					<span>More info about KOT for order #{{ kotForPreview.orderId }}</span>
+				</v-card-title>
+				<v-card-text>
 					<v-list dense
-						class="cart-items-list py-0"
+						class="cart-items-lis"
 						color="transparent"
 					>
 						<v-list-item-group
-							v-for="(kot, index) in batchGroupedOrderKOTs(item.cartItems)"
+							v-for="(kot, index) in batchGroupedOrderKOTs(kotForPreview.cartItems)"
 							:key="index+27*43"
 							class="px-0"
 						>
 							<v-subheader>
 								<v-btn icon
-									@click="generateKOTPDF(kot, item)"
+									@click="generateKOTPDF(kot, kotForPreview)"
 								>
 									<v-icon color="primary">
 										kitchen
@@ -94,8 +122,10 @@
 								</v-btn>
 								Batch: {{ kot.batch }}
 							</v-subheader>
-							<v-list-item v-for="(cartItem, i) in kot.cartItems"
+							<v-list-item
+								v-for="(cartItem, i) in kot.cartItems"
 								:key="i+39*871"
+								disabled
 							>
 								<v-list-item-content>
 									<v-list-item-title>
@@ -108,27 +138,9 @@
 							</v-list-item>
 						</v-list-item-group>
 					</v-list>
-				</td>
-			</template>
-			<!-- eslint-disable-next-line vue/valid-v-slot-->
-			<template #item.orderId="{ item }">
-				<span class="cursor one-point-two-rem orange--text"
-					@click="routeToUpdateOrder(item.orderId)"
-				>{{ item.orderId }}</span>
-			</template>
-			<!-- eslint-disable-next-line vue/valid-v-slot-->
-			<template #item.cart_items="{ item }">
-				{{ item.cartItems.length }}
-			</template>
-			<template #no-data>
-				<v-btn
-					color="primary"
-					@click="initialize"
-				>
-					Reset
-				</v-btn>
-			</template>
-		</v-data-table>
+				</v-card-text>
+			</v-card>
+		</v-dialog>
 	</div>
 </template>
 <script>
@@ -142,12 +154,15 @@ export default {
 			doc: null,
 			isLoading: false,
 			searchKOT: null,
-			expanded: [],
+			kotForPreview: {
+				cartItems: []
+			},
+			kotDetailDialog: null,
 			dessertHeaders: [
 				{ text: "ORDER ID", value: "orderId" },
 				{ text: "CART ITEMS", value: "cart_items", align: "start" },
 				{ text: "TIMESTAMP", value: "timestamp" },
-				{ text: "", value: "data-table-expand" },
+				{ text: "ACTIONS", value: "actions", align: "end" },
 			],
 			orderKOTs: [],
 			transactionPageBreadcrumbs: [
@@ -224,6 +239,10 @@ export default {
 			})
 			this.$helper.generateKOTPDF(kot, this.doc, item.orderId)
 			this.overlay = false
+		},
+		openKotDetailDialog(item) {
+			this.kotForPreview = item
+			this.kotDetailDialog = true
 		}
 	}
 }

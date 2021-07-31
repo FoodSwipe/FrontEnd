@@ -71,7 +71,9 @@
 				cols="12"
 				class="d-flex justify-center"
 			>
-				<v-btn dark
+				<v-btn
+					:loading="loadingCartBtn"
+					dark
 					class="to-cart-btn"
 					color="orange"
 					min-width="25"
@@ -98,6 +100,9 @@ export default {
 			required: true
 		}
 	},
+	data: () => ({
+		loadingCartBtn: null
+	})
 }
 </script>
 

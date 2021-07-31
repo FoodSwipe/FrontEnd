@@ -73,7 +73,9 @@
 						</v-card>
 					</transition>
 					<div class="to-cart-column mb-1">
-						<v-btn fab
+						<v-btn
+							:loading="loadingCartBtn"
+							fab
 							:dark="!isItemInCart"
 							color="blue-gradient"
 							:disabled="isItemInCart"
@@ -203,7 +205,9 @@
 						</v-card>
 					</v-list>
 					<v-card-actions>
-						<v-btn dark
+						<v-btn
+							:loading="loadingCartBtn"
+							dark
 							class="my-gradient"
 							block
 							:disabled="isItemInCart"
@@ -240,6 +244,7 @@ export default {
 		myReview: "",
 		isLoading: false,
 		isItemInCart: false,
+		loadingCartBtn: false,
 	}),
 	computed: {
 		...mapGetters({

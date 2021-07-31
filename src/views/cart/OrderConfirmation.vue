@@ -68,6 +68,7 @@
 			</v-card-actions>
 			<v-card-actions>
 				<v-btn
+					:loading="loadingBtn"
 					text
 					color="orange"
 					@click="proceedToPayment()"
@@ -90,6 +91,7 @@ export default {
 	name: "OrderConfirmation",
 	mixins: [Snack],
 	data: () =>  ({
+		loadingBtn: false,
 		order: {
 			custom_location: null,
 			custom_contact: null,
@@ -118,12 +120,14 @@ export default {
 			}
 		},
 		async proceedToPayment() {
+			this.loadingBtn = true
 			const patched = await this.$store.dispatch("order/unauthorizedUpdateOrder", {
 				id: this.$helper.getCookingOrderId(),
 				body: {
 					...this.order
 				}
 			})
+			this.loadingBtn = false
 			if (patched === true) {
 				await this.$store.dispatch("order/clearFormErrors")
 				await router.push({name: "Confirm Payment"})

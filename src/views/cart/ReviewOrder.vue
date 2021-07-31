@@ -99,6 +99,11 @@ import { getFormData } from "@/Helper"
 
 export default {
 	name: "ReviewOrderView",
+	beforeRouteLeave(to, from, next) {
+		this.$helper.removeCookingOrderIdFromLocalStorage()
+		this.$store.dispatch("order/clearOrderDetail")
+		next()
+	},
 	data: () => ({
 		isLoading: false,
 		cartItemsList: [],

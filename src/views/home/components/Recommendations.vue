@@ -46,7 +46,9 @@
 						</v-list-item-subtitle>
 					</v-list-item-content>
 					<v-list-item-action>
-						<v-btn icon
+						<v-btn
+							:loading="loadingCartBtn"
+							icon
 							@click="addItemToCart(food.menu_item)"
 						>
 							<v-icon>
@@ -69,6 +71,7 @@ import router from "@/router"
 export default {
 	name: "RecommendationsList",
 	data: () => ({
+		loadingCartBtn: false,
 		addedToCart: false,
 		recommendedItemsSet: [],
 		colors: [

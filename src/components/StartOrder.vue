@@ -51,6 +51,7 @@
 					Discard
 				</v-btn>
 				<v-btn
+					:loading="loadingBtn"
 					color="green darken-1"
 					text
 					@click="makeOrder()"
@@ -69,6 +70,7 @@ export default {
 	name: "StartOrder",
 	mixins: [Snack],
 	data: () => ({
+		loadingBtn: false,
 		startOrder: false,
 		withItem: null,
 		order: {
@@ -112,7 +114,9 @@ export default {
 			await this.openSnack(`Cheers! ${this.withItem.name} added to cart.`, "success")
 		},
 		async makeOrder() {
+			this.loadingBtn = true
 			const started = await this.$store.dispatch("order/startOrder", this.order)
+			this.loadingBtn = false
 			if (started === true) {
 				await this.addItemToCart({withItem: this.withItem})
 				this.startOrder = false

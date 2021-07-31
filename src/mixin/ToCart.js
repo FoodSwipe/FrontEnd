@@ -16,6 +16,7 @@ const ToCart = {
 	},
 	methods: {
 		async addItemToCart(item) {
+			this.loadingCartBtn = true
 			if (this.$helper.getCookingOrderId()) {
 				this.$bus.emit("add-item-to-cart", {
 					withItem: item
@@ -40,6 +41,7 @@ const ToCart = {
 					})
 				}
 			}
+			this.loadingCartBtn = false
 		},
 	},
 }
