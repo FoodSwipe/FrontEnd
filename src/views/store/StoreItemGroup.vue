@@ -92,16 +92,22 @@
 					sm="3"
 				>
 					<v-list
-						class="rounded ma-2 mt-3" flat
+						class="rounded ma-2 mt-3"
 						color="rgb(255 251 246)"
 					>
 						<v-subheader>Menu Item Groups</v-subheader>
 						<v-divider />
-						<v-list-item-group class="pa-1">
-							<v-list-item v-for="groupItem in storeItemGroups['results']"
+						<v-list-item-group v-model="selection"
+							class="pa-1"
+						>
+							<v-list-item
+								v-for="groupItem in storeItemGroups['results']"
 								:key="groupItem.id"
 								class="rounded"
-								@click="filter({ menu_item_group: groupItem.id })"
+								active-class="menu-item-group-active"
+								exact-active-class="menu-item-group-active"
+								:class="{'menu-item-group-active': activeGroup[groupItem.id]}"
+								@click="filterMenuItemGroup(groupItem)"
 							>
 								<v-list-item-avatar>
 									<v-img :src="groupItem.image" />
@@ -151,7 +157,7 @@ export default {
 		StoreItemCard: () => import("./StoreItemCard")
 	},
 	data: () => ({
-		panel: [],
+		selection: null,
 		loading: false,
 		menuItemType: null,
 		filterMode: false,
@@ -162,9 +168,35 @@ export default {
 			storeItemGroups: "menuItemGroup/allMenuItemGroups",
 			storeItems: "menuItem/allMenuItems",
 			itemTypes: "itemType/allItemTypes"
-		})
+		}),
+		activeGroup() {
+			let activeGroupObj = {}
+			const routerParam = this.$route.params.filter
+			if (!routerParam) return activeGroupObj
+			if (!this.storeItemGroups) return activeGroupObj
+			this.storeItemGroups.results.forEach(group => {
+				const routeId =routerParam.split("=")[1]
+				console.log(routeId, group.id)
+				activeGroupObj[group.id] = (parseInt(routeId) === group.id)
+			})
+			return activeGroupObj
+		}
+	},
+	watch: {
+		"$route.params.filter": {
+			handler: function () {
+				this.initialize()
+			},
+			deep: true,
+			immediate: true
+		}
 	},
 	async created(){
+		if(this.$helper.getCookingOrderId()) {
+			await this.$store.dispatch("order/withCartItems", {
+				id: this.$helper.getCookingOrderId()
+			})
+		}
 		this.$bus.on("search-menu-item", this.search)
 		await this.initialize()
 	},
@@ -172,16 +204,19 @@ export default {
 		this.$bus.off("search-menu-item")
 	},
 	methods: {
+		filterMenuItemGroup(groupItem) {
+			const url ="/store/menu_item_group="+ groupItem.id
+			if (this.$route.params.filter !== url) this.$router.push(url)
+		},
 		async initialize() {
+			let payload = {}
 			this.loading = true
-			await this.$store.dispatch("menuItem/fetchAll")
-			await this.$store.dispatch("menuItemGroup/fetchAll")
-			await this.$store.dispatch("itemType/fetchAllItemTypes")
-			if(this.$helper.getCookingOrderId()) {
-				await this.$store.dispatch("order/withCartItems", {
-					id: this.$helper.getCookingOrderId()
-				})
+			let routeFilter = this.$route.params.filter
+			if (routeFilter && routeFilter.includes("menu_item_group=")) {
+				this.filterMode = true
+				payload["menu_item_group"] = routeFilter.split("=")[1]
 			}
+			await this.$store.dispatch("menuItem/fetchAll", payload)
 			this.loading = false
 		},
 		search(e) {
@@ -195,6 +230,11 @@ export default {
 		},
 		async clearFilterMode() {
 			if(this.filterMode) {
+				if(this.$route.params.filter) {
+					await this.$router.push("/store")
+				}
+				console.log(this.selection)
+				this.selection = null
 				this.filterMode = false
 				await this.$store.dispatch("menuItem/fetchAll")
 			}
@@ -205,5 +245,8 @@ export default {
 <style lang="scss" scoped>
 .filter-text {
 	font-size: 12px !important;
+}
+.menu-item-group-active {
+	background-color: #d0d0d0;
 }
 </style>

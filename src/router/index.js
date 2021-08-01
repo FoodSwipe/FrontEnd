@@ -14,7 +14,7 @@ const routes = [
 				component: () => import("@/views/home/Home"),
 			},
 			{
-				path: "store",
+				path: "store/:filter?",
 				name: "Store",
 				component: () => import("@/views/store/Store")
 			},

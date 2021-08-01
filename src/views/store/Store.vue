@@ -2,6 +2,7 @@
 	<v-card width="100vw"
 		flat tile
 		color="#fff5e6"
+		:loading="loading"
 	>
 		<store-tool-bar />
 		<v-row class="ma-0 pa-0"
@@ -19,6 +20,14 @@ export default {
 	components: {
 		StoreToolBar: () => import("@/views/store/StoreToolBar"),
 		StoreItemGroup: () => import("@/views/store/StoreItemGroup"),
+	},
+	data: () => ({
+		loading: true
+	}),
+	async created() {
+		await this.$store.dispatch("menuItemGroup/fetchAll")
+		await this.$store.dispatch("itemType/fetchAllItemTypes")
+		this.loading = false
 	},
 	methods: {
 		setSearchValue(e) {

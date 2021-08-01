@@ -5,6 +5,7 @@
 		max-width="140"
 		rounded
 		color="transparent"
+		@click="$router.push(routeTo)"
 	>
 		<div>
 			<v-avatar class="menu-group-av"
@@ -26,6 +27,11 @@ export default {
 		itemGroup: {
 			type: Object,
 			required: true
+		},
+	},
+	computed: {
+		routeTo() {
+			return `/store/menu_item_group=${this.itemGroup.id}`
 		}
 	}
 }
