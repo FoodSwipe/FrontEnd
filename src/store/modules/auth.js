@@ -56,8 +56,8 @@ const actions = {
 	},
 	async logout({}, payload) {
 		try {
-			await $api.post(authUrls.logout, payload)
 			localStorage.clear()
+			await $api.post(authUrls.logout, payload)
 			return true
 		} catch(err) {
 			return err.response.data
