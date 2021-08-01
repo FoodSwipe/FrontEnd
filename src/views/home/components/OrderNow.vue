@@ -289,6 +289,10 @@ export default {
 			}
 		},
 		async startShopping() {
+			if (!this.order.custom_location && !this.order.custom_contact) {
+				await this.openSnack("Please fill the form to start your order.")
+				return
+			}
 			const started = await this.$store.dispatch("order/startOrder", this.order)
 			if (started === true) {
 				this.order = {

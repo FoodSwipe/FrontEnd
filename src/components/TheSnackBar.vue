@@ -3,6 +3,7 @@
 		v-model="snack"
 		:timeout="3000"
 		class="food-swipe-snack"
+		bottom
 	>
 		{{ snackText }}
 		<template #action="{ attrs }">
@@ -41,5 +42,7 @@ export default {
 </script>
 
 <style scoped>
-
+.food-swipe-snack {
+	z-index: 200;
+}
 </style>

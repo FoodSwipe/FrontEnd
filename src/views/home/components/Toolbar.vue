@@ -1,16 +1,21 @@
 <template>
-	<v-card flat
+	<v-card
+		dark
+		flat
 		tile
 		width="100vw"
-		color="transparent"
+		color="#9e9e9e6e"
+		style="position: fixed; top: 0; z-index: 2;"
+		height="50"
 	>
 		<v-card max-width="1000"
 			color="transparent"
 			class="pr-4 mx-auto"
 			flat tile
+			height="50"
 		>
 			<div class="d-flex align-center justify-space-between"
-				style="width: 100%"
+				style="width: 100%; height: 50px;"
 			>
 				<v-card-title class="organization-title"
 					:class="($route.name !== 'Food Swipe') ? 'cursor': ''"
@@ -156,15 +161,10 @@ export default {
 			}
 		},
 		async logOut() {
-			const isLoggedOut = await this.$store.dispatch("auth/logout", { username: this.currentUser.username })
-			if (isLoggedOut === true) {
-				await this.openSnack("Logged out successfully.")
-				this.currentUser = null
-				this.$bus.emit("refresh-order-now")
-			} else {
-				await this.openSnack(isLoggedOut.detail, "error")
-				localStorage.clear()
-			}
+			await this.$store.dispatch("auth/logout", { username: this.currentUser.username })
+			await this.openSnack("Logged out successfully.")
+			this.currentUser = null
+			this.$bus.emit("refresh-order-now")
 			await this.initialize()
 		},
 	}

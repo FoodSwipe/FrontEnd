@@ -27,8 +27,6 @@
 				/>
 			</v-card>
 		</flickity>
-		<home-toolbar style="position: absolute; top:0;" />
-		<order-now style="position: absolute; top: 30vh;" />
 		<div
 			style="position: absolute; top: 90vh; width: 100vw; display: flex; justify-content: center"
 		>
@@ -52,9 +50,7 @@ import Flickity from "vue-flickity"
 export default {
 	name: "ShowCaseSlider",
 	components: {
-		Flickity,
-		HomeToolbar: () => import("@/views/home/components/Toolbar"),
-		OrderNow: () => import("@/views/home/components/OrderNow"),
+		Flickity
 	},
 	mixins: [Snack],
 	data: () => ({
