@@ -176,7 +176,6 @@ export default {
 			if (!this.storeItemGroups) return activeGroupObj
 			this.storeItemGroups.results.forEach(group => {
 				const routeId =routerParam.split("=")[1]
-				console.log(routeId, group.id)
 				activeGroupObj[group.id] = (parseInt(routeId) === group.id)
 			})
 			return activeGroupObj

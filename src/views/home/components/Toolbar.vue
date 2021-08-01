@@ -162,8 +162,9 @@ export default {
 		},
 		async logOut() {
 			await this.$store.dispatch("auth/logout", { username: this.currentUser.username })
-			await this.openSnack("Logged out successfully.")
+			await this.openSnack("Logged out successfully.", "success")
 			this.currentUser = null
+			await this.$store.dispatch("order/clearOrderDetail")
 			this.$bus.emit("refresh-order-now")
 			await this.initialize()
 		},

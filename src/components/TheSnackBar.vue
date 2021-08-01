@@ -33,7 +33,6 @@ export default {
 		}),
 		snack: {
 			get() {
-				console.log(this.$store.state.snack.snack)
 				return this.$store.state.snack.snack
 			},
 			set(v) {

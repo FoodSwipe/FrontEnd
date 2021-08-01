@@ -346,7 +346,7 @@ export default {
 			const loggedIn = await this.$store.dispatch("auth/login", this.login)
 			if (loggedIn === true) {
 				// logged in with zero pending order
-				await this.openSnack("Logged in successfully.")
+				await this.openSnack("Logged in successfully.", "success")
 				this.$bus.emit("set-cart-count", 0)
 				this.$bus.emit("refresh-order-now")
 				this.$emit("reload")
@@ -359,7 +359,7 @@ export default {
 				await this.openSnack(loggedIn.message, "error")
 			} else if (typeof loggedIn === "number") {
 				// logged in with a pending order
-				await this.openSnack("Logged in successfully.")
+				await this.openSnack("Welcome. You've a on going order. Do you want to checkout?", "success")
 				this.$bus.emit("set-cart-count", loggedIn)
 				this.$bus.emit("refresh-cart")
 				this.$bus.emit("refresh-order-now")

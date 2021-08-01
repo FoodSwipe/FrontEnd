@@ -153,7 +153,7 @@ export default {
 				}
 			})
 			if (done === true) {
-				await this.openSnack("Order placement completed successfully.")
+				await this.openSnack("Order placement completed successfully.", "success")
 				await router.push(`review-order/${this.$helper.getCookingOrderId()}`)
 			} else {
 				await this.openSnack("Internal server error. Try again.", "error")

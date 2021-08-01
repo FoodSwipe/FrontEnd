@@ -115,11 +115,15 @@ export default {
 			})
 			this.order = {
 				custom_location: this.cookingOrder.custom_location,
-				custom_contact: this.cookingOrder.custom_contact.replace(/\D/g, ""),
+				custom_contact: (this.cookingOrder.custom_contact) ? this.cookingOrder.custom_contact.replace(/\D/g, "") : "",
 				custom_email: this.cookingOrder.custom_email,
 			}
 		},
 		async proceedToPayment() {
+			if(!this.order.custom_location && !this.order.custom_email) {
+				await this.openSnack("Please provide your delivery address and contact details.", "error")
+				return
+			}
 			this.loadingBtn = true
 			const patched = await this.$store.dispatch("order/unauthorizedUpdateOrder", {
 				id: this.$helper.getCookingOrderId(),

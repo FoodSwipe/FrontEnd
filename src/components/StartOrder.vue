@@ -53,6 +53,15 @@
 				<v-spacer />
 				<v-btn
 					:loading="loadingBtn"
+					color="grey darken-1"
+					text
+					small
+					@click="skipWithMakeOrder()"
+				>
+					LATER
+				</v-btn>
+				<v-btn
+					:loading="loadingBtn"
 					color="green darken-1"
 					text
 					small
@@ -115,11 +124,17 @@ export default {
 			await this.$store.dispatch("order/withCartItems", {id: this.$helper.getCookingOrderId()})
 			await this.openSnack(`Cheers! ${this.withItem.name} added to cart.`, "success")
 		},
+		async skipWithMakeOrder() {
+			await this.startOrderProcess()
+		},
 		async makeOrder() {
 			if(!this.order.custom_contact && !this.order.custom_location) {
 				await this.openSnack("Please fill the form to start your order.")
 				return
 			}
+			await this.startOrderProcess()
+		},
+		async startOrderProcess() {
 			this.loadingBtn = true
 			const started = await this.$store.dispatch("order/startOrder", this.order)
 			this.loadingBtn = false
@@ -139,7 +154,7 @@ export default {
 				})
 				this.startOrder = false
 			}
-		},
+		}
 	}
 }
 </script>

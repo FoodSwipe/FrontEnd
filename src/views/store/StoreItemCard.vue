@@ -91,7 +91,7 @@
 											color="orange"
 											v-bind="attrs"
 											v-on="on"
-											@click.prevent="addItemToCart(item)"
+											@click.stop="addItemToCart(item)"
 										>
 											<v-icon size="20">
 												add_shopping_cart
