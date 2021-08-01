@@ -41,19 +41,21 @@
 					</v-col>
 				</v-row>
 			</v-card-text>
-			<v-card-actions>
-				<v-spacer />
+			<v-card-actions class="px-8">
 				<v-btn
 					color="red darken-1"
 					text
+					small
 					@click="startOrder = false"
 				>
 					Discard
 				</v-btn>
+				<v-spacer />
 				<v-btn
 					:loading="loadingBtn"
 					color="green darken-1"
 					text
+					small
 					@click="makeOrder()"
 				>
 					Proceed
@@ -114,11 +116,17 @@ export default {
 			await this.openSnack(`Cheers! ${this.withItem.name} added to cart.`, "success")
 		},
 		async makeOrder() {
+			if(!this.order.custom_contact && !this.order.custom_location) {
+				await this.openSnack("Please fill the form to start your order.")
+				return
+			}
 			this.loadingBtn = true
 			const started = await this.$store.dispatch("order/startOrder", this.order)
 			this.loadingBtn = false
 			if (started === true) {
+				this.loadingBtn = true
 				await this.addItemToCart({withItem: this.withItem})
+				this.loadingBtn = false
 				this.startOrder = false
 			} else if (started === 500) {
 				await this.openSnack("Internal Server Error.")

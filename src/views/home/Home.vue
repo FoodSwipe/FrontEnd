@@ -1,18 +1,8 @@
 <template>
 	<div>
 		<home-toolbar />
-		<v-card height="100vh"
-			class="transparent"
-			style="z-index: 0; position: relative"
-			dark
-		>
-			<order-now style="z-index: 2; position: absolute; top: 35vh;" />
-			<v-card height="100vh"
-				style="position: absolute; top: 0; z-index: 1;"
-			>
-				<swiper />
-			</v-card>
-		</v-card>
+		<order-now style="z-index: 1; position: absolute; top: 30vh;" />
+		<swiper />
 		<hot-items />
 		<our-menu />
 		<how-we-serve />

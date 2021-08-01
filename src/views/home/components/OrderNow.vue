@@ -27,6 +27,7 @@
 			v-if="cookingOrderId"
 			max-width="820"
 			class="mx-auto"
+			dark
 		>
 			<v-card-title class="d-flex justify-space-between align-center">
 				<div>
@@ -90,7 +91,9 @@
 								class="pa-2 ml-2 mb-1 text-center"
 								color="grey darken-3"
 							>
-								<v-avatar>
+								<v-avatar rounded
+									size="80"
+								>
 									<v-img :src="item.item.image" />
 								</v-avatar>
 								<div class="subtitle-2 cursor"

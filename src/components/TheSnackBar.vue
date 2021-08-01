@@ -1,13 +1,16 @@
 <template>
 	<v-snackbar
 		v-model="snack"
-		:timeout="3000"
-		class="food-swipe-snack"
-		bottom
+		:timeout="5000"
+		top
+		:color="snackColor"
+		outlined
+		right
 	>
 		{{ snackText }}
 		<template #action="{ attrs }">
 			<v-btn
+				small
 				text
 				:color="snackColor"
 				v-bind="attrs"
@@ -18,12 +21,11 @@
 		</template>
 	</v-snackbar>
 </template>
-
 <script>
-import { mapGetters } from "vuex"
+import {mapGetters} from "vuex";
 
 export default {
-	name: "TheSnackBar",
+	name: "TheSnackbar",
 	computed: {
 		...mapGetters({
 			snackText: "snack/snackText",
@@ -31,18 +33,13 @@ export default {
 		}),
 		snack: {
 			get() {
+				console.log(this.$store.state.snack.snack)
 				return this.$store.state.snack.snack
 			},
 			set(v) {
 				this.$store.dispatch("snack/setSnackState", v)
 			}
-		}
+		},
 	}
 }
 </script>
-
-<style scoped>
-.food-swipe-snack {
-	z-index: 200;
-}
-</style>
