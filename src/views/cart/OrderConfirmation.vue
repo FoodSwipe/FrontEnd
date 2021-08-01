@@ -1,7 +1,7 @@
 <template>
 	<v-card max-width="600"
 		flat
-		class="mx-auto delivery-details-card"
+		class="mx-auto delivery-details-card transparent"
 	>
 		<div class="order-card-header">
 			<v-card-title class="grey--text text--darken-3">

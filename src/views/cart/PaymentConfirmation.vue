@@ -1,6 +1,6 @@
 <template>
 	<v-card max-width="600" flat
-		class="mx-auto payment-details-card"
+		class="mx-auto payment-details-card transparent"
 	>
 		<div class="order-card-header">
 			<v-card-title class="grey--text text--darken-3">

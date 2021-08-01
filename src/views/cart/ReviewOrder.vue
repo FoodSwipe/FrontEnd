@@ -1,7 +1,7 @@
 <template>
 	<v-card max-width="600"
 		flat
-		class="mx-auto review-order-card"
+		class="mx-auto review-order-card transparent"
 	>
 		<div class="order-card-header pt-1">
 			<v-card-title class="grey--text text--darken-3">

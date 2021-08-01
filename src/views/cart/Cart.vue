@@ -12,6 +12,7 @@
 		>
 			<v-row class="ma-0 pa-0 px-3"
 				justify="center"
+				align="center"
 			>
 				<v-breadcrumbs v-if="!isLoading"
 					:items="cartBreadcrumbs"
