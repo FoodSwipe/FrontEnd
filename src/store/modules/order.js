@@ -146,6 +146,14 @@ const actions = {
 			return 500
 		}
 	},
+	async initKot({}, {id: id}) {
+		try {
+			await $api.post(util.format(orderUrls.initKot, id))
+			return true
+		} catch (e) {
+			return false
+		}
+	},
 	async update({commit}, payload) {
 		try {
 			await $api.put(util.format(orderUrls.detail, payload.id), payload.body)

@@ -57,7 +57,8 @@
     "userStoreSummary": "user/%s/store-summary",
     "saleSummary": "sales-report",
     "doneFromCustomer": "done-from-customer/%s",
-    "timestampFilter": "order/?created_at_after=%s&created_at_before=%s"
+    "timestampFilter": "order/?created_at_after=%s&created_at_before=%s",
+    "initKot": "init-fist-batch/%s"
   },
   "kot": {
     "list": "order-kot/",

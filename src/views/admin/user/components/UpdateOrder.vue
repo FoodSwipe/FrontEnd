@@ -79,6 +79,7 @@
 					</v-btn>
 					<v-btn icon
 						color="error"
+						@click="deleteOrder"
 					>
 						<v-icon>delete</v-icon>
 					</v-btn>
@@ -106,7 +107,7 @@
 						<v-data-table
 							:headers="headers"
 							:search="searchOrderItems"
-							:items="order.cart_items"
+							:items="order['cart_items']"
 							sort-by="calories"
 							class="elevation-1"
 							hide-default-footer
@@ -211,26 +212,21 @@
 														</template>
 													</template>
 													<template #append-outer>
-														<v-avatar v-ripple
-															size="30"
-															color="orange"
-															class="golden-rod-border-2 elevation-4"
+														<v-btn
+															:loading="adding"
+															color="grey darken-3"
 															@click="addSelectedItemsToOrderCart()"
 														>
 															<v-icon>
-																add_circle
+																add
 															</v-icon>
-														</v-avatar>
+														</v-btn>
 													</template>
 												</v-autocomplete>
 											</v-col>
 										</v-row>
 									</template>
 								</v-toolbar>
-							</template>
-							<!-- eslint-disable-next-line vue/valid-v-slot-->
-							<template #item.name="{ item }">
-								{{ item.item.name }}
 							</template>
 							<!-- eslint-disable-next-line vue/valid-v-slot-->
 							<template #item.subTotal="{ item }">
@@ -414,6 +410,7 @@
 					>
 						<v-btn
 							:disabled="order.is_delivered"
+							:loading="updating"
 							block
 							large
 							@click="updateOrder"
@@ -430,14 +427,18 @@
 import jsPDF from "jspdf"
 import "jspdf-autotable"
 import { mapGetters } from "vuex"
+import Snack from "@/mixin/Snack"
 
 export default {
 	name: "UpdateUserOrderByAdminComponent",
 	components: {
 		OrderKOTMenu: () => import("@/views/admin/components/OrderKOTMenu")
 	},
+	mixins: [Snack],
 	data: () => ({
+		adding: false,
 		overlay: false,
+		updating: false,
 		isLoading: false,
 		searchOrderItems: "",
 		isUpdating: false,
@@ -445,7 +446,7 @@ export default {
 		orderNowRefinedList: [],
 		headers: [
 			{ text: "Actions", value: "actions", sortable: false, align: "center" },
-			{ text: "Menu Item", value: "name", align: "start"},
+			{ text: "Menu Item", value: "item.name", align: "start"},
 			{ text: "Quantity", value: "quantity" },
 			{ text: "Sub Total (NRs)", value: "subTotal" },
 		],
@@ -542,12 +543,14 @@ export default {
 			const reaction = confirm("Are you sure the order is delivered? You will not be able to modify" +
 				" this order further after setting it to done.");
 			if (reaction === true) {
+				this.overlay = true
 				const patched = await this.$store.dispatch("order/patch", {
 					id: this.order.id,
 					body: {
 						is_delivered: true
 					}
 				})
+				this.overlay = false
 				if (patched === true) {
 					await this.openSnack("Order completed successfully.", "success")
 					await this.initialize({
@@ -559,12 +562,14 @@ export default {
 		async startDelivery() {
 			const reaction = confirm(`Are you sure to start delivery for order #${this.order.id}?`);
 			if (reaction === true) {
+				this.overlay = true
 				const patched = await this.$store.dispatch("order/patch", {
 					id: this.order.id,
 					body: {
 						delivery_started: true
 					}
 				})
+				this.overlay = false
 				if (patched === true) {
 					await this.openSnack("Order updated successfully.", "success")
 					await this.initialize({
@@ -757,6 +762,7 @@ export default {
 			if (index >= 0) this.selectedItems.splice(index, 1)
 		},
 		async updateQuantity(item) {
+			this.overlay = true
 			const patched = await this.$store.dispatch("cart/adminUpdateCartItemQuantity", {
 				cartId: item.id,
 				body: {
@@ -777,17 +783,11 @@ export default {
 				id: this.order.id
 			})
 		},
-		async openSnack(text, color="error") {
-			await this.$store.dispatch("snack/setSnackState", true)
-			await this.$store.dispatch("snack/setSnackColor", color)
-			await this.$store.dispatch("snack/setSnackText", text)
-		},
-		cancelQuantityUpdate() {
-			// do nothing
-		},
+		cancelQuantityUpdate() {},
 		async addSelectedItemsToOrderCart() {
 			let addedToCart = false
 			if (this.selectedItems.length === 0) return
+			this.adding = true
 			for (const itemID of this.selectedItems) {
 				addedToCart = await this.$store.dispatch("cart/addToCart", {
 					order: this.order.id,
@@ -800,11 +800,22 @@ export default {
 				await this.initialize({id: this.order.id})
 				this.selectedItems = []
 			}
+			this.adding = false
+		},
+		async deleteOrder() {
+			this.overlay = true
+			const deleted = await this.$store.dispatch("order/delete", {id: this.order.id})
+			this.overlay = false
+			if(deleted) {
+				await this.openSnack("Order deleted successfully")
+				await this.$router.push("/admin/order")
+			} else await this.openSnack("Order deleted failed. Try again.", "error")
 		},
 		/**
 		 * update delivery location, delivery charge and loyalty discount
 		 */
 		async updateOrder() {
+			this.updating = true
 			const patched = await this.$store.dispatch("order/patch", {
 				id: this.order.id,
 				body: {
@@ -813,6 +824,7 @@ export default {
 					loyalty_discount: this.order.loyalty_discount,
 				}
 			})
+			this.updating = false
 			if (patched === true) {
 				await this.openSnack("Order updated successfully.", "success")
 				await this.$store.dispatch("order/clearFormErrors")

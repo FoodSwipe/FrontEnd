@@ -205,7 +205,7 @@
 							sm="6"
 							class="checkbox-input-column"
 						>
-							<v-checkbox v-model="done_from_customer"
+							<v-checkbox v-model="order.done_from_customer"
 								hide-details="auto" label="Done from customer?"
 								readonly color="orange"
 							/>
@@ -236,6 +236,7 @@
 							Cancel
 						</v-btn>
 						<v-btn
+							:loading="saving"
 							color="blue lighten-5"
 							class="blue--text"
 							depressed
@@ -252,24 +253,27 @@
 <script>
 import { mapGetters } from "vuex"
 import router from "@/router"
+import Snack from "@/mixin/Snack"
 
 export default {
 	name: "StartOrderByAdminFormDialog",
+	mixins: [Snack],
 	data: () => ({
 		isLoading: false,
+		saving: false,
 		isLoadingAutocomplete: false,
 		dialog: false,
 		isUpdating: false,
 		selectedItems: [],
 		orderNowRefinedList: [],
 		search: null,
-		done_from_customer: true,
 		order: {
 			custom_contact: null,
 			custom_location: null,
 			delivery_charge: null,
 			loyalty_discount: 0,
-			payment_type: "Cash"
+			payment_type: "Cash",
+			done_from_customer: true
 		},
 		contactFormErrorMsg: [],
 	}),
@@ -301,24 +305,26 @@ export default {
 		},
 		async initialize() {
 			this.isLoading = true
+			this.dialog = true
 			this.order.delivery_charge = this.$helper.getDeliveryCharge()
 			await this.initializeMenuItemAutocomplete()
 			await this.initializeContactList()
 			await this.$store.dispatch("order/clearFormErrors")
 			this.isLoading = false
-			this.dialog = true
 		},
 		closeDialog() {
 			this.dialog = false
 		},
 		async saveOrder() {
 			let addedToCart = false
+			this.saving = true
 			if(typeof this.order.custom_contact == "string") {
 				this.contactFormErrorMsg = []
 				// every thing is ok
 			} else if (typeof this.order.custom_contact == "object"){
 				if (this.order.custom_contact === null) {
 					this.contactFormErrorMsg.push("This field is required")
+					this.saving = false
 					return
 				}
 				this.contactFormErrorMsg = []
@@ -334,14 +340,19 @@ export default {
 						})
 						if (addedToCart === 500) {
 							await this.openSnack("Internal server error. Please try again.")
+							this.saving = false
 							return
 						} else if (addedToCart === false) {
 							await this.openSnack("Please load a valid form and try again.")
+							this.saving = false
 							return
 						}
 					}
 				}
 				await this.openSnack("Order placed successfully.", "success")
+				const kot = await this.$store.dispatch("order/initKot", {id: this.lastCreatedOrderId})
+				if(kot) await this.openSnack("Kot initialized successfully")
+				else await this.openSnack("Kot initialization failed.", "error")
 				this.closeDialog()
 				await router.push("/admin/order/"+this.lastCreatedOrderId)
 			} else if(orderStarted === 500) {
@@ -353,6 +364,7 @@ export default {
 					this.contactFormErrorMsg = []
 				}
 				await this.openSnack("Please load a valid form and try again.")
+				this.saving = false
 			}
 		},
 		removeItemFromSelectedOrderInput(item) {
