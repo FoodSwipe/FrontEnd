@@ -9,6 +9,24 @@
 		<food-swipe-facebook />
 		<facebook-chat />
 		<visit-store v-if="$vuetify.breakpoint.width < 1000" />
+		<v-chip class="ma-1 contact-chip"
+			:class="{ 'slight-up' : ($vuetify.breakpoint.width > 1300),
+				'slight-down': ($vuetify.breakpoint.width < 1300)
+			}"
+			color="orange lighten-4"
+		>
+			<v-icon small
+				left color="#f96a1f"
+			>
+				call
+			</v-icon>
+			<a href="tel:9802801073"
+				class="text-decoration-none"
+				style="color: #f96a1f;"
+			>
+				9802801073
+			</a>
+		</v-chip>
 		<scroll-top />
 	</div>
 </template>
@@ -29,3 +47,20 @@ export default {
 	},
 };
 </script>
+<style lang="scss" scoped>
+.public-contact-icon {
+	height: 100%;
+	display: flex;
+	align-items: center;
+	padding-right: 6px;
+}
+.contact-chip {
+	position: fixed; right: 10px; z-index: 3;
+}
+.slight-up {
+	top: 5px;
+}
+.slight-down {
+	top: 55px;
+}
+</style>
