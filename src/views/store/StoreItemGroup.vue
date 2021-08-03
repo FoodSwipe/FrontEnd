@@ -1,12 +1,13 @@
 <template>
 	<v-card flat
 		tile
-		:loading="loading"
 		color="transparent"
 	>
 		<v-card flat
-			tile color="#fcf8f2"
+			tile color="orange"
+			:loading="loading"
 			width="100vw"
+			style="background-color: #fcf8f2!important;"
 		>
 			<v-card v-if="itemTypes"
 				class="py-4 px-2 d-flex justify-start align-center flex-wrap mx-auto"
@@ -126,6 +127,7 @@
 					sm="9"
 				>
 					<v-row
+						v-if="storeItems.length"
 						class="ma-0 pa-0"
 						no-gutters
 					>
@@ -143,6 +145,19 @@
 							/>
 						</v-col>
 					</v-row>
+					<v-card v-else
+						class="ma-4"
+						outlined
+					>
+						<v-card-title class="grey lighten-3 d-flex justify-center subtitle-2">
+							No results found.
+						</v-card-title>
+						<v-card-actions class="justify-center">
+							<v-btn @click="initialize">
+								Reset
+							</v-btn>
+						</v-card-actions>
+					</v-card>
 				</v-col>
 			</v-row>
 		</v-card>
@@ -218,8 +233,8 @@ export default {
 			await this.$store.dispatch("menuItem/fetchAll", payload)
 			this.loading = false
 		},
-		search(e) {
-			this.filter(e)
+		async search(e) {
+			await this.filter(e)
 		},
 		async filter(payload = null) {
 			this.loading = true
@@ -232,7 +247,6 @@ export default {
 				if(this.$route.params.filter) {
 					await this.$router.push("/store")
 				}
-				console.log(this.selection)
 				this.selection = null
 				this.filterMode = false
 				await this.$store.dispatch("menuItem/fetchAll")

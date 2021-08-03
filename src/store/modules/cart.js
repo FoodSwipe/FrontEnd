@@ -70,7 +70,6 @@ const actions = {
 	},
 	async addToCart({commit}, payload) {
 		try {
-			console.log("whats going on ...")
 			await $api.post(cartUrls.list, payload)
 			return true
 		} catch (e) {

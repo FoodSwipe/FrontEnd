@@ -44,7 +44,7 @@
 						:value="search"
 						placeholder="Search our store"
 						class="search-store"
-						@keypress="setSearchValue"
+						@change="setSearchValue"
 						@keypress.enter="searchMenuItems"
 					>
 				</div>
