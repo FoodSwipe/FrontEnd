@@ -1,9 +1,11 @@
 <template>
-	<v-card flat
-		tile
+	<v-card
+		flat tile
+		:loading="isLoading"
 		class="mx-auto"
 		min-height="100vh"
-		color="#fff5e6"
+		color="orange"
+		style="background-color: #fff5e6 !important;"
 	>
 		<simple-toolbar />
 		<v-card max-width="1200"

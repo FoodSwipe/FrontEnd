@@ -52,7 +52,7 @@
 				</v-btn>
 				<v-spacer />
 				<v-btn
-					:loading="loadingBtn"
+					:loading="loadingLater"
 					color="grey darken-1"
 					text
 					small
@@ -82,6 +82,7 @@ export default {
 	mixins: [Snack],
 	data: () => ({
 		loadingBtn: false,
+		loadingLater: false,
 		startOrder: false,
 		withItem: null,
 		order: {
@@ -125,7 +126,9 @@ export default {
 			await this.openSnack(`Cheers! ${this.withItem.name} added to cart.`, "success")
 		},
 		async skipWithMakeOrder() {
+			this.loadingLater = true
 			await this.startOrderProcess()
+			this.loadingLater = false
 		},
 		async makeOrder() {
 			if(!this.order.custom_contact && !this.order.custom_location) {

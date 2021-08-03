@@ -1,8 +1,9 @@
 <template>
 	<v-card width="100vw"
 		flat tile
-		color="#fff5e6"
+		color="orange"
 		:loading="loading"
+		style="background-color: #fff5e6 !important;"
 	>
 		<store-tool-bar />
 		<v-row class="ma-0 pa-0"

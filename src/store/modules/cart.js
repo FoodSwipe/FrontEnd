@@ -66,6 +66,7 @@ const actions = {
 	async fetchParticular({commit}, payload) {
 		const res = await $api.get(util.format(cartUrls.detail, payload.id))
 		commit("SET_CART_ITEM", res)
+
 	},
 	async addToCart({commit}, payload) {
 		try {
