@@ -2,7 +2,7 @@
 	<v-card
 		class="peek-item"
 		max-width="140"
-		min-height="300"
+		height="320"
 		color="elevation-1"
 		rounded
 	>

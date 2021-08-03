@@ -55,6 +55,37 @@
 				rounded
 				max-width="600"
 			>
+				<v-card-text class="text-center py-0">
+					<div class="text-uppercase">
+						Contact us here
+					</div>
+				</v-card-text>
+				<v-card-text class="text-center">
+					<v-chip class="ma-1">
+						<v-icon small
+							left color="primary"
+						>
+							call
+						</v-icon>
+						<a href="tel:9802801073"
+							class="phone"
+						>
+							9802801073
+						</a>
+					</v-chip>
+					<v-chip class="ma-1">
+						<v-icon small
+							left color="primary"
+						>
+							call
+						</v-icon>
+						<a href="tel:9802801073"
+							class="phone"
+						>
+							980-6742220
+						</a>
+					</v-chip>
+				</v-card-text>
 				<v-card-title class="text-center d-flex justify-center align-center">
 					<div class="section-sub-header">
 						Stay connected with us!
@@ -184,5 +215,8 @@ export default {
 		width: calc(202% + 1.3px);
 		height: 322px;
 	}
+}
+.phone {
+	text-decoration: none;
 }
 </style>

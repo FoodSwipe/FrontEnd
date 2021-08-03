@@ -331,5 +331,6 @@ export default {
 	line-height: 2.2rem;
 	font-weight: bold;
 	text-align: center;
+	color: white;
 }
 </style>

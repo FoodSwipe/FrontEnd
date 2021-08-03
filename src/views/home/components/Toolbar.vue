@@ -8,109 +8,129 @@
 		style="position: fixed; top: 0; z-index: 2;"
 		height="50"
 	>
-		<v-card max-width="1000"
-			color="transparent"
-			class="pr-4 mx-auto"
-			flat tile
-			height="50"
-		>
-			<div class="d-flex align-center justify-space-between"
-				style="width: 100%; height: 50px;"
+		<div style="position: relative">
+			<v-chip class="ma-1 contact-chip"
+				:class="{ 'slight-up' : ($vuetify.breakpoint.width > 1300),
+					'slight-down': ($vuetify.breakpoint.width < 1300)
+				}"
+				color="orange lighten-4"
 			>
-				<v-card-title class="organization-title"
-					:class="($route.name !== 'Food Swipe') ? 'cursor': ''"
-					@click="toHome"
+				<v-icon small
+					left color="#f96a1f"
 				>
-					Food Swipe
-				</v-card-title>
-				<div class="d-flex align-center justify-space-between">
-					<div
-						v-if="$vuetify.breakpoint.width > 1000"
-						class="pr-3"
+					call
+				</v-icon>
+				<a href="tel:9802801073"
+					class="text-decoration-none"
+					style="color: #f96a1f;"
+				>
+					9802801073
+				</a>
+			</v-chip>
+			<v-card max-width="1000"
+				color="transparent"
+				class="pr-4 mx-auto"
+				flat tile
+				height="50"
+			>
+				<div class="d-flex align-center justify-space-between"
+					style="width: 100%; height: 50px;"
+				>
+					<v-card-title class="organization-title"
+						:class="($route.name !== 'Food Swipe') ? 'cursor': ''"
+						@click="toHome"
 					>
-						<v-btn
-							icon
-							to="/store"
+						Food Swipe
+					</v-card-title>
+					<div class="d-flex align-center justify-space-between">
+						<div
+							v-if="$vuetify.breakpoint.width > 1000"
+							class="pr-3"
 						>
-							<v-icon size="28">
-								store
-							</v-icon>
-						</v-btn>
+							<v-btn
+								icon
+								to="/store"
+							>
+								<v-icon size="28">
+									store
+								</v-icon>
+							</v-btn>
+						</div>
+						<v-tooltip v-if="currentUser === null"
+							bottom
+						>
+							<template #activator="{on, attrs}">
+								<v-btn
+									v-bind="attrs"
+									icon
+									small
+									class="cursor"
+									v-on="on"
+									@click.stop="toggleDrawerState()"
+								>
+									<v-icon size="26">
+										input
+									</v-icon>
+								</v-btn>
+							</template>
+							<span>Login</span>
+						</v-tooltip>
+						<v-menu
+							v-else
+							close-on-content-click
+							offset-y
+							transition="scale-transition"
+							nudge-left="10"
+							nudge-bottom="5"
+						>
+							<template #activator="{on, attrs}">
+								<v-btn
+									icon
+									small
+									class="cursor"
+									v-bind="attrs"
+									v-on="on"
+								>
+									<v-icon size="26">
+										account_circle
+									</v-icon>
+								</v-btn>
+							</template>
+							<v-list color="orange lighten-4">
+								<v-list-item v-if="showAdminButton"
+									class="cursor"
+									to="/admin/home"
+								>
+									<v-list-item-icon class="mr-2">
+										<v-icon>settings_applications</v-icon>
+									</v-list-item-icon>
+									<v-list-item-title>
+										Settings
+									</v-list-item-title>
+								</v-list-item>
+								<v-divider
+									v-if="showAdminButton"
+									class="ml-4"
+								/>
+								<v-list-item class="cursor"
+									@click="logOut()"
+								>
+									<v-list-item-icon class="mr-2">
+										<v-icon>input</v-icon>
+									</v-list-item-icon>
+									<v-list-item-title>
+										Logout
+									</v-list-item-title>
+								</v-list-item>
+							</v-list>
+						</v-menu>
+						<div class="px-2" />
+						<cart-indicator />
 					</div>
-					<v-tooltip v-if="currentUser === null"
-						bottom
-					>
-						<template #activator="{on, attrs}">
-							<v-btn
-								v-bind="attrs"
-								icon
-								small
-								class="cursor"
-								v-on="on"
-								@click.stop="toggleDrawerState()"
-							>
-								<v-icon size="26">
-									input
-								</v-icon>
-							</v-btn>
-						</template>
-						<span>Login</span>
-					</v-tooltip>
-					<v-menu
-						v-else
-						close-on-content-click
-						offset-y
-						transition="scale-transition"
-						nudge-left="10"
-						nudge-bottom="5"
-					>
-						<template #activator="{on, attrs}">
-							<v-btn
-								icon
-								small
-								class="cursor"
-								v-bind="attrs"
-								v-on="on"
-							>
-								<v-icon size="26">
-									account_circle
-								</v-icon>
-							</v-btn>
-						</template>
-						<v-list color="orange lighten-4">
-							<v-list-item v-if="showAdminButton"
-								class="cursor"
-								to="/admin/home"
-							>
-								<v-list-item-icon class="mr-2">
-									<v-icon>settings_applications</v-icon>
-								</v-list-item-icon>
-								<v-list-item-title>
-									Settings
-								</v-list-item-title>
-							</v-list-item>
-							<v-divider
-								v-if="showAdminButton"
-								class="ml-4"
-							/>
-							<v-list-item class="cursor"
-								@click="logOut()"
-							>
-								<v-list-item-icon class="mr-2">
-									<v-icon>input</v-icon>
-								</v-list-item-icon>
-								<v-list-item-title>
-									Logout
-								</v-list-item-title>
-							</v-list-item>
-						</v-list>
-					</v-menu>
-					<div class="px-2" />
-					<cart-indicator />
 				</div>
-			</div>
-			<auth-sidebar @reload="initialize()" />
-		</v-card>
+				<auth-sidebar @reload="initialize()" />
+			</v-card>
+		</div>
 	</v-card>
 </template>
 
@@ -219,6 +239,15 @@ export default {
 	display: flex;
 	align-items: center;
 	padding-right: 6px;
+}
+.contact-chip {
+	position: absolute; right: 10px; z-index: 3;
+}
+.slight-up {
+	top: 5px;
+}
+.slight-down {
+	top: 55px;
 }
 </style>
 <style lang="sass" scoped>

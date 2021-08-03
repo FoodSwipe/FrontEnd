@@ -23,6 +23,6 @@ export default {
 
 <style scoped>
 #to-store {
-	top: 80px;
+	top: 100px;
 }
 </style>

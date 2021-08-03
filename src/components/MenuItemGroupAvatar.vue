@@ -1,7 +1,7 @@
 <template>
 	<v-card
 		flat
-		class="pa-2 d-flex justify-center align-center"
+		class="pa-2 d-flex justify-center align-center ma-0"
 		max-width="140"
 		rounded
 		color="transparent"
