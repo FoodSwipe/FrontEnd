@@ -1,22 +1,28 @@
 <template>
 	<div>
-		<v-row class="ma-0 pa-0">
-			<v-breadcrumbs v-if="$route.name === 'Order Detail'"
-				dark
-				:items="orderDetailBreadCrumbs"
-				class="px-1 pt-3"
+		<div class="d-flex justify-start align-center py-4 white--text"
+			style="font-family: 'Righteous', cursive; font-size: 14px;"
+		>
+			<div class="px-1 cursor breadcrumb-item"
+				@click="$router.push('/admin/home')"
 			>
-				<template #item="{ item }">
-					<v-breadcrumbs-item
-						class="admin-breadcrumb-item"
-						:to="item.href"
-						:disabled="item.disabled"
-					>
-						{{ item.text.toUpperCase() }}
-					</v-breadcrumbs-item>
-				</template>
-			</v-breadcrumbs>
-		</v-row>
+				> HOME
+			</div>
+			<div class="px-1">
+				/
+			</div>
+			<div class="px-1 cursor breadcrumb-item"
+				@click="$router.push('/admin/order')"
+			>
+				ORDERS
+			</div>
+			<div class="px-1">
+				/
+			</div>
+			<div class="px-2 grey--text">
+				{{ $route.params.id }}
+			</div>
+		</div>
 		<v-fade-transition>
 			<v-card
 				dark
@@ -471,17 +477,14 @@ export default {
 			return [
 				{
 					text: "> Home",
-					disabled: false,
 					href: "/admin/home",
 				},
 				{
 					text: "Orders",
-					disabled: false,
 					href: "/admin/order",
 				},
 				{
 					text: this.$route.params.id,
-					disabled: true,
 				}
 			]
 		},
@@ -847,6 +850,9 @@ export default {
 }
 </script>
 <style scoped lang="scss">
+::v-deep.v-toolbar__content {
+	padding: 4px 0 !important;
+}
 .divider-search-inset {
 	height: 40px;
 	width: 2px;
@@ -880,5 +886,10 @@ export default {
 			color: white;
 		}
 	}
+}
+.breadcrumb-item:hover {
+	background-color: #313131;
+	color: #aaaaaa;
+	border-radius: 4px;
 }
 </style>
