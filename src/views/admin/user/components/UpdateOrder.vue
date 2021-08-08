@@ -1,6 +1,8 @@
 <template>
 	<div>
-		<div class="d-flex justify-start align-center py-4 white--text"
+		<div
+			v-if="$route.name === 'Order Detail'"
+			class="d-flex justify-start align-center py-4 white--text"
 			style="font-family: 'Righteous', cursive; font-size: 14px;"
 		>
 			<div class="px-1 cursor breadcrumb-item"
@@ -527,13 +529,16 @@ export default {
 		this.$bus.off("load-order", this.initialize)
 	},
 	methods: {
-		async initialize() {
+		async initialize(args=null) {
 			let id
 			if (this.$route.name === "Order Detail") {
 				id = this.$route.params.id
 			} else {
-				this.order = null
+				if (this.$route.name === "User Detail" && args) {
+					id = args.id
+				} else return
 			}
+			console.log(args)
 
 			this.overlay = true
 			await this.$store.dispatch("order/withCartItems", {

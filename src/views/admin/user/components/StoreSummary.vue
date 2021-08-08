@@ -11,55 +11,49 @@
 				v-for="(item, index) in miniList"
 				:key="index"
 			>
-				<v-list-item-avatar>
-					<v-avatar color="blue">
-						{{ item.field[6] }}
-					</v-avatar>
-				</v-list-item-avatar>
 				<v-list-item-content>
+					<v-list-item-subtitle>{{ item.field }}</v-list-item-subtitle>
 					<v-list-item-title class="number-font one-point-two-rem">
 						{{ item.value }}
 					</v-list-item-title>
-					<v-list-item-subtitle>{{ item.field }}</v-list-item-subtitle>
 				</v-list-item-content>
 			</v-list-item>
 			<v-divider inset />
 			<v-list-item>
-				<v-list-item-avatar>
-					<v-avatar color="blue">
-						I
-					</v-avatar>
-				</v-list-item-avatar>
 				<v-list-item-content>
-					<v-list-item-title>
-						<v-row class="ma-0 pa-0">
-							<v-badge
-								v-for="(topItem, index) in userStoreSummary['top_items']"
-								:key="(index+1)*21"
-								bordered
-								right
-								overlap
-								offset-x="20"
-								offset-y="19"
-								color="black"
-								dark
-								:content="topItem.count"
-							>
-								<v-avatar
-									size="40"
-									class="mb-2"
-									:class="
-										(index === userStoreSummary['top_items'].length -1) ? '': 'mr-3'
-									"
-								>
-									<v-img :src="topItem.image" />
-								</v-avatar>
-							</v-badge>
-						</v-row>
-					</v-list-item-title>
 					<v-list-item-subtitle>
 						Top Items
 					</v-list-item-subtitle>
+					<v-list-item-title>
+						<div class="d-flex flex-wrap justify-start">
+							<v-card v-for="(topItem, index) in userStoreSummary['top_items']"
+								:key="(index+1)*21"
+								max-width="50"
+								class="ma-1 pa-1"
+							>
+								<div class="d-flex justify-center">
+									<v-avatar
+										size="40"
+									>
+										<v-img :src="topItem.image" />
+									</v-avatar>
+								</div>
+								<div class="py-1" />
+								<div style="font-size: 12px; text-align: center">
+									{{ topItem.name }}
+								</div>
+								<div class="py-1" />
+								<div class="d-flex justify-center align-center">
+									<v-avatar class="text-center number-font"
+										color="indigo"
+										size="30"
+									>
+										{{ topItem.count }}
+									</v-avatar>
+								</div>
+							</v-card>
+						</div>
+					</v-list-item-title>
 				</v-list-item-content>
 			</v-list-item>
 			<v-divider inset />
@@ -132,6 +126,7 @@ export default {
 			await this.$store.dispatch("order/fetchUserStoreSummary", {
 				id: this.$route.params.id
 			})
+			console.log(this.userStoreSummary)
 			this.isLoading = false
 		}
 	}

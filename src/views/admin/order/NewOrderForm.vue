@@ -141,7 +141,8 @@
 								</template>
 							</v-combobox>
 						</v-col>
-						<v-col cols="12"
+						<v-col
+							cols="12"
 							xl="6"
 							lg="6"
 							md="6"
@@ -283,6 +284,8 @@ export default {
 			done_from_customer: true
 		},
 		contactFormErrorMsg: [],
+		forUser: false,
+		setUser: null,
 	}),
 	computed: {
 		...mapGetters({
@@ -293,10 +296,13 @@ export default {
 		}),
 	},
 	async created() {
+		await this.initializeMenuItemAutocomplete()
 		this.$bus.on("start-order-admin", this.initialize)
+		this.$bus.on("start-order-admin-for-user", this.initializeForUser)
 	},
 	beforeUnmount() {
 		this.$bus.on("start-order-admin", this.initialize)
+		this.$bus.off("start-order-admin-for-user", this.initializeForUser)
 	},
 	methods: {
 		async initializeMenuItemAutocomplete() {
@@ -314,9 +320,22 @@ export default {
 			this.isLoading = true
 			this.dialog = true
 			this.order.delivery_charge = this.$helper.getDeliveryCharge()
-			await this.initializeMenuItemAutocomplete()
 			await this.initializeContactList()
 			await this.$store.dispatch("order/clearFormErrors")
+			this.isLoading = false
+		},
+		async initializeForUser(args) {
+			console.log("here")
+			this.isLoading = true
+			this.dialog = true
+			this.order.delivery_charge = this.$helper.getDeliveryCharge()
+			await this.$store.dispatch("order/clearFormErrors")
+			this.setUser = args.user
+			console.log(this.setUser)
+			this.order.custom_contact = args.user.profile.contact
+			this.order.custom_location = args.user.profile.address
+			this.order["custom_email"] = args.user.email
+			this.forUser = true
 			this.isLoading = false
 		},
 		closeDialog() {

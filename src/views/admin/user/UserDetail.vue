@@ -1,9 +1,9 @@
 <template>
 	<v-card flat
 		:loading="isLoading"
-		dark
-		class="rounded-0" width="100vw"
-		color="transparent"
+		dark tile
+		class="transparent" width="100vw"
+		color=""
 	>
 		<v-row class="ma-0 pa-0">
 			<v-col cols="10">
@@ -33,44 +33,29 @@
 				</v-btn>
 			</v-col>
 		</v-row>
-		<v-card-title v-if="!isLoading"
-			class="py-1 d-flex justify-center"
-		>
-			<v-avatar size="60"
-				class="golden-rod-border-3"
-			>
-				<v-img v-if="user.profile.image !== null"
-					:src="user.profile.image"
-				/>
-				<span v-else>{{ user.username[0] }}</span>
-			</v-avatar><span class="ml-4">
-				{{ user.username }}
-			</span>
-		</v-card-title>
 		<v-row class="ma-0 pa-0">
 			<v-col
-				:xl="(!show) ? 9 : 3"
-				:lg="(!show) ? 9 : 3"
-				:md="(!show) ? 9 : 3"
-				:sm="(!show) ? 12 : 5"
+				xl="3"
+				lg="3"
+				md="4"
+				sm="4"
 				cols="12"
-				:class="(show) ? 'overflow-y' : ''"
+				class="overflow-y"
 			>
 				<user-orders />
 			</v-col>
 			<v-col
-				v-if="show"
 				xl="6"
 				lg="6"
-				md="6"
-				sm="7"
+				md="8"
+				sm="8"
 				cols="12"
 			>
 				<update-order />
 			</v-col>
 			<v-col xl="3"
 				lg="3"
-				md="3"
+				md="12"
 				sm="12"
 				cols="12"
 			>
