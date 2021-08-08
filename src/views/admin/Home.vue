@@ -1,5 +1,9 @@
 <template>
-	<div class="admin-home">
+	<v-card
+		class="admin-home"
+		dark
+		color=""
+	>
 		<v-row class="ma-0 pa-0">
 			<v-breadcrumbs
 				dark
@@ -40,7 +44,7 @@
 				</v-card>
 			</v-col>
 		</v-row>
-	</div>
+	</v-card>
 </template>
 
 <script>
@@ -80,6 +84,6 @@ export default {
 				href: "/admin/menu-item",
 			},
 		]
-	})
+	}),
 }
 </script>

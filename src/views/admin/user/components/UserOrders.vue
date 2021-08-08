@@ -123,34 +123,12 @@ export default {
 			user: "user/user"
 		})
 	},
-	async created() {
-		await this.initialize()
-	},
 	methods: {
+		loadOrderForUpdate(id) {
+			this.$store.dispatch("order/withCartItems", {id: id})
+		},
 		startOrderForUser() {
 			this.$bus.emit("start-order-admin-for-user", {user: this.user})
-		},
-		async initialize() {
-			this.isLoading = true
-			const fetched = await this.$store.dispatch("order/fetchUserOrders", {
-				id: this.$route.params.id
-			})
-			if (!fetched) {
-				await this.openSnack("Internal server error. Please try again.")
-			}
-			this.isLoading = false
-			if (this.userOrders.length > 0) {
-				this.$bus.emit("load-order", {
-					id: this.userOrders[0].id
-				})
-			} else {
-				this.$bus.emit("hide-update-order-box")
-			}
-		},
-		loadOrderForUpdate(id) {
-			this.$bus.emit("load-order", {
-				id: id
-			})
 		}
 	}
 }

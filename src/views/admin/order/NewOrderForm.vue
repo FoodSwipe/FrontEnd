@@ -296,7 +296,6 @@ export default {
 		}),
 	},
 	async created() {
-		await this.initializeMenuItemAutocomplete()
 		this.$bus.on("start-order-admin", this.initialize)
 		this.$bus.on("start-order-admin-for-user", this.initializeForUser)
 	},
@@ -305,33 +304,22 @@ export default {
 		this.$bus.off("start-order-admin-for-user", this.initializeForUser)
 	},
 	methods: {
-		async initializeMenuItemAutocomplete() {
-			this.isUpdating = true
-			await this.$store.dispatch("menuItem/fetchOrderNowList")
-			this.orderNowRefinedList = this.$helper.refineOrderNowList(this.menuItemsList)
-			this.isUpdating = false
-		},
-		async initializeContactList() {
-			this.isLoadingAutocomplete = true
-			await this.$store.dispatch("user/fetchProfileContactList")
-			this.isLoadingAutocomplete = false
-		},
 		async initialize() {
 			this.isLoading = true
 			this.dialog = true
+
+			this.orderNowRefinedList = this.$helper.refineOrderNowList(this.menuItemsList)
 			this.order.delivery_charge = this.$helper.getDeliveryCharge()
-			await this.initializeContactList()
 			await this.$store.dispatch("order/clearFormErrors")
 			this.isLoading = false
 		},
 		async initializeForUser(args) {
-			console.log("here")
 			this.isLoading = true
 			this.dialog = true
+			this.orderNowRefinedList = this.$helper.refineOrderNowList(this.menuItemsList)
 			this.order.delivery_charge = this.$helper.getDeliveryCharge()
 			await this.$store.dispatch("order/clearFormErrors")
 			this.setUser = args.user
-			console.log(this.setUser)
 			this.order.custom_contact = args.user.profile.contact
 			this.order.custom_location = args.user.profile.address
 			this.order["custom_email"] = args.user.email

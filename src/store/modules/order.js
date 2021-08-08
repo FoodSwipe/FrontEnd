@@ -201,9 +201,9 @@ const actions = {
 	clearOrderDetail({commit}){
 		commit("SET_ORDER", {})
 	},
-	async fetchUserOrders({commit}, payload) {
+	async fetchUserOrdersByContact({commit}, contact) {
 		try {
-			const res = await $api.get(util.format(orderUrls.userOrders, payload.id))
+			const res = await $api.getWithPayload(orderUrls.list, {custom_contact: contact})
 			commit("SET_ORDERS", res)
 			return true
 		} catch (e) {

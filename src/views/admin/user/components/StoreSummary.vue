@@ -126,7 +126,6 @@ export default {
 			await this.$store.dispatch("order/fetchUserStoreSummary", {
 				id: this.$route.params.id
 			})
-			console.log(this.userStoreSummary)
 			this.isLoading = false
 		}
 	}

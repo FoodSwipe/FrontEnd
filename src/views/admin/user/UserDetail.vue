@@ -7,21 +7,7 @@
 	>
 		<v-row class="ma-0 pa-0">
 			<v-col cols="10">
-				<v-breadcrumbs v-if="!isLoading"
-					dark
-					:items="userDetailBreadcrumbs"
-					class="px-1 pt-3"
-				>
-					<template #item="{ item }">
-						<v-breadcrumbs-item
-							class="admin-breadcrumb-item"
-							:to="item.href"
-							:disabled="item.disabled"
-						>
-							{{ item.text.toUpperCase() }}
-						</v-breadcrumbs-item>
-					</template>
-				</v-breadcrumbs>
+				<admin-breadcrumb :items="userDetailBreadcrumbs" />
 			</v-col>
 			<v-col cols="2"
 				class="d-flex justify-end align-center"
@@ -33,7 +19,9 @@
 				</v-btn>
 			</v-col>
 		</v-row>
-		<v-row class="ma-0 pa-0">
+		<v-row v-if="userOrders"
+			class="ma-0 pa-0"
+		>
 			<v-col
 				xl="3"
 				lg="3"
@@ -45,15 +33,20 @@
 				<user-orders />
 			</v-col>
 			<v-col
+				v-if="userOrders.length"
 				xl="6"
 				lg="6"
 				md="8"
 				sm="8"
 				cols="12"
 			>
-				<update-order />
+				<update-order v-if="!isLoading" />
+				<div v-else>
+					No order to update.
+				</div>
 			</v-col>
-			<v-col xl="3"
+			<v-col v-if="userOrders.length"
+				xl="3"
 				lg="3"
 				md="12"
 				sm="12"
@@ -66,57 +59,64 @@
 </template>
 <script>
 import { mapGetters } from "vuex"
+import AdminBreadcrumb from "@/components/AdminBreadcrumb"
+import Snack from "@/mixin/Snack"
 
 export default {
 	components: {
+		AdminBreadcrumb,
 		UserOrders: () => import("./components/UserOrders"),
 		UpdateOrder: () => import("./components/UpdateOrder"),
 		UserStoreSummary: () => import("./components/StoreSummary"),
 	},
+	mixins: [Snack],
 	data: () => ({
 		show: true,
 		isLoading: false,
 	}),
 	computed: {
 		...mapGetters({
-			user: "user/user"
+			user: "user/user",
+			userOrders: "order/allOrders",
 		}),
 		userDetailBreadcrumbs() {
 			return [
 				{
 					text: "> Home",
-					disabled: false,
-					href: "/admin/home",
+					to: "/admin/home",
 				},
 				{
 					text: "Users",
-					disabled: false,
-					href: "/admin/user",
+					to: "/admin/user",
 				},
 				{
 					text: this.user.username,
-					disabled: true,
-					href: "breadcrumbs_link_2",
 				},
 			]
 		}
 	},
 	async created() {
-		this.$bus.on("hide-update-order-box", this.hideUpdateOrderBox)
 		await this.initialize()
 	},
-	beforeUnmount() {
-		this.$bus.off("hide-update-order-box", this.hideUpdateOrderBox)
-	},
 	methods: {
-		hideUpdateOrderBox() {
-			this.show = false
-		},
 		async initialize() {
 			this.isLoading = true
+			await this.$store.dispatch("menuItem/fetchOrderNowList")
+			await this.$store.dispatch("user/fetchProfileContactList")
 			await this.$store.dispatch("user/getSingle", {
 				id: this.$route.params.id
 			})
+			const fetched = await this.$store.dispatch("order/fetchUserOrdersByContact", {
+				id: this.user.profile.contact
+			})
+			if (!fetched) {
+				await this.openSnack("Internal server error. Please try again.")
+			}
+			if (this.userOrders.length > 0) {
+				await this.$store.dispatch("order/withCartItems", {
+					id: this.userOrders[0].id
+				})
+			}
 			this.isLoading = false
 		}
 	}

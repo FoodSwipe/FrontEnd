@@ -1,30 +1,5 @@
 <template>
 	<div>
-		<div
-			v-if="$route.name === 'Order Detail'"
-			class="d-flex justify-start align-center py-4 white--text"
-			style="font-family: 'Righteous', cursive; font-size: 14px;"
-		>
-			<div class="px-1 cursor breadcrumb-item"
-				@click="$router.push('/admin/home')"
-			>
-				> HOME
-			</div>
-			<div class="px-1">
-				/
-			</div>
-			<div class="px-1 cursor breadcrumb-item"
-				@click="$router.push('/admin/order')"
-			>
-				ORDERS
-			</div>
-			<div class="px-1">
-				/
-			</div>
-			<div class="px-2 grey--text">
-				{{ $route.params.id }}
-			</div>
-		</div>
 		<v-fade-transition>
 			<v-card
 				dark
@@ -166,8 +141,6 @@
 												<v-autocomplete
 													v-model="selectedItems"
 													class="menu-items-autocomplete"
-													:disabled="isUpdating"
-													:readonly="order.is_delivered"
 													:items="orderNowRefinedList"
 													solo
 													chips
@@ -181,6 +154,7 @@
 													prepend-inner-icon="emoji_food_beverage"
 													hide-details="auto"
 													clearable
+													:disabled="order.is_delivered"
 												>
 													<template #no-data>
 														No <code>menu items</code> available
@@ -228,12 +202,14 @@
 													</template>
 													<template #append-outer>
 														<v-btn
+															style="margin-top: -20px;"
 															:loading="adding"
+															icon
 															color="grey darken-3"
 															@click="addSelectedItemsToOrderCart()"
 														>
 															<v-icon>
-																add
+																add_circle
 															</v-icon>
 														</v-btn>
 													</template>
@@ -454,9 +430,7 @@ export default {
 		adding: false,
 		overlay: false,
 		updating: false,
-		isLoading: false,
 		searchOrderItems: "",
-		isUpdating: false,
 		selectedItems: [],
 		selectedItemQuantity: {},
 		orderNowRefinedList: [],
@@ -521,6 +495,11 @@ export default {
 			}
 		},
 	},
+	watch: {
+		orderList(value) {
+			this.initialize()
+		}
+	},
 	async created() {
 		this.$bus.on("load-order", this.initialize)
 		await this.initialize()
@@ -529,32 +508,18 @@ export default {
 		this.$bus.off("load-order", this.initialize)
 	},
 	methods: {
-		async initialize(args=null) {
-			let id
-			if (this.$route.name === "Order Detail") {
-				id = this.$route.params.id
-			} else {
-				if (this.$route.name === "User Detail" && args) {
-					id = args.id
-				} else return
-			}
-			console.log(args)
-
+		async fetchOrder({ id: id }) {
+			await this.$store.dispatch("order/withCartItems", {id: id})
+		},
+		async initialize() {
 			this.overlay = true
-			await this.$store.dispatch("order/withCartItems", {
-				id: id
-			})
 			this.order = this.orderList
-			this.overlay = false
-			this.show = true
-			this.isUpdating = true
-			await this.$store.dispatch("menuItem/fetchOrderNowList")
 			const cartVsOrderDiff = this.$helper.removeCartedItemsDuplicationFromOrderNowList(
 				this.orderNowList,
-				this.order.cart_items
+				this.order["cart_items"]
 			)
 			this.orderNowRefinedList = this.$helper.refineOrderNowList(cartVsOrderDiff)
-			this.isUpdating = false
+			this.overlay = false
 		},
 		async completeDelivery() {
 			this.order.order_completed = false
@@ -571,7 +536,7 @@ export default {
 				this.overlay = false
 				if (patched === true) {
 					await this.openSnack("Order completed successfully.", "success")
-					await this.initialize({
+					await this.fetchOrder({
 						id: this.order.id
 					})
 				} else await this.openSnack("Internal server error. Please try again.")
@@ -590,7 +555,7 @@ export default {
 				this.overlay = false
 				if (patched === true) {
 					await this.openSnack("Order updated successfully.", "success")
-					await this.initialize({
+					await this.fetchOrder({
 						id: this.order.id
 					})
 				} else await this.openSnack("Internal server error. Please try again.")
@@ -771,7 +736,7 @@ export default {
 				})
 				if (removed) {
 					await this.openSnack(orderMenuItem.item.name + " removed from cart.", "success")
-					await this.initialize({id: this.order.id})
+					await this.fetchOrder({id: this.order.id})
 				} else await this.openSnack("Internal server error. Try again.")
 			}
 		},
@@ -780,7 +745,9 @@ export default {
 			if (index >= 0) this.selectedItems.splice(index, 1)
 		},
 		async updateQuantity(item) {
+			if (this.order.is_delivered) return
 			this.overlay = true
+			if(this.order.is_delivered) return
 			const patched = await this.$store.dispatch("cart/adminUpdateCartItemQuantity", {
 				cartId: item.id,
 				body: {
@@ -797,7 +764,7 @@ export default {
 					await this.openSnack(patched.quantity[0])
 				}
 			}
-			await this.initialize({
+			await this.fetchOrder({
 				id: this.order.id
 			})
 		},
@@ -816,7 +783,7 @@ export default {
 			}
 			if (addedToCart) {
 				await this.openSnack("Selected items added to cart.", "success")
-				await this.initialize({id: this.order.id})
+				await this.fetchOrder({id: this.order.id})
 				this.selectedItems = []
 			}
 			this.adding = false
