@@ -88,7 +88,13 @@
 											<v-list-item-title>{{ data.item.name }}</v-list-item-title>
 											<v-list-item-subtitle>{{ data.item.group }}</v-list-item-subtitle>
 										</v-list-item-content>
-										<v-list-item-action-text>{{ data.item.price }}</v-list-item-action-text>
+										<v-list-item-action>
+											<v-text-field
+												v-model="selectedItemQuantity[data.item.id]"
+												solo-inverted
+												hide-details
+											/>
+										</v-list-item-action>
 									</template>
 								</template>
 							</v-autocomplete>
@@ -265,6 +271,7 @@ export default {
 		dialog: false,
 		isUpdating: false,
 		selectedItems: [],
+		selectedItemQuantity: {},
 		orderNowRefinedList: [],
 		search: null,
 		order: {
@@ -336,7 +343,8 @@ export default {
 					for (const itemID of this.selectedItems) {
 						addedToCart = await this.$store.dispatch("cart/addToCart", {
 							order: this.lastCreatedOrderId,
-							item: itemID
+							item: itemID,
+							quantity: (this.selectedItemQuantity[itemID]) ? parseInt(this.selectedItemQuantity[itemID]) : 1
 						})
 						if (addedToCart === 500) {
 							await this.openSnack("Internal server error. Please try again.")

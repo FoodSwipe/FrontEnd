@@ -181,6 +181,7 @@ module.exports = {
 					cartItems: [
 						{
 							itemName: item["cart_item"].item.name,
+							itemImage: item["cart_item"].item.image,
 							quantity: item["cart_item"].quantity,
 							quantityDiff: item["quantity_diff"]
 						}

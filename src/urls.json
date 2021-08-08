@@ -62,7 +62,8 @@
   },
   "kot": {
     "list": "order-kot/",
-    "detail": "order-kot/%s/"
+    "detail": "order-kot/%s/",
+    "generatePostKot": "generate-post-kot/%s"
   },
   "review": {
     "list": "review/",

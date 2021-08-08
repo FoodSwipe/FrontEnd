@@ -39,6 +39,7 @@
 					<v-spacer />
 					<order-k-o-t-menu :order-id="order.id"
 						:done-from-customer="order.done_from_customer"
+						@refresh="initialize"
 					/>
 					<v-tooltip bottom>
 						<template #activator="{on, attrs}">
@@ -206,8 +207,14 @@
 																	{{ data.item.group }}
 																</v-list-item-subtitle>
 															</v-list-item-content>
-															<v-list-item-action-text style="color: white;">
-																{{ data.item.price }}
+															<v-list-item-action-text class="align-center">
+																<v-text-field
+																	v-model="selectedItemQuantity[data.item.id]"
+																	solo
+																	type="number"
+																	hide-details
+																	dark
+																/>
 															</v-list-item-action-text>
 														</template>
 													</template>
@@ -443,6 +450,7 @@ export default {
 		searchOrderItems: "",
 		isUpdating: false,
 		selectedItems: [],
+		selectedItemQuantity: {},
 		orderNowRefinedList: [],
 		headers: [
 			{ text: "Actions", value: "actions", sortable: false, align: "center" },
@@ -510,18 +518,20 @@ export default {
 	},
 	async created() {
 		this.$bus.on("load-order", this.initialize)
-		if (this.$route.name === "Order Detail") {
-			const id = this.$route.params.id
-			await this.initialize({ id })
-		} else {
-			this.order = null
-		}
+		await this.initialize()
 	},
 	beforeUnmount() {
 		this.$bus.off("load-order", this.initialize)
 	},
 	methods: {
-		async initialize({ id }) {
+		async initialize() {
+			let id
+			if (this.$route.name === "Order Detail") {
+				id = this.$route.params.id
+			} else {
+				this.order = null
+			}
+
 			this.overlay = true
 			await this.$store.dispatch("order/withCartItems", {
 				id: id
@@ -791,7 +801,8 @@ export default {
 			for (const itemID of this.selectedItems) {
 				addedToCart = await this.$store.dispatch("cart/addToCart", {
 					order: this.order.id,
-					item: itemID
+					item: itemID,
+					quantity: (this.selectedItemQuantity[itemID]) ? parseInt(this.selectedItemQuantity[itemID]) : 1
 				})
 				if (addedToCart !== true) await this.openSnack(addedToCart)
 			}

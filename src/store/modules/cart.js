@@ -126,6 +126,14 @@ const actions = {
 			}
 			return 500
 		}
+	},
+	async generatePostKotForOrder({commit}, {id: id}) {
+		try {
+			await $api.post(util.format(urls.kot.generatePostKot, id))
+			return true
+		} catch (e) {
+			return false
+		}
 	}
 }
 
