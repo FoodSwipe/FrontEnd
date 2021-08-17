@@ -6,27 +6,34 @@
 		tile
 		style="position: relative"
 	>
-		<flickity ref="flickity"
-			:options="flickityOptions"
+		<v-carousel
+			height="100vh"
+			hide-delimiters
+			:show-arrows="false"
+			cycle
+			continuous
 		>
-			<v-card
+			<v-carousel-item
 				v-for="item in homePageContents"
 				:key="item.id"
-				flat
-				tile
-				class="carousel-cell"
-				height="100vh"
 			>
-				<v-img
-					eager
-					class="carousel-image"
-					:src="item.image"
-					dark
-					gradient="to top, rgb(0 0 0 / 0%), rgb(0 0 0 / 60%), rgb(0 0 0 / 20%)"
+				<v-card
+					flat
+					tile
+					class="carousel-cell"
 					height="100vh"
-				/>
-			</v-card>
-		</flickity>
+				>
+					<v-img
+						eager
+						class="carousel-image"
+						:src="item.image"
+						dark
+						gradient="to top, rgb(0 0 0 / 0%), rgb(0 0 0 / 60%), rgb(0 0 0 / 20%)"
+						height="100vh"
+					/>
+				</v-card>
+			</v-carousel-item>
+		</v-carousel>
 		<div
 			style="position: absolute; top: 90vh; width: 100vw; display: flex; justify-content: center"
 		>
@@ -44,14 +51,9 @@
 <script>
 import { mapGetters } from "vuex"
 import Snack from "@/mixin/Snack"
-import Flickity from "vue-flickity"
-
 
 export default {
 	name: "ShowCaseSlider",
-	components: {
-		Flickity
-	},
 	mixins: [Snack],
 	data: () => ({
 		loading: false,
@@ -61,16 +63,6 @@ export default {
 			"blue-gradient",
 			"green-gradient-rgba"
 		],
-		flickityOptions: {
-			initialIndex: 0,
-			autoPlay: 6000,
-			prevNextButtons: false,
-			pauseAutoPlayOnHover: true,
-			pageDots: false,
-			wrapAround: true,
-			selectedAttraction: 0.01,
-			friction: 0.25,
-		},
 	}),
 	computed: {
 		...mapGetters({
