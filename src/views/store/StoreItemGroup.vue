@@ -101,6 +101,7 @@
 						class="pa-2 transparent"
 						flat
 						outlined
+						:style="(!$vuetify.breakpoint.smAndDown) ? 'position: fixed;' : ''"
 					>
 						<v-list
 							outlined
