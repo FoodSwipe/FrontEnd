@@ -1,6 +1,7 @@
 <template>
-	<v-card width="100vw"
+	<v-card width="100vw" class="store-toolbar"
 		color="#fcf8f2" tile
+		style="position: fixed; top: 0; z-index: 1"
 	>
 		<v-toolbar class="px-2 mx-auto"
 			max-width="1200"

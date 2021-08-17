@@ -3,11 +3,13 @@
 		tile
 		color="transparent"
 	>
-		<v-card flat
+		<v-card
+			ref="chips-filter"
+			flat
 			tile color="orange"
 			:loading="loading"
 			width="100vw"
-			style="background-color: #fcf8f2!important;"
+			style="background-color: #fcf8f2!important; position:fixed; top: 75px; z-index: 1; border-bottom: 2px solid #ff8c00"
 		>
 			<v-card v-if="itemTypes"
 				class="py-4 px-2 d-flex justify-start align-center flex-wrap mx-auto"
@@ -77,86 +79,109 @@
 				</v-chip>
 			</v-card>
 		</v-card>
-		<div style="height: 2px; background-color: darkorange" />
-		<v-card max-width="1200"
+		<v-card
+			max-width="1200"
 			class="mx-auto" flat
 			color="transparent"
 			min-height="80vh"
 		>
-			<v-row no-gutters
-				class="ma-0 pa-0"
-			>
-				<v-col
-					xl="3"
+			<v-card
+				flat tile
+				color="transparent"
+				style="transition: all .5s ease;"
+				:height="topPadding"
+			/>
+			<v-row no-gutters>
+				<v-col cols="12"
+					xl="9"
 					lg="3"
 					md="3"
-					sm="3"
 				>
-					<v-list
-						class="rounded ma-2 mt-3"
-						color="rgb(255 251 246)"
+					<v-card
+						class="pa-2 transparent"
+						flat
+						outlined
 					>
-						<v-subheader>Menu Item Groups</v-subheader>
-						<v-divider />
-						<v-list-item-group v-model="selection"
-							class="pa-1"
+						<v-list
+							outlined
+							class="rounded ma-2 mt-2 pt-1"
+							style="background-color: rgb(255 251 246)"
 						>
-							<v-list-item
-								v-for="groupItem in storeItemGroups['results']"
-								:key="groupItem.id"
-								class="rounded"
-								active-class="menu-item-group-active"
-								exact-active-class="menu-item-group-active"
-								:class="{'menu-item-group-active': activeGroup[groupItem.id]}"
-								@click="filterMenuItemGroup(groupItem)"
+							<div class="px-2 d-flex justify-space-between align-center flex-wrap">
+								<v-subheader>Menu Item Groups</v-subheader>
+								<v-btn
+									v-if="$vuetify.breakpoint.smAndDown"
+									icon
+									@click="showGroup = !showGroup"
+								>
+									<v-icon v-if="showGroup">
+										keyboard_arrow_up
+									</v-icon>
+									<v-icon v-else>
+										keyboard_arrow_down
+									</v-icon>
+								</v-btn>
+							</div>
+							<v-divider v-if="showGroup" />
+							<v-list-item-group
+								v-if="showGroup"
+								v-model="selection"
+								class="pa-1"
 							>
-								<v-list-item-avatar>
-									<v-img :src="groupItem.image" />
-								</v-list-item-avatar>
-								<v-list-item-title>
-									{{ groupItem.name }}
-								</v-list-item-title>
-							</v-list-item>
-						</v-list-item-group>
-					</v-list>
+								<v-list-item
+									v-for="groupItem in storeItemGroups['results']"
+									:key="groupItem.id"
+									class="rounded"
+									active-class="menu-item-group-active"
+									exact-active-class="menu-item-group-active"
+									:class="{'menu-item-group-active': activeGroup[groupItem.id]}"
+									@click="filterMenuItemGroup(groupItem)"
+								>
+									<v-list-item-avatar>
+										<v-img :src="groupItem.image" />
+									</v-list-item-avatar>
+									<v-list-item-title>
+										{{ groupItem.name }}
+									</v-list-item-title>
+								</v-list-item>
+							</v-list-item-group>
+						</v-list>
+					</v-card>
 				</v-col>
-				<v-col cols="12"
+				<v-col
+					cols="12"
 					xl="9"
 					lg="9"
 					md="9"
-					sm="9"
 				>
-					<v-row
-						v-if="storeItems.length"
-						class="ma-0 pa-0"
-						no-gutters
+					<v-card
+						class="pa-2 transparent"
+						flat tile
 					>
-						<v-col v-for="(item, i) in storeItems"
-							:key="i"
-							cols="12"
-							xl="3"
-							lg="3"
-							md="4"
-							sm="6"
-							class="pa-2"
+						<div
+							v-if="storeItems && storeItems.length"
+							class="d-flex flex-wrap justify-start align-start"
 						>
 							<store-item-card
+								v-for="(item, i) in storeItems"
+								:key="i"
+								class="ma-2"
 								:item="item"
 							/>
-						</v-col>
-					</v-row>
-					<v-card v-else
-						class="ma-4"
-						outlined
-					>
-						<v-card-title class="grey lighten-3 d-flex justify-center subtitle-2">
-							No results found.
-						</v-card-title>
-						<v-card-actions class="justify-center">
-							<v-btn @click="initialize">
-								Reset
-							</v-btn>
-						</v-card-actions>
+						</div>
+						<v-card v-else
+							class="ma-4"
+							outlined
+						>
+							<v-card-title class="grey lighten-3 d-flex justify-center subtitle-2">
+								No results found.
+							</v-card-title>
+							<v-card-actions class="justify-center">
+								<v-btn @click="initialize">
+									Reset
+								</v-btn>
+							</v-card-actions>
+						</v-card>
 					</v-card>
 				</v-col>
 			</v-row>
@@ -177,6 +202,8 @@ export default {
 		menuItemType: null,
 		filterMode: false,
 		menuItemGroupNav: true,
+		topPadding: "75",
+		showGroup: true,
 	}),
 	computed: {
 		...mapGetters({
@@ -194,7 +221,7 @@ export default {
 				activeGroupObj[group.id] = (parseInt(routeId) === group.id)
 			})
 			return activeGroupObj
-		}
+		},
 	},
 	watch: {
 		"$route.params.filter": {
@@ -203,6 +230,12 @@ export default {
 			},
 			deep: true,
 			immediate: true
+		},
+		"$vuetify.breakpoint.width": {
+			handler: function (val) {
+				if (this.$refs["chips-filter"]) this.topPadding = (75 + this.$refs["chips-filter"].$el.clientHeight).toString()
+				this.showGroup = !this.$vuetify.breakpoint.smAndDown;
+			}
 		}
 	},
 	async created(){
@@ -218,6 +251,7 @@ export default {
 		this.$bus.off("search-menu-item")
 	},
 	methods: {
+
 		filterMenuItemGroup(groupItem) {
 			const url ="/store/menu_item_group="+ groupItem.id
 			if (this.$route.params.filter !== url) this.$router.push(url)
@@ -232,6 +266,9 @@ export default {
 			}
 			await this.$store.dispatch("menuItem/fetchAll", payload)
 			this.loading = false
+			this.showGroup = !this.$vuetify.breakpoint.smAndDown;
+			await this.$nextTick()
+			this.topPadding = (75 + this.$refs["chips-filter"].$el.clientHeight).toString()
 		},
 		async search(e) {
 			await this.filter(e)

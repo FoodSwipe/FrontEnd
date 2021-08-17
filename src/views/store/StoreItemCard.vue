@@ -1,9 +1,10 @@
 <template>
 	<v-card
 		:loading="loading"
-		class="mx-auto ma-1 store-item-card"
-		color="rgb(255 251 246)"
-		min-height="380"
+		class="mx-auto store-item-card"
+		min-height="350"
+		:max-width="maxWidth"
+		outlined
 	>
 		<template #progress>
 			<v-progress-linear
@@ -27,15 +28,13 @@
 		</v-card>
 
 		<div class="description">
-			<v-card-text class=" pt-2 pb-0">
+			<v-card-text class=" pt-2 pb-0 d-flex justify-center align-center">
 				<div class="text-center item-name cursor"
 					@click="routeToItemDetail(item)"
 				>
 					{{ item.name }}
 				</div>
-			</v-card-text>
-			<v-card-subtitle class="text-center py-0">
-				<span
+				<div
 					v-for="(type, index) in item.item_type"
 					:key="index"
 					class="px-1"
@@ -43,7 +42,6 @@
 					<v-tooltip bottom>
 						<template #activator="{on, attrs}">
 							<v-avatar
-								class="elevation-1"
 								size="20"
 								v-bind="attrs"
 								v-on="on"
@@ -55,8 +53,8 @@
 						</template>
 						<span>{{ type.name }}</span>
 					</v-tooltip>
-				</span>
-			</v-card-subtitle>
+				</div>
+			</v-card-text>
 
 			<v-card-text class="item-details text-center">
 				<v-row
@@ -128,6 +126,15 @@ export default {
 		selection: 1,
 		orderInProgress: null
 	}),
+	computed: {
+		maxWidth() {
+			const screenSize = this.$vuetify.breakpoint.width
+			if (screenSize > 330) {
+				return "140"
+			}
+			else return "320"
+		}
+	},
 	methods: {
 		routeToItemDetail(item) {
 			this.$router.push(`product/${item.id}`)
