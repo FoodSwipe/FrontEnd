@@ -158,6 +158,7 @@
 					<v-card
 						class="pa-2 transparent"
 						flat tile
+						min-height="100vh"
 					>
 						<div
 							v-if="storeItems && storeItems.length"

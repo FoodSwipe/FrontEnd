@@ -295,7 +295,7 @@
 							prepend-inner-icon="camera"
 							hide-details="auto"
 							:error-messages="menuItemFormErrors['image']"
-							@change="patch({image: imageForUpload})"
+							@change="updateImage"
 						/>
 					</v-col>
 					<v-col cols="12">
@@ -483,6 +483,12 @@ export default {
 				await this.createMenuItem()
 			}
 		},
+		async updateImage() {
+			const fd = new FormData()
+			fd.append("image", this.imageForUpload)
+			console.log(this.imageForUpload)
+			await this.patch(fd)
+		}
 	}
 }
 </script>
