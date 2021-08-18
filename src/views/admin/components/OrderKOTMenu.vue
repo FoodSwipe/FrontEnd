@@ -111,7 +111,7 @@
 						<p class="mb-0"
 							style="font-size: 12px;"
 						>
-							Note: The first KOT is only automatically generated. Preceding KOTs should be refreshed by the operator manually after updating the order.
+							Note: Only the first KOT is automatically generated. Preceding KOTs should be refreshed by the operator manually after updating the order.
 						</p>
 					</v-list-item-content>
 				</v-list-item>

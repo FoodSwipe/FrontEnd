@@ -61,8 +61,10 @@
 					>
 						<v-icon>print</v-icon>
 					</v-btn>
-					<v-btn icon
+					<v-btn
+						icon
 						color="error"
+						:disabled="order.delivery_started"
 						@click="deleteOrder"
 					>
 						<v-icon>delete</v-icon>
@@ -154,7 +156,7 @@
 													prepend-inner-icon="emoji_food_beverage"
 													hide-details="auto"
 													clearable
-													:disabled="order.is_delivered"
+													:disabled="order.delivery_started"
 												>
 													<template #no-data>
 														No <code>menu items</code> available
@@ -202,9 +204,10 @@
 													</template>
 													<template #append-outer>
 														<v-btn
-															style="margin-top: -20px;"
+															:disabled="order.delivery_started"
+															style="margin-top: -18px;"
 															:loading="adding"
-															icon
+															fab
 															color="grey darken-3"
 															@click="addSelectedItemsToOrderCart()"
 														>
@@ -323,7 +326,7 @@
 										filled
 										clearable
 										hide-details="auto"
-										:readonly="order.is_delivered"
+										:disabled="order.delivery_started"
 										label="Delivery Location"
 										prepend-inner-icon="explore"
 										:error-messages="orderFormError.custom_location"
@@ -343,7 +346,7 @@
 										hide-details="auto"
 										label="Delivery Charge"
 										prepend-inner-icon="money"
-										:readonly="order.is_delivered"
+										:disabled="order.delivery_started"
 										:error-messages="orderFormError.delivery_charge"
 									/>
 								</v-col>
@@ -360,7 +363,7 @@
 										type="number"
 										hide-details="auto"
 										label="Loyalty Discount (%)"
-										:readonly="order.is_delivered"
+										:disabled="order.delivery_started"
 										prepend-inner-icon="emoji_symbols"
 										:error-messages="orderFormError.loyalty_discount"
 									/>
@@ -396,14 +399,12 @@
 							</v-row>
 						</v-list>
 					</v-col>
-					<v-col cols="12"
-						class="pb-4"
-					>
+					<v-col cols="12">
 						<v-btn
-							:disabled="order.is_delivered"
+							:disabled="order.delivery_started"
 							:loading="updating"
-							block
-							large
+							block large
+							class="rounded-b rounded-t-0"
 							@click="updateOrder"
 						>
 							<v-icon>save</v-icon><span class="pl-2">Update Order</span>

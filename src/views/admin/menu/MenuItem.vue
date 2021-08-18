@@ -135,6 +135,23 @@
 				</v-row>
 			</template>
 			<!-- eslint-disable-next-line vue/valid-v-slot-->
+			<template #item.group="{ item }">
+				<v-tooltip bottom>
+					<template #activator="{on, attrs}">
+						<v-avatar
+							size="40"
+							class="mr-2"
+							left
+							v-bind="attrs"
+							v-on="on"
+						>
+							<v-img :src="item.menu_item_group.image" />
+						</v-avatar>
+					</template>
+					<span>{{ (item.menu_item_group.name) ? item.menu_item_group.name : 'name' }}</span>
+				</v-tooltip>
+			</template>
+			<!-- eslint-disable-next-line vue/valid-v-slot-->
 			<template #item.actions="{ item }">
 				<v-btn icon
 					color="primary"
@@ -166,24 +183,26 @@
 </template>
 <script>
 import { mapGetters } from "vuex"
+import Snack from "@/mixin/Snack"
 
 export default {
 	name: "MenuItemAdministration",
 	components: {
 		MenuItemFormDialog: () => import("./MenuItemFormDialog")
 	},
+	mixins: [Snack],
 	data: () => ({
 		isLoading: false,
 		dialogDelete: false,
 		searchMenuItem: "",
 		headers: [
-			{ text: "ACTIONS", value: "actions", align: "start", sortable: false},
+			{ text: "ACTIONS", value: "actions", sortable: false},
 			{ text: "MENU ITEM", value: "name", },
 			{ text: "PRICE (NRs)", value: "price" },
-			{ text: "SCALE (pcs/ml)", value: "scale", align: "center"},
-			{ text: "VEGETARIAN?", value: "is_veg", align: "center" },
-			{ text: "IS BAR ITEM?", value: "is_bar_item", align: "center" },
-			{ text: "AVAILABLE?", value: "is_available", align: "center" },
+			{ text: "GROUP", value: "group"},
+			{ text: "VEGETARIAN?", value: "is_veg"},
+			{ text: "IS BAR ITEM?", value: "is_bar_item"},
+			{ text: "AVAILABLE?", value: "is_available"},
 			{ text: "TYPE", value: "type"},
 		],
 		menuItemBreadcrumbs: [
@@ -226,9 +245,7 @@ export default {
 			}
 			await this.initialize()
 		},
-		cancelPriceUpdate() {
-			//
-		},
+		cancelPriceUpdate() {},
 		async updateName(item) {
 			const patched = await this.$store.dispatch("menuItem/patch", {
 				id: item.id,
@@ -245,9 +262,7 @@ export default {
 			}
 			await this.initialize()
 		},
-		cancelNameUpdate() {
-			//
-		},
+		cancelNameUpdate() {},
 		async updateIsVeg(item) {
 			const patched = await this.$store.dispatch("menuItem/patch", {
 				id: item.id,
@@ -298,12 +313,6 @@ export default {
 			this.isLoading = true
 			await this.$store.dispatch("menuItem/fetchAll")
 			this.isLoading = false
-		},
-
-		async openSnack(text, color="error") {
-			await this.$store.dispatch("snack/setSnackState", true)
-			await this.$store.dispatch("snack/setSnackColor", color)
-			await this.$store.dispatch("snack/setSnackText", text)
 		},
 
 		async deleteItem(item) {
