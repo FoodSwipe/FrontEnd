@@ -93,7 +93,7 @@
 			/>
 			<v-row no-gutters>
 				<v-col cols="12"
-					xl="9"
+					xl="3"
 					lg="3"
 					md="3"
 				>
