@@ -439,6 +439,7 @@ export default {
 		async initialize(payload = null) {
 			this.isLoading = true
 			if(payload === null) payload = {done_from_customer: true}
+			await this.$store.dispatch("menuItem/fetchOrderNowList")
 			await this.$store.dispatch("order/fetchAllWithAuthenticated", payload)
 			this.isLoading = false
 		},

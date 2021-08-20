@@ -38,6 +38,55 @@
 					<v-row class="ma-0 pa-0"
 						justify="center" align="center"
 					>
+						<v-slide-x-transition>
+							<v-col v-if="selectedItems.length">
+								<v-card elevation="24"
+									class="grey darken-4"
+								>
+									<v-card-title>
+										Order Info
+									</v-card-title>
+									<v-divider />
+									<v-list dense>
+										<v-list-item>
+											<v-list-item-title>
+												Total Items
+											</v-list-item-title>
+											<v-list-item-action-text>{{ selectedItems.length }}</v-list-item-action-text>
+										</v-list-item>
+										<v-list-item>
+											<v-list-item-title>
+												Total Amount
+											</v-list-item-title>
+											<v-list-item-action-text>{{ getTotalAmount }}</v-list-item-action-text>
+										</v-list-item>
+										<v-list-item>
+											<v-list-item-title>
+												Delivery Charge
+											</v-list-item-title>
+											<v-list-item-action-text>
+												{{ order.delivery_charge }}
+											</v-list-item-action-text>
+										</v-list-item>
+										<v-list-item>
+											<v-list-item-title>
+												Loyalty
+											</v-list-item-title>
+											<v-list-item-action-text>
+												{{ order.loyalty_discount }}
+											</v-list-item-action-text>
+										</v-list-item>
+										<v-divider />
+										<v-list-item>
+											<v-list-item-title>
+												Grand total
+											</v-list-item-title>
+											<v-list-item-action-text>{{ getGrandTotal }}</v-list-item-action-text>
+										</v-list-item>
+									</v-list>
+								</v-card>
+							</v-col>
+						</v-slide-x-transition>
 						<v-col cols="12"
 							class="form-group-heading"
 						>
@@ -58,18 +107,22 @@
 								item-value="id"
 								item-color="orange darken-2"
 								multiple
+								attach=""
 								prepend-inner-icon="emoji_food_beverage"
 								hide-details="auto"
 								clearable
 							>
 								<template #no-data>
-									No <code>menu items</code> available
+									<div class="pa-2">
+										No <code>menu items</code> available
+									</div>
 								</template>
 								<template #selection="data">
 									<v-chip
 										v-bind="data.attrs"
 										:input-value="data.selected"
 										close
+										label
 										@click="data.select"
 										@click:close="removeItemFromSelectedOrderInput(data.item)"
 									>
@@ -86,13 +139,16 @@
 									<template v-else>
 										<v-list-item-content>
 											<v-list-item-title>{{ data.item.name }}</v-list-item-title>
-											<v-list-item-subtitle>{{ data.item.group }}</v-list-item-subtitle>
+											<v-list-item-subtitle class="number-font">
+												Rs {{ data.item.price }}
+											</v-list-item-subtitle>
 										</v-list-item-content>
 										<v-list-item-action>
 											<v-text-field
 												v-model="selectedItemQuantity[data.item.id]"
 												solo-inverted
 												hide-details
+												style="z-index: 3"
 											/>
 										</v-list-item-action>
 									</template>
@@ -278,7 +334,7 @@ export default {
 		order: {
 			custom_contact: null,
 			custom_location: null,
-			delivery_charge: null,
+			delivery_charge: 100,
 			loyalty_discount: 0,
 			payment_type: "Cash",
 			done_from_customer: true
@@ -294,6 +350,19 @@ export default {
 			lastCreatedOrderId: "order/lastCreatedOrderID",
 			orderFormErrors: "order/orderFormFieldErrors"
 		}),
+		getTotalAmount() {
+			let total = 0
+			for (const [key, value] of Object.entries(this.selectedItemQuantity)) {
+				const item = this.menuItemsList.find(item => item.id = key)
+				total += item.price * value
+			}
+			return total
+		},
+		getGrandTotal() {
+			if (!this.getTotalAmount) return 0
+			if (this.getTotalAmount < 0) return 0
+			return this.getTotalAmount - this.order.delivery_charge - this.order.loyalty_discount
+		}
 	},
 	async created() {
 		this.$bus.on("start-order-admin", this.initialize)

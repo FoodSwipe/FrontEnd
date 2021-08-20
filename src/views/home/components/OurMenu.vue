@@ -27,34 +27,38 @@
 				/>
 			</svg>
 		</div>
-		<v-card flat
-			tile
+		<v-card
 			color="transparent"
+			rounded
 		>
-			<v-list max-width="600"
-				color="transparent"
-				class="mx-auto"
+			<v-row no-gutters
+				class="pa-2"
+				justify="space-around"
 			>
-				<v-list-item v-for="item in items"
+				<v-col
+					v-for="item in items"
 					:key="item.title"
 				>
-					<v-list-item-avatar :size="avatarSize">
-						<v-img
-							:src="item.image"
-							max-height="200"
-							contain
-						/>
-					</v-list-item-avatar>
-					<v-list-item-content>
-						<v-list-item-title class="item-title">
+					<v-card
+						:max-width="($vuetify.breakpoint.width < 600) ? 600 : 300"
+						outlined
+						class="ma-2 text-center"
+					>
+						<v-card-text>
+							<v-avatar size="200">
+								<v-img :src="item.image" />
+							</v-avatar>
+						</v-card-text>
+						<v-card-title class="d-flex justify-center">
 							{{ item.title }}
-						</v-list-item-title>
-						<p class="item-subtitle">
+						</v-card-title>
+						<v-divider />
+						<v-card-subtitle>
 							{{ item.subtitle }}
-						</p>
-					</v-list-item-content>
-				</v-list-item>
-			</v-list>
+						</v-card-subtitle>
+					</v-card>
+				</v-col>
+			</v-row>
 		</v-card>
 	</v-card>
 </template>

@@ -246,10 +246,10 @@ export default {
 	background-color: transparent;
 }
 .slide-left:hover {
-	background-color: #ff980073;
+	background-color: rgba(75, 74, 72, 0.45);
 }
 .slide-right:hover {
-	background-color: #ff980073;
+	background-color: rgba(75, 74, 72, 0.45);
 }
 .slide-right {
 	z-index: 2;

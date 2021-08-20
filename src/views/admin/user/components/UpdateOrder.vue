@@ -144,22 +144,20 @@
 													v-model="selectedItems"
 													class="menu-items-autocomplete"
 													:items="orderNowRefinedList"
-													solo
-													chips
-													deletable-chips
-													color="orange"
-													placeholder="Add menu items in this order (*)"
-													item-text="name"
-													item-value="id"
-													item-color="orange darken-2"
-													multiple
-													prepend-inner-icon="emoji_food_beverage"
+													solo chips
+													deletable-chips multiple
+													color="orange" item-color="orange darken-2"
+													item-text="name" item-value="id"
 													hide-details="auto"
-													clearable
+													clearable attach=""
 													:disabled="order.delivery_started"
+													prepend-inner-icon="emoji_food_beverage"
+													placeholder="Add menu items in this order (*)"
 												>
 													<template #no-data>
-														No <code>menu items</code> available
+														<div class="pa-2">
+															No <code>menu items</code> available
+														</div>
 													</template>
 													<template #selection="data">
 														<v-chip
@@ -207,8 +205,7 @@
 															:disabled="order.delivery_started"
 															style="margin-top: -18px;"
 															:loading="adding"
-															fab
-															color="grey darken-3"
+															fab color="grey darken-3"
 															@click="addSelectedItemsToOrderCart()"
 														>
 															<v-icon>
@@ -705,7 +702,7 @@ export default {
 					5,
 					this.doc.lastAutoTable.finalY + 42,
 				)
-			this.doc.save("hello.pdf")
+			this.doc.save(`order-${this.order.id}.pdf`)
 			this.doc.autoPrint()
 			this.$store.dispatch("snack/setSnackState", true)
 			this.$store.dispatch("snack/setSnackColor", "success")
