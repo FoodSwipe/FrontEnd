@@ -95,7 +95,6 @@
 							:search="searchOrderItems"
 							:items="order['cart_items']"
 							sort-by="calories"
-							class="elevation-1"
 							hide-default-footer
 						>
 							<template #top>
@@ -142,16 +141,14 @@
 											>
 												<v-autocomplete
 													v-model="selectedItems"
-													class="menu-items-autocomplete"
+													:disabled="order.delivery_started"
 													:items="orderNowRefinedList"
 													solo chips
-													deletable-chips multiple
-													color="orange" item-color="orange darken-2"
-													item-text="name" item-value="id"
-													hide-details="auto"
-													clearable attach=""
-													:disabled="order.delivery_started"
-													prepend-inner-icon="emoji_food_beverage"
+													color="blue-grey lighten-2"
+													item-text="name"
+													item-value="id"
+													multiple clearable
+													deletable-chips
 													placeholder="Add menu items in this order (*)"
 												>
 													<template #no-data>
@@ -186,7 +183,7 @@
 															<v-list-item-content>
 																<v-list-item-title>{{ data.item.name }}</v-list-item-title>
 																<v-list-item-subtitle style="color: white;">
-																	{{ data.item.group }}
+																	<span class="number-font">Rs {{ data.item.price }}</span>
 																</v-list-item-subtitle>
 															</v-list-item-content>
 															<v-list-item-action-text class="align-center">
@@ -200,16 +197,15 @@
 															</v-list-item-action-text>
 														</template>
 													</template>
-													<template #append-outer>
+													<template #append>
 														<v-btn
 															:disabled="order.delivery_started"
-															style="margin-top: -18px;"
 															:loading="adding"
-															fab color="grey darken-3"
+															icon dark
 															@click="addSelectedItemsToOrderCart()"
 														>
 															<v-icon>
-																add_circle
+																add
 															</v-icon>
 														</v-btn>
 													</template>

@@ -1,7 +1,12 @@
 <template>
 	<div>
+		<v-card
+			v-if="isLoading" tile
+			color="" :loading="isLoading"
+			height="4"
+		/>
 		<v-row class="ma-0 pa-0">
-			<v-breadcrumbs v-if="!isLoading"
+			<v-breadcrumbs
 				dark
 				:items="orderBreadcrumbs"
 				class="px-1 pt-3"
@@ -17,8 +22,9 @@
 				</template>
 			</v-breadcrumbs>
 		</v-row>
-		<v-card :loading="isLoading"
-			dark color=""
+		<v-card
+			dark
+			tile
 		>
 			<v-toolbar height="auto">
 				<template #default>

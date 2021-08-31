@@ -91,14 +91,15 @@ module.exports = {
 		return localStorage.getItem("token")
 	},
 	getDeliveryCharge() {
-		const today = new Date()
-		const DELIVERY_START_PM = 17
-		const DELIVER_START_AM = 4
-		const DELIVERY_CHARGE = 50
-
-		if (today.getHours() >= DELIVERY_START_PM || today.getHours() <= DELIVER_START_AM) {
-			return DELIVERY_CHARGE
-		} else return 0
+		// const today = new Date()
+		// const DELIVERY_START_PM = 17
+		// const DELIVER_START_AM = 4
+		// const DELIVERY_CHARGE = 100
+		//
+		// if (today.getHours() >= DELIVERY_START_PM || today.getHours() <= DELIVER_START_AM) {
+		// 	return DELIVERY_CHARGE
+		// } else return 0
+		return 100
 	},
 	getLoyaltyDiscount(totalPrice) {
 		const LOYALTY_10_PER_FROM = 10000

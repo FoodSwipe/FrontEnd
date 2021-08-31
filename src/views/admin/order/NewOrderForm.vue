@@ -3,14 +3,16 @@
 		<v-dialog
 			v-model="dialog"
 			:loading="isLoading"
-			fullscreen
 			hide-overlay
 			transition="dialog-bottom-transition"
 			dark
+			scrollable
+			max-width="600"
 		>
-			<v-card class="rounded-0">
+			<v-card>
 				<v-toolbar
 					dark
+					flat
 				>
 					<v-btn
 						icon
@@ -31,130 +33,13 @@
 						</v-btn>
 					</v-toolbar-items>
 				</v-toolbar>
-				<v-card flat
-					class="mt-4 mx-auto pa-4"
+				<v-card-text flat
+					class="mx-auto pa-4"
 					max-width="1000"
 				>
 					<v-row class="ma-0 pa-0"
 						justify="center" align="center"
 					>
-						<v-slide-x-transition>
-							<v-col v-if="selectedItems.length">
-								<v-card elevation="24"
-									class="grey darken-4"
-								>
-									<v-card-title>
-										Order Info
-									</v-card-title>
-									<v-divider />
-									<v-list dense>
-										<v-list-item>
-											<v-list-item-title>
-												Total Items
-											</v-list-item-title>
-											<v-list-item-action-text>{{ selectedItems.length }}</v-list-item-action-text>
-										</v-list-item>
-										<v-list-item>
-											<v-list-item-title>
-												Total Amount
-											</v-list-item-title>
-											<v-list-item-action-text>{{ getTotalAmount }}</v-list-item-action-text>
-										</v-list-item>
-										<v-list-item>
-											<v-list-item-title>
-												Delivery Charge
-											</v-list-item-title>
-											<v-list-item-action-text>
-												{{ order.delivery_charge }}
-											</v-list-item-action-text>
-										</v-list-item>
-										<v-list-item>
-											<v-list-item-title>
-												Loyalty
-											</v-list-item-title>
-											<v-list-item-action-text>
-												{{ order.loyalty_discount }}
-											</v-list-item-action-text>
-										</v-list-item>
-										<v-divider />
-										<v-list-item>
-											<v-list-item-title>
-												Grand total
-											</v-list-item-title>
-											<v-list-item-action-text>{{ getGrandTotal }}</v-list-item-action-text>
-										</v-list-item>
-									</v-list>
-								</v-card>
-							</v-col>
-						</v-slide-x-transition>
-						<v-col cols="12"
-							class="form-group-heading"
-						>
-							Menu Item Information
-						</v-col>
-						<v-col cols="12">
-							<v-autocomplete
-								id="menu-items"
-								v-model="selectedItems"
-								:disabled="isUpdating"
-								:items="orderNowRefinedList"
-								outlined
-								chips
-								deletable-chips
-								color="orange"
-								placeholder="Add menu items in this order (*)"
-								item-text="name"
-								item-value="id"
-								item-color="orange darken-2"
-								multiple
-								attach=""
-								prepend-inner-icon="emoji_food_beverage"
-								hide-details="auto"
-								clearable
-							>
-								<template #no-data>
-									<div class="pa-2">
-										No <code>menu items</code> available
-									</div>
-								</template>
-								<template #selection="data">
-									<v-chip
-										v-bind="data.attrs"
-										:input-value="data.selected"
-										close
-										label
-										@click="data.select"
-										@click:close="removeItemFromSelectedOrderInput(data.item)"
-									>
-										<v-avatar left>
-											<v-img :src="data.item.avatar" />
-										</v-avatar>
-										{{ data.item.name }}
-									</v-chip>
-								</template>
-								<template #item="data">
-									<template v-if="typeof data.item !== 'object'">
-										<v-list-item-content v-text="data.item" />
-									</template>
-									<template v-else>
-										<v-list-item-content>
-											<v-list-item-title>{{ data.item.name }}</v-list-item-title>
-											<v-list-item-subtitle class="number-font">
-												Rs {{ data.item.price }}
-											</v-list-item-subtitle>
-										</v-list-item-content>
-										<v-list-item-action>
-											<v-text-field
-												v-model="selectedItemQuantity[data.item.id]"
-												solo hide-details
-												dark
-												background-color="grey darken-4"
-											/>
-										</v-list-item-action>
-									</template>
-								</template>
-							</v-autocomplete>
-						</v-col>
 						<v-col cols="12"
 							class="form-group-heading"
 						>
@@ -184,6 +69,7 @@
 								small-chips
 								deletable-chips
 								clearable
+								:multiple="false"
 								:error-messages="contactFormErrorMsg"
 							>
 								<template #no-data>
@@ -224,6 +110,7 @@
 								label="Email address"
 								outlined
 								clearable
+								type="email"
 								prepend-inner-icon="email"
 								hide-details="auto"
 								:error-messages="orderFormErrors.custom_email"
@@ -239,6 +126,7 @@
 								id="loyalty-discount"
 								v-model="order.loyalty_discount"
 								color="orange"
+								type="number"
 								label="Loyalty Discount"
 								outlined
 								clearable
@@ -288,27 +176,28 @@
 							/>
 						</v-col>
 					</v-row>
-					<v-card-actions class="py-4">
-						<v-spacer />
-						<v-btn
-							color="red lighten-5"
-							class="red--text"
-							depressed
-							@click="closeDialog"
-						>
-							Cancel
-						</v-btn>
-						<v-btn
-							:loading="saving"
-							color="blue lighten-5"
-							class="blue--text"
-							depressed
-							@click.stop="saveOrder"
-						>
-							Save
-						</v-btn>
-					</v-card-actions>
-				</v-card>
+				</v-card-text>
+				<v-divider />
+				<v-card-actions class="py-4">
+					<v-spacer />
+					<v-btn
+						color="red lighten-5"
+						class="red--text"
+						depressed
+						@click="closeDialog"
+					>
+						Cancel
+					</v-btn>
+					<v-btn
+						:loading="saving"
+						color="blue lighten-5"
+						class="blue--text"
+						depressed
+						@click.stop="saveOrder"
+					>
+						Save
+					</v-btn>
+				</v-card-actions>
 			</v-card>
 		</v-dialog>
 	</v-row>
@@ -349,19 +238,11 @@ export default {
 			userProfileList: "user/profileContactList",
 			lastCreatedOrderId: "order/lastCreatedOrderID",
 			orderFormErrors: "order/orderFormFieldErrors"
-		}),
-		getTotalAmount() {
-			let total = 0
-			for (const [key, value] of Object.entries(this.selectedItemQuantity)) {
-				const item = this.menuItemsList.find(item => item.id = key)
-				total += item.price * value
-			}
-			return total
-		},
-		getGrandTotal() {
-			if (!this.getTotalAmount) return 0
-			if (this.getTotalAmount < 0) return 0
-			return this.getTotalAmount + this.order.delivery_charge - this.order.loyalty_discount
+		})
+	},
+	watch: {
+		selectedItemQuantity(val) {
+			console.log(val)
 		}
 	},
 	async created() {
@@ -373,13 +254,17 @@ export default {
 		this.$bus.off("start-order-admin-for-user", this.initializeForUser)
 	},
 	methods: {
+		getMenuItmNameById(id) {
+			const menuItem = this.menuItemsList.find(menu => menu.id === id)
+			return (menuItem) ? menuItem.name : null
+		},
 		async initialize() {
 			this.isLoading = true
 			this.dialog = true
-
 			this.orderNowRefinedList = this.$helper.refineOrderNowList(this.menuItemsList)
 			this.order.delivery_charge = this.$helper.getDeliveryCharge()
 			await this.$store.dispatch("order/clearFormErrors")
+			await this.$store.dispatch("user/fetchProfileContactList")
 			this.isLoading = false
 		},
 		async initializeForUser(args) {
@@ -415,30 +300,9 @@ export default {
 			}
 			const orderStarted = await this.$store.dispatch("order/create", this.order)
 			if (orderStarted === true) {
-				if (this.selectedItems.length > 0) {
-					for (const itemID of this.selectedItems) {
-						addedToCart = await this.$store.dispatch("cart/addToCart", {
-							order: this.lastCreatedOrderId,
-							item: itemID,
-							quantity: (this.selectedItemQuantity[itemID]) ? parseInt(this.selectedItemQuantity[itemID]) : 1
-						})
-						if (addedToCart === 500) {
-							await this.openSnack("Internal server error. Please try again.")
-							this.saving = false
-							return
-						} else if (addedToCart === false) {
-							await this.openSnack("Please load a valid form and try again.")
-							this.saving = false
-							return
-						}
-					}
-				}
 				await this.openSnack("Order placed successfully.", "success")
-				const kot = await this.$store.dispatch("order/initKot", {id: this.lastCreatedOrderId})
-				if(kot) await this.openSnack("Kot initialized successfully")
-				else await this.openSnack("Kot initialization failed.", "error")
 				this.closeDialog()
-				await router.push("/admin/order/"+this.lastCreatedOrderId)
+				await router.push("/admin/order/" + this.lastCreatedOrderId)
 			} else if(orderStarted === 500) {
 				await this.openSnack("Internal server error. Please try again.")
 			} else if(orderStarted === false) {
@@ -490,6 +354,19 @@ th[role='columnheader'] span {
 		border-radius: 4px;
 		&:hover {
 			border: 1.2px solid white !important;
+		}
+	}
+}
+</style>
+<style scoped lang="scss">
+.v-menu__content {
+	.v-select-list {
+		background: #443a3a !important;
+		::v-deep.v-list-item:not(.v-list-item--active):not(.v-list-item--disabled) {
+			color: white !important;
+		}
+		::v-deep.v-subheader {
+			color: white;
 		}
 	}
 }

@@ -2,10 +2,10 @@
 	<v-snackbar
 		v-model="snack"
 		:timeout="5000"
-		top
 		:color="snackColor"
 		outlined
-		right
+		bottom
+		centered
 	>
 		{{ snackText }}
 		<template #action="{ attrs }">
