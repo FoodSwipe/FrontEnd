@@ -146,9 +146,9 @@
 										<v-list-item-action>
 											<v-text-field
 												v-model="selectedItemQuantity[data.item.id]"
-												solo-inverted
-												hide-details
-												style="z-index: 3"
+												solo hide-details
+												dark
+												background-color="grey darken-4"
 											/>
 										</v-list-item-action>
 									</template>
