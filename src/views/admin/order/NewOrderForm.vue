@@ -361,7 +361,7 @@ export default {
 		getGrandTotal() {
 			if (!this.getTotalAmount) return 0
 			if (this.getTotalAmount < 0) return 0
-			return this.getTotalAmount - this.order.delivery_charge - this.order.loyalty_discount
+			return this.getTotalAmount + this.order.delivery_charge - this.order.loyalty_discount
 		}
 	},
 	async created() {
