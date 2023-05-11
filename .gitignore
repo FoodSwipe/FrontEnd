@@ -104,3 +104,18 @@ typings/
 
 # IDE
 .idea/
+
+# SRC
+src/
+public/
+.browserlistrc
+.editorconfig
+.eslintrc.js
+LICENSE
+package.json
+pnpm-lock.yaml
+vue.config.js
+build.sh
+README.md
+ghPageDeploy.js
+
