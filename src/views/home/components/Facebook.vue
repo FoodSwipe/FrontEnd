@@ -33,8 +33,10 @@
 			max-width="1000"
 			class="mx-auto d-flex justify-center align-center flex-wrap"
 		>
-			<v-card :width="fbCardWidth">
-				<div class="fb-page"
+			<v-card :width="fbCardWidth"
+				height="450"
+			>
+				<!-- <div class="fb-page"
 					data-href="https://www.facebook.com/foodswipeonline" data-tabs="timeline"
 					data-width="400" data-height=""
 					data-small-header="false" data-adapt-container-width="true"
@@ -45,7 +47,7 @@
 					>
 						<a href="https://www.facebook.com/foodswipeonline">Food Swipe Food Delivery</a>
 					</blockquote>
-				</div>
+				</div> -->
 			</v-card>
 			<div v-if="$vuetify.breakpoint.width > 900"
 				class="px-12"
@@ -67,10 +69,10 @@
 						>
 							call
 						</v-icon>
-						<a href="tel:9802801073"
+						<a href="tel:98xxxxxxxx"
 							class="phone"
 						>
-							9802801073
+							98xxxxxxxx
 						</a>
 					</v-chip>
 					<v-chip class="ma-1">
@@ -79,10 +81,10 @@
 						>
 							call
 						</v-icon>
-						<a href="tel:9802801073"
+						<a href="tel:98xxxxxxxx"
 							class="phone"
 						>
-							980-6742220
+							98xxxxxxxx
 						</a>
 					</v-chip>
 				</v-card-text>
@@ -140,10 +142,10 @@ export default {
 	},
 	methods: {
 		routeToFoodSwipeFacebookPage() {
-			window.open(this.$constants.facebookUrl, "_blank")
+			// window.open(this.$constants.facebookUrl, "_blank")
 		},
 		routeToFoodSwipeInstaPage() {
-			window.open(this.$constants.facebookUrl, "_blank")
+			// window.open(this.$constants.facebookUrl, "_blank")
 		},
 	}
 }

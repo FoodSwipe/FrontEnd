@@ -42,7 +42,7 @@
     "jquery-bridget": "^3.0.0",
     "moment": "^2.29.1",
     "moment-timezone": "^0.5.31",
-    "node-sass": "4.12.0",
+    "node-sass": "^8.0.0",
     "sass": "1.32.13",
     "sass-loader": "^10.0.3",
     "vue-cli-plugin-vuetify": "~2.0.7",

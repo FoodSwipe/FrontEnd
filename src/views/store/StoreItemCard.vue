@@ -3,7 +3,6 @@
 		:loading="loading"
 		class="mx-auto store-item-card"
 		min-height="350"
-		:max-width="maxWidth"
 		outlined
 	>
 		<template #progress>
@@ -126,15 +125,6 @@ export default {
 		selection: 1,
 		orderInProgress: null
 	}),
-	computed: {
-		maxWidth() {
-			const screenSize = this.$vuetify.breakpoint.width
-			if (screenSize > 330) {
-				return "140"
-			}
-			else return "320"
-		}
-	},
 	methods: {
 		routeToItemDetail(item) {
 			this.$router.push(`product/${item.id}`)

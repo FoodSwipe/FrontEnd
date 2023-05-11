@@ -144,10 +144,10 @@ export default {
 			this.currentUser = this.$helper.getCurrentUser()
 		},
 		routeToFoodSwipeFacebookPage() {
-			window.open(this.$constants.facebookUrl, "_blank")
+			// window.open(this.$constants.facebookUrl, "_blank")
 		},
 		routeToFoodSwipeInstaPage() {
-			window.open(this.$constants.instagramUrl, "_blank")
+			// window.open(this.$constants.instagramUrl, "_blank")
 		},
 		toggleDrawerState() {
 			this.$bus.emit("open-auth-sidebar")

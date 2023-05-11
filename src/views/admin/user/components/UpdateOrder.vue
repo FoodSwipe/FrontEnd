@@ -477,7 +477,7 @@ export default {
 				invoiceDate: this.order.delivered_at,
 				paymentMode: this.order.payment_type,
 				items: particulars,
-				tel: "+9779802801073/+9779802801077",
+				tel: "+9779841xxxxxx/+9779813xxxxxx",
 				counter: "TELLER 1 (" + this.order.delivered_at + ")",
 				cashier: this.$helper.getCurrentUser().username,
 				netAmount: this.order.total_price,

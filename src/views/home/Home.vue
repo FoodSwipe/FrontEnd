@@ -20,11 +20,11 @@
 			>
 				call
 			</v-icon>
-			<a href="tel:9802801073"
+			<a href="tel:98xxxxxxxx"
 				class="text-decoration-none"
 				style="color: #f96a1f;"
 			>
-				9802801073
+				98xxxxxxxx
 			</a>
 		</v-chip>
 		<scroll-top />

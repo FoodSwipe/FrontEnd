@@ -162,7 +162,7 @@
 					>
 						<div
 							v-if="storeItems && storeItems.length"
-							class="d-flex flex-wrap justify-start align-start"
+							class="store-item-card-container"
 						>
 							<store-item-card
 								v-for="(item, i) in storeItems"
@@ -294,11 +294,28 @@ export default {
 	}
 }
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
 .filter-text {
 	font-size: 12px !important;
 }
 .menu-item-group-active {
 	background-color: #d0d0d0;
+}
+
+.store-item-card-container {
+	display: flex;
+	gap: 1rem;
+	flex-wrap: wrap;
+	align-items: start;
+	& > * {
+		flex-grow: 1;
+		flex-basis: 20%;
+		@media screen and (max-width: 670px) {
+			flex-basis: 35%;
+		}
+		@media screen and (max-width: 670px) {
+			flex-basis: 35%;
+		}
+	}
 }
 </style>
