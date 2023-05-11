@@ -1,15 +1,13 @@
 #!/usr/bin/env sh
 
 DIST_BRANCH="dist"
-BASE_DIR="/home/runner/work/FoodSwipe/FrontEnd"
+BASE_DIR="/home/runner/work/FoodSwipe"
 
-ls -la
-pwd
+echo $VUE_APP_BACKEND_URL
 
 
 echo "Building Started...."
 pnpm build
-ls -la
 echo "Building Completed."
 
 
@@ -21,7 +19,7 @@ git fetch origin ${DIST_BRANCH}
 git checkout ${DIST_BRANCH}
 
 rm -rf dist
-mv "${BASE_DIR}"/temp/dist/* .
+cp -r "${BASE_DIR}"/temp/dist/* .
 
 if [ -n "$(git status --porcelain)" ]; then
   git add .

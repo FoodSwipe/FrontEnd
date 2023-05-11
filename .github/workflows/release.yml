@@ -30,4 +30,7 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
       - name: Publish
-        run: bash -x build.sh
+        run: |
+          cp .env.prod .env
+          cat .env
+          bash -x build.sh
