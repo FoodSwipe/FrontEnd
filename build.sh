@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
 DIST_BRANCH="dist"
-BASE_DIR="/home/runner/work//FoodSwipe/FrontEnd"
+BASE_DIR="/home/runner/work/FoodSwipe/FrontEnd"
 
 ls -la
 pwd
